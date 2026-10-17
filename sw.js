@@ -1,0 +1,66 @@
+/* Morioka Masjid — notifications only (no offline cache, so the page is always fresh).
+   The push itself is empty: on each push we ask iwate-bd.org (the Prayer Times plugin that sends
+   them) what to show, exactly like its own worker does. */
+var MSG = 'https://iwate-bd.org/?pt_msg=1';
+var ICON = '/icon-192.png';
+
+self.addEventListener('install', function () { self.skipWaiting(); });
+self.addEventListener('activate', function (e) { e.waitUntil(self.clients.claim()); });
+
+self.addEventListener('push', function (e) {
+  var ep = '', jid = '';
+  function ack(ok, err) {     // tell the server it was shown (the admin list uses it)
+    if (!ep) return Promise.resolve();
+    var perm = (self.Notification && self.Notification.permission) || '?';
+    return fetch(MSG + '&ack=' + (ok ? 1 : 0) + '&p=' + encodeURIComponent(perm) + '&id=' + encodeURIComponent(jid)
+      + '&err=' + encodeURIComponent(String(err || '').slice(0, 150)) + '&e=' + encodeURIComponent(ep)).catch(function () {});
+  }
+  e.waitUntil(
+    self.registration.pushManager.getSubscription().then(function (sub) {
+      if (!sub) return null;
+      ep = sub.endpoint;
+      return fetch(MSG + '&e=' + encodeURIComponent(ep)).then(function (r) { return r.json(); });
+    }).catch(function () { return null; }).then(function (d) {
+      // iPhone needs a notification for every push, or it cancels the subscription
+      if (!d || !d.title) d = { title: '🕌 Morioka Masjid', body: 'Prayer times · 礼拝時間', url: '/' };
+      jid = d.id || '';
+      var opts = { body: d.body || '', tag: d.id ? 'pt-' + d.id : 'prayer', renotify: true, icon: ICON, badge: ICON,
+        data: { url: d.url || '/', id: d.id || '', ep: ep } };
+      if (d.image) opts.image = d.image;
+      return self.registration.showNotification(d.title, opts)
+        .then(function () { return ack(true, ''); }, function (err1) {
+          return self.registration.showNotification(d.title, { body: d.body || '' })
+            .then(function () { return ack(true, 'retry: ' + err1); }, function (err2) { return ack(false, err2); });
+        });
+    }).catch(function (err) { return ack(false, err); })
+  );
+});
+
+self.addEventListener('notificationclick', function (e) {
+  e.notification.close();
+  var nd = e.notification.data || {};
+  if (nd.id) fetch(MSG + '&clk=' + encodeURIComponent(nd.id) + '&e=' + encodeURIComponent(nd.ep || '')).catch(function () {});
+  // prayer / Jumu'ah / Islamic-day notifications open this site; a post or alert opens its own page
+  var url = '/#times';
+  try {
+    var u = new URL(nd.url || '/', 'https://iwate-bd.org/');
+    // adhan notification: open the site with the azan player (?azan=prayer index, t=send time)
+    var q = u.searchParams, ai = q.get('pt_adhan');
+    if (ai === null && q.get('pt_card') !== null && q.get('k') !== 'j') ai = q.get('pt_card');
+    if (ai !== null && /^[0-5]$/.test(ai)) url = '/?azan=' + ai + '&t=' + encodeURIComponent(q.get('pt_t') || '') + '#times';
+    var mine = u.hostname === 'iwate-bd.org' && u.pathname === '/'
+      && !/[?&](p|page_id|hs_code)=/.test(u.search) && (nd.id ? /pt_/.test(u.search) : true);
+    if (!mine && nd.id) url = u.href;
+  } catch (x) {}
+  var inScope = url.charAt(0) === '/';
+  e.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+    for (var i = 0; i < list.length; i++) {
+      if (inScope && 'focus' in list[i]) {
+        return ('navigate' in list[i] ? list[i].navigate(url) : Promise.resolve(list[i]))
+          .then(function (c) { return (c || list[0]).focus(); })
+          .catch(function () { return clients.openWindow && clients.openWindow(url); });
+      }
+    }
+    if (clients.openWindow) return clients.openWindow(url);
+  }));
+});

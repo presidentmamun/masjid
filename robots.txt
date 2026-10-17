@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://masjid.iwate-bd.org/sitemap.xml

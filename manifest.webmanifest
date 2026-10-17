@@ -1,7 +1,7 @@
 {
-  "name": "盛岡マスジド | Morioka Masjid",
+  "name": "Masjid Al-Tawheed | 盛岡マスジド",
   "short_name": "Masjid",
-  "description": "Morioka Masjid (Masjid Al-Tawheed) — prayer times, Qibla, Quran and prayer notifications.",
+  "description": "Masjid Al-Tawheed (Morioka Masjid) — prayer times, Qibla, Quran and prayer notifications.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

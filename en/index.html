@@ -412,11 +412,8 @@
     font-size: 0.88rem;
   }
   footer .name { font-family: "Amiri", serif; color: #e9cf8f; font-size: 1.2rem; display: block; margin-bottom: 4px; }
-  .jp-comm { max-width: 560px; margin: 18px auto 0; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.15); }
-  .jp-comm b { display: block; color: #e9cf8f; font-size: 1rem; margin-bottom: 4px; }
-  .jp-comm p { margin: 0 0 8px; }
-  .jp-comm nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; }
-  .jp-comm a { color: #fff; }
+  .jp-comm { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.15); opacity: .85; }
+  .jp-comm a { color: #e9cf8f; }
 </style>
 </head>
 <body>
@@ -625,17 +622,7 @@
   <div class="wrap">
     <span class="name">مسجد التوحيد</span>
     <span data-i18n="footer">Information may change. Please check our Facebook page for the latest news.</span>
-    <!-- community site of the Bangladeshis in Iwate (same people who run this page's tools) -->
-    <div class="jp-comm">
-      <b><a href="https://iwate-bd.org/" lang="bn">জাপান প্রবাসে</a> · iwate-bd.org</b>
-      <p data-i18n="jp_desc">Community site of the Bangladeshis in Iwate (Iwate Bangladesh Exchange Association): prayer times, halal food check, garbage rules, a guide for newcomers, Bangla TV and community news.</p>
-      <nav aria-label="iwate-bd.org">
-        <a href="https://iwate-bd.org/about/" data-i18n="jp_about">About us</a>
-        <a href="https://iwate-bd.org/japan-diary/" data-i18n="jp_diary">Japan Diary</a>
-        <a href="https://iwate-bd.org/events/" data-i18n="jp_events">Events</a>
-        <a href="https://iwate-bd.org/contact/" data-i18n="jp_contact">Contact</a>
-      </nav>
-    </div>
+    <p class="jp-comm"><span data-i18n="jp_by">Courtesy of</span> <a href="https://iwate-bd.org/">iwate-bd.org</a></p>
   </div>
 </footer>
 
@@ -688,8 +675,7 @@ const I18N = {
     v4: "Please remove your shoes before entering the prayer hall.", v5: "Please switch your phone to silent.",
     contact_title: "Contact", contact_person: "Contact person", phone: "Phone", fb_btn: "Message us on Facebook",
     footer: "Information may change. Please check our Facebook page for the latest news.",
-    jp_desc: "Community site of the Bangladeshis in Iwate (Iwate Bangladesh Exchange Association): prayer times, halal food check, garbage rules, a guide for newcomers, Bangla TV and community news.",
-    jp_about: "About us", jp_diary: "Japan Diary", jp_events: "Events", jp_contact: "Contact"
+    jp_by: "Courtesy of"
   },
   ja: {
     more_gomi: "ごみカレンダー", more_gomi_d: "お住まいの地域のごみ出しの日と、前日の夜のお知らせ",
@@ -722,8 +708,7 @@ const I18N = {
     v4: "礼拝室に入る前に靴を脱いでください。", v5: "携帯電話はマナーモードにしてください。",
     contact_title: "連絡先", contact_person: "担当者", phone: "電話", fb_btn: "Facebookでメッセージを送る",
     footer: "情報は変更される場合があります。最新情報はFacebookページをご確認ください。",
-    jp_desc: "岩手のバングラデシュ人コミュニティのサイト（岩手バングラデシュ交流協会）：礼拝時間、ハラールチェック、ごみ出しルール、来日したばかりの人のためのガイド、バングラ語テレビ、コミュニティのお知らせ。",
-    jp_about: "私たちについて", jp_diary: "日本日記", jp_events: "イベント", jp_contact: "お問い合わせ"
+    jp_by: "協力："
   },
   bn: {
     more_gomi: "ময়লার ক্যালেন্ডার", more_gomi_d: "আপনার এলাকায় কোন দিন কোন ময়লা, আর আগের রাতে রিমাইন্ডার",
@@ -756,8 +741,7 @@ const I18N = {
     v4: "নামাজের ঘরে ঢোকার আগে জুতা খুলুন।", v5: "মোবাইল ফোন সাইলেন্ট রাখুন।",
     contact_title: "যোগাযোগ", contact_person: "যোগাযোগের জন্য", phone: "ফোন", fb_btn: "Facebook-এ মেসেজ পাঠান",
     footer: "তথ্য পরিবর্তন হতে পারে। সর্বশেষ খবরের জন্য আমাদের Facebook পেজ দেখুন।",
-    jp_desc: "ইওয়াতের বাংলাদেশিদের কমিউনিটির সাইট (Iwate Bangladesh Exchange Association): নামাজের সময়, হালাল খাবার যাচাই, ময়লা ফেলার নিয়ম, নতুনদের গাইড, বাংলা টিভি ও কমিউনিটির খবর।",
-    jp_about: "আমাদের সম্পর্কে", jp_diary: "জাপান ডায়েরি", jp_events: "অনুষ্ঠান", jp_contact: "যোগাযোগ"
+    jp_by: "সৌজন্যে"
   },
   ur: {
     more_gomi: "کچرے کا کیلنڈر", more_gomi_d: "آپ کے علاقے میں کس دن کون سا کچرا، اور ایک رات پہلے یاد دہانی",
@@ -790,8 +774,7 @@ const I18N = {
     v4: "نماز ہال میں داخل ہونے سے پہلے جوتے اتار دیں۔", v5: "موبائل فون خاموش رکھیں۔",
     contact_title: "رابطہ", contact_person: "رابطہ کار", phone: "فون", fb_btn: "Facebook پر پیغام بھیجیں",
     footer: "معلومات تبدیل ہو سکتی ہیں۔ تازہ خبروں کے لیے ہمارا Facebook صفحہ دیکھیں۔",
-    jp_desc: "ایواتے میں بنگلہ دیشیوں کی کمیونٹی کی سائٹ ⁦(Iwate Bangladesh Exchange Association)⁩: نماز کے اوقات، حلال کھانے کی جانچ، کوڑا پھینکنے کے اصول، نئے آنے والوں کے لیے رہنمائی، بنگلہ ٹی وی اور کمیونٹی کی خبریں۔",
-    jp_about: "ہمارے بارے میں", jp_diary: "جاپان ڈائری", jp_events: "تقریبات", jp_contact: "رابطہ"
+    jp_by: "بشکریہ"
   },
   hi: {
     more_gomi: "कूड़े का कैलेंडर", more_gomi_d: "आपके इलाके में किस दिन कौन-सा कूड़ा, और एक रात पहले रिमाइंडर",
@@ -824,8 +807,7 @@ const I18N = {
     v4: "नमाज़ हॉल में जाने से पहले जूते उतारें।", v5: "मोबाइल फ़ोन साइलेंट रखें।",
     contact_title: "संपर्क", contact_person: "संपर्क व्यक्ति", phone: "फ़ोन", fb_btn: "Facebook पर संदेश भेजें",
     footer: "जानकारी बदल सकती है। ताज़ा ख़बरों के लिए हमारा Facebook पेज देखें।",
-    jp_desc: "इवाते में बांग्लादेशियों की कम्युनिटी की साइट (Iwate Bangladesh Exchange Association): नमाज़ का समय, हलाल खाने की जाँच, कचरा फेंकने के नियम, नए लोगों के लिए गाइड, बांग्ला टीवी और कम्युनिटी की ख़बरें।",
-    jp_about: "हमारे बारे में", jp_diary: "जापान डायरी", jp_events: "कार्यक्रम", jp_contact: "संपर्क"
+    jp_by: "सौजन्य:"
   },
   ar: {
     more_gomi: "تقويم النفايات", more_gomi_d: "أي نوع من النفايات يُخرج في أي يوم في منطقتك، مع تذكير في الليلة السابقة",
@@ -858,8 +840,7 @@ const I18N = {
     v4: "يُرجى خلع الحذاء قبل دخول المصلى.", v5: "يُرجى وضع الهاتف على الوضع الصامت.",
     contact_title: "التواصل", contact_person: "للتواصل", phone: "الهاتف", fb_btn: "راسلنا على Facebook",
     footer: "قد تتغير المعلومات. تابع صفحتنا على Facebook لآخر الأخبار.",
-    jp_desc: "موقع مجتمع البنغلاديشيين في إيواتي ⁦(Iwate Bangladesh Exchange Association)⁩: مواقيت الصلاة، فحص الطعام الحلال، قواعد رمي النفايات، دليل للقادمين الجدد، تلفزيون بنغالي وأخبار المجتمع.",
-    jp_about: "من نحن", jp_diary: "يوميات اليابان", jp_events: "الفعاليات", jp_contact: "اتصل بنا"
+    jp_by: "بدعم من"
   }
 };
 const RTL = new Set(["ar", "ur"]);

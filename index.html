@@ -448,6 +448,8 @@
   .tas-btn svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
   .tas-bg { fill: none; stroke: rgba(255, 255, 255, .14); stroke-width: 5; }
   .tas-ring { fill: none; stroke: #e9cf8f; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 339.3; stroke-dashoffset: 339.3; transition: stroke-dashoffset .15s; }
+  .tas-tl { position: relative; margin-top: -2px; font-size: .78rem; line-height: 1.2; color: rgba(255, 255, 255, .8); min-height: 1em; }
+  .tas-tl:empty { display: none; }
   .tas-ar { position: relative; font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: 1.35rem; line-height: 1.4; color: #e9cf8f; min-height: 1.4em; }
   .tas-n { position: relative; font-size: 3.2rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
   .tas-of { position: relative; font-size: .85rem; opacity: .8; min-height: 1.2em; }
@@ -933,6 +935,7 @@
       <button type="button" class="tas-btn" id="tasBtn">
         <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="54" class="tas-bg"/><circle cx="60" cy="60" r="54" class="tas-ring" id="tasRing"/></svg>
         <span class="tas-ar" id="tasAr" lang="ar"></span>
+        <span class="tas-tl" id="tasTl"></span>
         <span class="tas-n" id="tasN">0</span>
         <span class="tas-of" id="tasOf"></span>
       </button>
@@ -1234,6 +1237,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    tas_p0: "SubhanAllah", tas_p1: "Alhamdulillah", tas_p2: "Allahu Akbar",
     zk_title: "📿 Dhikr", nav_zikr: "Dhikr",
     month_link: "📅 Whole month's timetable (with Sehri & Iftar) →",
     sehri_end: "Sehri ends",
@@ -1288,6 +1292,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    tas_p0: "スブハーナッラー", tas_p1: "アルハムドゥリッラー", tas_p2: "アッラーフ・アクバル",
     zk_title: "📿 ズィクル", nav_zikr: "ズィクル",
     month_link: "📅 1か月の礼拝時間表（サフール・イフタール付き）→",
     sehri_end: "サフール終了",
@@ -1342,6 +1347,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    tas_p0: "সুবহানাল্লাহ", tas_p1: "আলহামদুলিল্লাহ", tas_p2: "আল্লাহু আকবার",
     zk_title: "📿 জিকির", nav_zikr: "জিকির",
     month_link: "📅 পুরো মাসের সময়সূচি (সেহরি ও ইফতারসহ) →",
     sehri_end: "সেহরি শেষ",
@@ -1396,6 +1402,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    tas_p0: "سبحان اللہ", tas_p1: "الحمد للہ", tas_p2: "اللہ اکبر",
     zk_title: "📿 ذکر", nav_zikr: "ذکر",
     month_link: "📅 پورے مہینے کے اوقات (سحری و افطار سمیت) ←",
     sehri_end: "سحری ختم",
@@ -1448,6 +1455,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    tas_p0: "सुब्हानअल्लाह", tas_p1: "अल्हम्दुलिल्लाह", tas_p2: "अल्लाहु अकबर",
     zk_title: "📿 ज़िक्र", nav_zikr: "ज़िक्र",
     month_link: "📅 पूरे महीने का टाइम टेबल (सहरी व इफ़्तार समेत) →",
     sehri_end: "सहरी ख़त्म",
@@ -1500,6 +1508,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    tas_p0: "", tas_p1: "", tas_p2: "",
     zk_title: "📿 الذكر", nav_zikr: "الذكر",
     month_link: "📅 جدول الشهر كاملًا (مع السحور والإفطار) ←",
     sehri_end: "نهاية السحور",
@@ -1910,15 +1919,17 @@ function renderCal() {
   function phase(n) { let a = 0; for (let i = 0; i < PH.length; i++) { if (n < a + PH[i][1]) return [i, n - a]; a += PH[i][1]; } return [PH.length, 0]; }
   function draw() {
     document.querySelectorAll(".tas-mode .chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.m === s.m ? "true" : "false"));
-    let shown, of = "", ar = "", frac;
+    let shown, of = "", ar = "", frac, pi = -1;
     if (s.m === "after") {
       const [i, k] = phase(s.n);
       if (i >= PH.length) { shown = 100; ar = ""; frac = 1; st.textContent = T("tas_done"); }
-      else { shown = k; of = "/ " + PH[i][1]; ar = PH[i][0]; frac = k / PH[i][1]; st.textContent = s.n ? "" : T("tas_tap"); }
+      else { shown = k; of = "/ " + PH[i][1]; ar = PH[i][0]; pi = i; frac = k / PH[i][1]; st.textContent = s.n ? "" : T("tas_tap"); }
     } else {
       shown = s.n; frac = (s.n % 33) / 33; st.textContent = s.n ? "" : T("tas_tap");
     }
     nEl.textContent = localDigits(String(shown)); ofEl.textContent = localDigits(of); arEl.textContent = ar;
+    // the same words in the visitor's own letters, small (not for Arabic readers)
+    document.getElementById("tasTl").textContent = pi > -1 && lang !== "ar" ? T("tas_p" + pi) : "";
     ring.style.strokeDashoffset = String(C * (1 - frac));
   }
   btn.addEventListener("click", () => {

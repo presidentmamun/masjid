@@ -2667,19 +2667,32 @@ function placeFind() {
     const a = +pos.coords.latitude.toFixed(4), b = +pos.coords.longitude.toFixed(4);
     if (!inJapan(a, b)) { placeMsg("ts_out"); return; }
     place = { mode: "me", lat: a, lng: b, n: "" }; placeSave(); placeApply(); placeMsg("");
-    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=10&lat=${a}&lon=${b}&accept-language=${lang}`, { credentials: "omit" })
-      .then(r => r.json()).then(d => {
-        const ad = (d && d.address) || {};
-        const n = ad.city || ad.town || ad.village || ad.municipality || ad.county || ad.suburb || "";
-        if (n && place.mode === "me" && place.lat === a) { place.n = n; placeSave(); placeUI(); if (typeof notif !== "undefined") notif.render(); }
-      }).catch(() => {});
+    placeNameFetch();
   }, e => placeMsg(e && e.code === 1 ? "ts_denied" : "ts_err", true), { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
+}
+// the town's name in the visitor's language: Google (through iwate-bd.org), else OpenStreetMap
+let placeNameBusy = "";
+function placeNameFetch() {
+  if (place.mode !== "me") return;
+  const a = place.lat, b = place.lng, l = lang, key = a + "," + b + "," + l;
+  if (placeNameBusy === key) return;
+  placeNameBusy = key;
+  const keep = n => {
+    placeNameBusy = "";
+    if (!n || place.mode !== "me" || place.lat !== a || lang !== l) return;
+    place.n = n; place.nl = l; placeSave(); placeUI(); if (typeof notif !== "undefined") notif.render();
+  };
+  const osm = () => fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=10&lat=${a}&lon=${b}&accept-language=${l}`, { credentials: "omit" })
+    .then(r => r.json()).then(d => { const ad = (d && d.address) || {}; keep(ad.city || ad.town || ad.village || ad.municipality || ad.county || ad.suburb || ""); })
+    .catch(() => { placeNameBusy = ""; });
+  fetch(`${MN.api}place?lat=${a}&lng=${b}&l=${l}`, { credentials: "omit" })
+    .then(r => r.json()).then(d => { if (d && d.n) keep(d.n); else osm(); }).catch(osm);
 }
 placeApply(true);
 
 function renderAll() {
   renderTexts();
-  if (typeof placeUI === "function") { placeUI(); if (placeMsgK) placeMsg(placeMsgK, placeMsgK !== "ts_wait"); }
+  if (typeof placeUI === "function") { placeUI(); if (placeMsgK) placeMsg(placeMsgK, placeMsgK !== "ts_wait"); if (place.mode === "me" && place.nl !== lang) placeNameFetch(); }
   theme.apply();
   if (window.qToTopLabel) window.qToTopLabel();
   renderDates();

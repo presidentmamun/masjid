@@ -1,4 +1,6 @@
-/* Morioka Masjid — notifications only (no offline cache, so the page is always fresh).
+/* Morioka Masjid — notifications + works without internet.
+   Pages: always from the internet when there is one (so they are always fresh); the last copy is kept
+   and shown only when the phone is offline. Other sites (Quran, maps, fonts) are not touched.
    The push itself is empty: on each push we ask iwate-bd.org (the Prayer Times plugin that sends
    them) what to show, exactly like its own worker does. */
 var MSG = 'https://iwate-bd.org/?pt_msg=1';
@@ -6,6 +8,35 @@ var ICON = '/icon-192.png';
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) { e.waitUntil(self.clients.claim()); });
+
+var KEEP = 'mm-offline-1';
+self.addEventListener('message', function (e) {      // the page asks to keep its own copy (first visit)
+  var d = e.data || {};
+  if (!Array.isArray(d.keep)) return;
+  e.waitUntil(caches.open(KEEP).then(function (c) {
+    return Promise.all(d.keep.filter(function (p) { return typeof p === 'string' && p.charAt(0) === '/'; }).slice(0, 5)
+      .map(function (p) { return c.add(p).catch(function () {}); }));
+  }));
+});
+self.addEventListener('fetch', function (e) {
+  var r = e.request;
+  if (r.method !== 'GET') return;
+  var u = new URL(r.url);
+  if (u.origin !== self.location.origin || u.pathname === '/sw.js') return;
+  e.respondWith(fetch(r).then(function (res) {
+    if (res && res.ok && res.type === 'basic') {
+      var copy = res.clone();
+      caches.open(KEEP).then(function (c) { c.put(u.origin + u.pathname, copy); });
+    }
+    return res;
+  }).catch(function () {
+    return caches.match(u.origin + u.pathname, { ignoreSearch: true }).then(function (hit) {
+      if (hit) return hit;
+      if (r.mode !== 'navigate') return Response.error();
+      return caches.match(u.origin + '/').then(function (home) { return home || Response.error(); });
+    });
+  }));
+});
 
 self.addEventListener('push', function (e) {
   var ep = '', jid = '';

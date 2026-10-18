@@ -354,6 +354,88 @@
   .cmp-st { font-weight: 600; min-height: 1.4em; }
   .cmp-st.ok { color: var(--green); }
 
+  /* Shared small parts */
+  .sub-h { margin: 22px 0 12px; font-size: 1.05rem; color: var(--text); }
+  .card > .sub-h:first-of-type { margin-top: 4px; }
+  .chip { display: inline-flex; align-items: center; gap: 4px; padding: 7px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+  .chip:hover { border-color: var(--green); color: var(--green); }
+  .chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #fff; }
+
+  /* Islamic calendar */
+  .ev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .ev { position: relative; padding: 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); overflow: hidden; }
+  .ev::after { content: ""; position: absolute; inset: auto -20px -20px auto; width: 70px; height: 70px; border-radius: 50%; background: var(--gold); opacity: .08; }
+  .ev .ic { font-size: 1.5rem; line-height: 1; }
+  .ev b { display: block; margin-top: 6px; color: var(--green); line-height: 1.35; }
+  .ev .d { display: block; font-size: .85rem; color: var(--muted); }
+  .ev .in { display: inline-block; margin-top: 8px; padding: 2px 10px; border-radius: 999px; background: var(--gold-soft); color: var(--text); font-size: .8rem; font-weight: 700; }
+  .ev.soon { background: linear-gradient(135deg, #123f2e, #0f5a3c); border-color: transparent; color: #fff; }
+  .ev.soon b { color: #e9cf8f; }
+  .ev.soon .d { color: rgba(255, 255, 255, .8); }
+  .ev.soon .in { background: rgba(255, 255, 255, .15); color: #fff; }
+  .mt-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .mt-nav { display: flex; align-items: center; gap: 6px; }
+  .mt-arrow { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); color: var(--green); font-size: 1.4rem; line-height: 1; cursor: pointer; }
+  .mt-arrow:hover { border-color: var(--green); }
+  .mt-arrow:disabled { opacity: .35; cursor: default; }
+  .mt-label { min-width: 9em; text-align: center; color: var(--green); }
+  .mt-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+  table.mt th small { display: block; font-size: .72rem; font-weight: 600; color: var(--gold); }
+  table.mt td.h { color: var(--muted); font-size: .85rem; }
+  @media (max-width: 600px) { table.mt th, table.mt td { padding: 7px 8px; font-size: .85rem; } }
+  table.mt td.sf, table.mt td.if { font-weight: 700; }
+  table.mt.ram td.sf, table.mt.ram td.if { color: var(--green); }
+  table.mt tr.today td { background: var(--gold-soft); font-weight: 700; }
+  table.mt tr.friday td:first-child { color: var(--green); font-weight: 700; }
+  .print-head { display: none; }
+
+  /* Duas & tasbih */
+  .dua-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .dua { padding: 16px 18px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); border-top: 3px solid var(--gold); }
+  .dua h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: 1rem; color: var(--green); }
+  .dua-ic { font-size: 1.2rem; }
+  .dua-ar { margin: 0; font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: 1.55rem; line-height: 2; color: var(--text); }
+  .dua-tl { margin: 4px 0 0; font-size: .88rem; font-style: italic; color: var(--muted); }
+  .dua-m { margin: 8px 0 0; }
+  .dua-m:empty { display: none; }
+  .dua-src { margin: 8px 0 0; font-size: .78rem; color: var(--muted); }
+  html[lang="ar"] .dua-tl { display: none; }
+  .tasbih { margin-top: 26px; padding: 18px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); text-align: center; }
+  .tasbih .sub-h { margin-top: 0; }
+  .tas-mode { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .tas-btn { position: relative; display: grid; place-content: center; gap: 2px; width: 220px; max-width: 80vw; aspect-ratio: 1; margin: 16px auto 6px; border: 0; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #1a7a52, #0f5a3c 60%, #0b4330); color: #fff; cursor: pointer; box-shadow: 0 10px 26px rgba(15, 90, 60, .3), inset 0 -6px 14px rgba(0, 0, 0, .18); -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; transition: transform .08s; }
+  .tas-btn:active { transform: scale(.97); }
+  .tas-btn svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .tas-bg { fill: none; stroke: rgba(255, 255, 255, .14); stroke-width: 5; }
+  .tas-ring { fill: none; stroke: #e9cf8f; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 339.3; stroke-dashoffset: 339.3; transition: stroke-dashoffset .15s; }
+  .tas-ar { position: relative; font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: 1.35rem; line-height: 1.4; color: #e9cf8f; min-height: 1.4em; }
+  .tas-n { position: relative; font-size: 3.2rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .tas-of { position: relative; font-size: .85rem; opacity: .8; min-height: 1.2em; }
+  .tas-st { min-height: 1.5em; margin: 4px 0 10px; font-weight: 600; color: var(--green); }
+
+  /* Share / QR */
+  .share { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 22px; padding: 16px; border-radius: 12px; background: var(--surface-2); border: 1px dashed var(--gold); }
+  .share img { width: 132px; height: 132px; border-radius: 8px; background: #fff; padding: 4px; flex: none; }
+  .share > div { flex: 1 1 220px; }
+  .share b { color: var(--green); }
+  .share p { margin: 4px 0 10px; font-size: .92rem; color: var(--muted); }
+  .share-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  @media print {
+    body.p-cal > *:not(main) { display: none !important; }
+    body.p-cal main > *:not(#cal) { display: none !important; }
+    body.p-cal #cal > *:not(.print-head):not(.mt-wrap) { display: none !important; }
+    body.p-cal { background: #fff; color: #000; }
+    body.p-cal #cal { box-shadow: none; border: 0; padding: 0; margin: 0; }
+    body.p-cal .print-head { display: block; text-align: center; margin-bottom: 8px; }
+    body.p-cal .print-head b { font-size: 16pt; color: #0f5a3c; }
+    body.p-cal .print-head span { display: block; font-size: 10pt; }
+    body.p-cal .table-wrap { overflow: visible; border-color: #999; }
+    body.p-cal table.mt { font-size: 9pt; }
+    body.p-cal table.mt th, body.p-cal table.mt td { padding: 3px 6px; border-color: #bbb; }
+    @page { size: A4 portrait; margin: 12mm; }
+  }
+
   /* More services (open on the community site) */
   .more-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
   .more-item { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); text-decoration: none; }
@@ -461,8 +543,10 @@
 <nav class="sections" aria-label="Sections">
   <ul>
     <li><a href="#times" data-i18n="nav_times">নামাজের সময়</a></li>
+    <li><a href="#cal" data-i18n="nav_cal">ক্যালেন্ডার</a></li>
     <li><a href="#qibla" data-i18n="nav_qibla">কিবলা</a></li>
     <li><a href="#quran" data-i18n="nav_quran">কুরআন</a></li>
+    <li><a href="#dua" data-i18n="nav_dua">দোয়া</a></li>
     <li><a href="#about" data-i18n="nav_about">পরিচিতি</a></li>
     <li><a href="#access" data-i18n="nav_access">যাতায়াত</a></li>
     <li><a href="#visit" data-i18n="nav_visit">আসার আগে</a></li>
@@ -522,6 +606,33 @@
     </div>
   </section>
 
+  <section id="cal" class="card">
+    <h2 data-i18n="cal_title">ইসলামি ক্যালেন্ডার ও রমজান</h2>
+    <h3 class="sub-h" data-i18n="cal_upcoming">সামনের দিনগুলো</h3>
+    <div class="ev-grid" id="evGrid"></div>
+    <p class="note" data-i18n="cal_note">তারিখ উম্মুল কুরা ক্যালেন্ডার অনুযায়ী। চাঁদ দেখার ওপর নির্ভর করে আসল দিন এক দিন আগে-পরে হতে পারে — মসজিদের ঘোষণা অনুসরণ করুন।</p>
+
+    <h3 class="sub-h" data-i18n="cal_month">মাসের নামাজের সময়সূচি</h3>
+    <div class="mt-bar">
+      <div class="mt-nav">
+        <button type="button" class="mt-arrow" id="mtPrev" aria-label="‹">‹</button>
+        <b class="mt-label" id="mtLabel"></b>
+        <button type="button" class="mt-arrow" id="mtNext" aria-label="›">›</button>
+      </div>
+      <div class="mt-acts">
+        <button type="button" class="chip" id="mtRam"></button>
+        <button type="button" class="chip" id="mtPrint" data-i18n="cal_print">🖨 প্রিন্ট</button>
+      </div>
+    </div>
+    <div class="print-head" id="printHead"></div>
+    <div class="table-wrap mt-wrap">
+      <table class="mt">
+        <thead><tr id="mtHead"></tr></thead>
+        <tbody id="mtBody"></tbody>
+      </table>
+    </div>
+  </section>
+
   <section id="qibla" class="card">
     <h2 data-i18n="qibla_title">কিবলার দিক</h2>
     <div class="qibla">
@@ -574,6 +685,56 @@
     <p class="note" style="margin:6px 0 10px" data-i18n="quran_tap">আয়াতে চাপ দিলে সেই আয়াতের তিলাওয়াত শুনবেন।</p>
     <div class="q-list" id="qList"><p class="q-st" data-i18n="quran_loading">লোড হচ্ছে…</p></div>
     <p class="note" data-i18n="quran_src">আরবি লেখা: Tanzil (alquran.cloud থেকে) · অর্থ: মুহিউদ্দীন খান · তিলাওয়াত: মিশারি আল-আফাসি</p>
+  </section>
+
+  <section id="dua" class="card">
+    <h2 data-i18n="dua_title">দোয়া ও তাসবিহ</h2>
+    <div class="dua-grid">
+      <article class="dua">
+        <h3><span class="dua-ic" aria-hidden="true">🌅</span><span data-i18n="dua_iftar">ইফতারের সময়</span></h3>
+        <p class="dua-ar" lang="ar" dir="rtl">ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ</p>
+        <p class="dua-tl" dir="ltr">Dhahabaz-zama'u wabtallatil-'uruqu wa thabatal-ajru in sha' Allah</p>
+        <p class="dua-m" data-i18n="dua_iftar_m">পিপাসা দূর হলো, শিরাগুলো সিক্ত হলো, আর আল্লাহ চাইলে প্রতিদান নিশ্চিত হলো।</p>
+        <p class="dua-src"><span data-i18n="src">সূত্র</span>: Abu Dawud 2357</p>
+      </article>
+      <article class="dua">
+        <h3><span class="dua-ic" aria-hidden="true">🚪</span><span data-i18n="dua_enter">মসজিদে ঢোকার সময়</span></h3>
+        <p class="dua-ar" lang="ar" dir="rtl">اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ</p>
+        <p class="dua-tl" dir="ltr">Allahummaftah li abwaba rahmatik</p>
+        <p class="dua-m" data-i18n="dua_enter_m">হে আল্লাহ, আমার জন্য আপনার রহমতের দরজাগুলো খুলে দিন।</p>
+        <p class="dua-src"><span data-i18n="src">সূত্র</span>: Muslim 713</p>
+      </article>
+      <article class="dua">
+        <h3><span class="dua-ic" aria-hidden="true">👣</span><span data-i18n="dua_leave">মসজিদ থেকে বের হওয়ার সময়</span></h3>
+        <p class="dua-ar" lang="ar" dir="rtl">اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ</p>
+        <p class="dua-tl" dir="ltr">Allahumma inni as'aluka min fadlik</p>
+        <p class="dua-m" data-i18n="dua_leave_m">হে আল্লাহ, আমি আপনার কাছে আপনার অনুগ্রহ চাই।</p>
+        <p class="dua-src"><span data-i18n="src">সূত্র</span>: Muslim 713</p>
+      </article>
+      <article class="dua">
+        <h3><span class="dua-ic" aria-hidden="true">✨</span><span data-i18n="dua_qadr">শবে কদর</span></h3>
+        <p class="dua-ar" lang="ar" dir="rtl">اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي</p>
+        <p class="dua-tl" dir="ltr">Allahumma innaka 'afuwwun tuhibbul-'afwa fa'fu 'anni</p>
+        <p class="dua-m" data-i18n="dua_qadr_m">হে আল্লাহ, আপনি ক্ষমাশীল, ক্ষমা করতে ভালোবাসেন, তাই আমাকে ক্ষমা করুন।</p>
+        <p class="dua-src"><span data-i18n="src">সূত্র</span>: Tirmidhi 3513</p>
+      </article>
+    </div>
+
+    <div class="tasbih">
+      <h3 class="sub-h" data-i18n="tas_title">তাসবিহ গণনা</h3>
+      <div class="tas-mode" role="group">
+        <button type="button" class="chip" data-m="after" data-i18n="tas_after">নামাজের পর (৩৩ · ৩৩ · ৩৪)</button>
+        <button type="button" class="chip" data-m="free" data-i18n="tas_free">নিজের মতো গণনা</button>
+      </div>
+      <button type="button" class="tas-btn" id="tasBtn">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="54" class="tas-bg"/><circle cx="60" cy="60" r="54" class="tas-ring" id="tasRing"/></svg>
+        <span class="tas-ar" id="tasAr" lang="ar"></span>
+        <span class="tas-n" id="tasN">0</span>
+        <span class="tas-of" id="tasOf"></span>
+      </button>
+      <p class="tas-st" id="tasSt" aria-live="polite"></p>
+      <button type="button" class="chip" id="tasReset" data-i18n="tas_reset">↺ আবার শুরু</button>
+    </div>
   </section>
 
   <section id="about" class="grid-2">
@@ -629,6 +790,9 @@
       <li data-i18n="v3">শালীন পোশাক পরে আসুন।</li>
       <li data-i18n="v4">নামাজের ঘরে ঢোকার আগে জুতা খুলুন।</li>
       <li data-i18n="v5">মোবাইল ফোন সাইলেন্ট রাখুন।</li>
+      <li data-i18n="v6">অন্য ধর্মের মানুষসহ সবাইকে স্বাগত। নির্দ্বিধায় প্রশ্ন করুন।</li>
+      <li data-i18n="v7">নামাজ চলার সময় নামাজির সামনে দিয়ে হাঁটবেন না। পেছন থেকে চুপচাপ দেখতে পারেন।</li>
+      <li data-i18n="v8">কারো ছবি তোলার আগে অনুমতি নিন।</li>
     </ul>
   </section>
 
@@ -647,6 +811,18 @@
       <span class="v">facebook.com/masjidaltauheed</span>
     </div>
     <a class="btn outline" href="https://www.facebook.com/masjidaltauheed/" target="_blank" rel="noopener" data-i18n="fb_btn">Facebook-এ মেসেজ পাঠান</a>
+
+    <div class="share">
+      <img src="/qr.svg" width="132" height="132" alt="QR code: masjid.iwate-bd.org" loading="lazy">
+      <div>
+        <b data-i18n="share_title">সাইটটি অন্যদের জানান</b>
+        <p data-i18n="share_text">QR কোড স্ক্যান করলে এই সাইট খুলবে। পোস্টার প্রিন্ট করে মসজিদে বা দোকানে লাগাতে পারেন।</p>
+        <div class="share-acts">
+          <a class="chip" href="/poster.html" target="_blank" rel="noopener" data-i18n="share_poster">🖨 পোস্টার প্রিন্ট</a>
+          <button type="button" class="chip" id="copyLink" data-i18n="share_copy">🔗 লিংক কপি</button>
+        </div>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -691,6 +867,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    nav_cal: "Calendar", nav_dua: "Duas", cal_title: "Islamic Calendar & Ramadan", cal_upcoming: "Coming up", ev_ramadan: "Ramadan begins", ev_fitr: "Eid al-Fitr", ev_arafah: "Day of Arafah", ev_adha: "Eid al-Adha", ev_newyear: "Islamic New Year", ev_ashura: "Ashura", cal_today: "Today", cal_tomorrow: "Tomorrow", cal_in: "in {n} days", cal_note: "Dates follow the Umm al-Qura calendar. The actual day can differ by one day depending on the moon sighting — please follow the masjid's announcement.", cal_month: "Monthly prayer timetable", cal_ram: "🌙 Ramadan {y}", cal_mon: "📅 This month", cal_print: "🖨 Print", sehri_s: "Sehri", cal_rday: "Ramadan", dua_title: "Duas & Tasbih", src: "Source", dua_iftar: "When breaking the fast", dua_iftar_m: "The thirst has gone, the veins are moistened, and the reward is certain, if Allah wills.", dua_enter: "Entering the masjid", dua_enter_m: "O Allah, open for me the doors of Your mercy.", dua_leave: "Leaving the masjid", dua_leave_m: "O Allah, I ask You of Your bounty.", dua_qadr: "Laylat al-Qadr", dua_qadr_m: "O Allah, You are the One who pardons, and You love to pardon, so pardon me.", tas_title: "Tasbih counter", tas_after: "After prayer (33 · 33 · 34)", tas_free: "Free count", tas_reset: "↺ Reset", tas_tap: "Tap the circle to count", tas_done: "Done — may Allah accept it", v6: "Everyone is welcome, including people of other faiths. Feel free to ask questions.", v7: "During prayer, please do not walk in front of people who are praying. You are welcome to watch quietly from the back.", v8: "Please ask before taking photos of people.", share_title: "Share this site", share_text: "Scan the QR code to open this site. Print the poster and put it up at the masjid or in shops.", share_poster: "🖨 Print poster", share_copy: "🔗 Copy link", share_copied: "✓ Link copied",
     reload: "Tap to refresh",
     sehri: "Sehri ends", iftar: "Iftar", fast_today: "Today's Sehri & Iftar", fast_tom: "Tomorrow's Sehri & Iftar", fast_note: "Sehri ends when Fajr begins. Iftar is at Maghrib.",
     fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumuah: "Jumu'ah (Friday Prayer)",
@@ -726,6 +903,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    nav_cal: "暦", nav_dua: "ドゥアー", cal_title: "イスラーム暦とラマダン", cal_upcoming: "これからの行事", ev_ramadan: "ラマダン開始", ev_fitr: "イード・アル＝フィトル", ev_arafah: "アラファの日", ev_adha: "イード・アル＝アドハー", ev_newyear: "イスラーム新年", ev_ashura: "アーシューラー", cal_today: "今日", cal_tomorrow: "明日", cal_in: "あと{n}日", cal_note: "日付はウンム・アル＝クラー暦によります。実際の日は月の観測により1日ずれることがあります。マスジドのお知らせに従ってください。", cal_month: "月間の礼拝時間表", cal_ram: "🌙 ラマダン {y}", cal_mon: "📅 今月", cal_print: "🖨 印刷", sehri_s: "サフール", cal_rday: "ラマダン", dua_title: "ドゥアーとタスビーフ", src: "出典", dua_iftar: "断食を解くとき", dua_iftar_m: "渇きは去り、血管は潤い、アッラーが望まれるなら報奨は確かなものとなった。", dua_enter: "マスジドに入るとき", dua_enter_m: "アッラーよ、私にあなたの慈悲の扉を開いてください。", dua_leave: "マスジドを出るとき", dua_leave_m: "アッラーよ、私はあなたの恵みを求めます。", dua_qadr: "ライラト・アル＝カドル（みいつの夜）", dua_qadr_m: "アッラーよ、あなたは赦す御方で、赦すことを好まれます。どうか私をお赦しください。", tas_title: "タスビーフ・カウンター", tas_after: "礼拝後（33・33・34）", tas_free: "自由に数える", tas_reset: "↺ リセット", tas_tap: "円をタップして数えます", tas_done: "完了 — アッラーが受け入れてくださいますように", v6: "ムスリム以外の方も歓迎します。気軽にご質問ください。", v7: "礼拝中は、礼拝している人の前を横切らないでください。後ろから静かに見学していただけます。", v8: "人を撮影する前に、ひと言お声がけください。", share_title: "このサイトを紹介する", share_text: "QRコードを読み取るとこのサイトが開きます。ポスターを印刷して、マスジドやお店に貼ってください。", share_poster: "🖨 ポスターを印刷", share_copy: "🔗 リンクをコピー", share_copied: "✓ コピーしました",
     reload: "タップして更新",
     sehri: "サフール終了", iftar: "イフタール", fast_today: "今日のサフールとイフタール", fast_tom: "明日のサフールとイフタール", fast_note: "サフール（夜明け前の食事）はファジュルの開始までに終えます。イフタール（断食明け）はマグリブの時刻です。",
     fajr: "ファジュル", sunrise: "日の出", dhuhr: "ズフル", asr: "アスル", maghrib: "マグリブ", isha: "イシャー", jumuah: "ジュムア（金曜礼拝）",
@@ -761,6 +939,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    nav_cal: "ক্যালেন্ডার", nav_dua: "দোয়া", cal_title: "ইসলামি ক্যালেন্ডার ও রমজান", cal_upcoming: "সামনের দিনগুলো", ev_ramadan: "রমজান শুরু", ev_fitr: "ঈদুল ফিতর", ev_arafah: "আরাফার দিন", ev_adha: "ঈদুল আজহা", ev_newyear: "ইসলামি নববর্ষ", ev_ashura: "আশুরা", cal_today: "আজ", cal_tomorrow: "আগামীকাল", cal_in: "আর {n} দিন", cal_note: "তারিখ উম্মুল কুরা ক্যালেন্ডার অনুযায়ী। চাঁদ দেখার ওপর নির্ভর করে আসল দিন এক দিন আগে-পরে হতে পারে — মসজিদের ঘোষণা অনুসরণ করুন।", cal_month: "মাসের নামাজের সময়সূচি", cal_ram: "🌙 রমজান {y}", cal_mon: "📅 এই মাস", cal_print: "🖨 প্রিন্ট", sehri_s: "সেহরি", cal_rday: "রমজান", dua_title: "দোয়া ও তাসবিহ", src: "সূত্র", dua_iftar: "ইফতারের সময়", dua_iftar_m: "পিপাসা দূর হলো, শিরাগুলো সিক্ত হলো, আর আল্লাহ চাইলে প্রতিদান নিশ্চিত হলো।", dua_enter: "মসজিদে ঢোকার সময়", dua_enter_m: "হে আল্লাহ, আমার জন্য আপনার রহমতের দরজাগুলো খুলে দিন।", dua_leave: "মসজিদ থেকে বের হওয়ার সময়", dua_leave_m: "হে আল্লাহ, আমি আপনার কাছে আপনার অনুগ্রহ চাই।", dua_qadr: "শবে কদর", dua_qadr_m: "হে আল্লাহ, আপনি ক্ষমাশীল, ক্ষমা করতে ভালোবাসেন, তাই আমাকে ক্ষমা করুন।", tas_title: "তাসবিহ গণনা", tas_after: "নামাজের পর (৩৩ · ৩৩ · ৩৪)", tas_free: "নিজের মতো গণনা", tas_reset: "↺ আবার শুরু", tas_tap: "গোল বোতামে চাপ দিয়ে গুনুন", tas_done: "শেষ — আল্লাহ কবুল করুন", v6: "অন্য ধর্মের মানুষসহ সবাইকে স্বাগত। নির্দ্বিধায় প্রশ্ন করুন।", v7: "নামাজ চলার সময় নামাজির সামনে দিয়ে হাঁটবেন না। পেছন থেকে চুপচাপ দেখতে পারেন।", v8: "কারো ছবি তোলার আগে অনুমতি নিন।", share_title: "সাইটটি অন্যদের জানান", share_text: "QR কোড স্ক্যান করলে এই সাইট খুলবে। পোস্টার প্রিন্ট করে মসজিদে বা দোকানে লাগাতে পারেন।", share_poster: "🖨 পোস্টার প্রিন্ট", share_copy: "🔗 লিংক কপি", share_copied: "✓ লিংক কপি হয়েছে",
     reload: "চাপ দিলে রিফ্রেশ হবে",
     sehri: "সেহরির শেষ সময়", iftar: "ইফতার", fast_today: "আজকের সেহরি ও ইফতার", fast_tom: "আগামীকালের সেহরি ও ইফতার", fast_note: "ফজরের ওয়াক্ত শুরু হলে সেহরির সময় শেষ। মাগরিবের সময় ইফতার।",
     fajr: "ফজর", sunrise: "সূর্যোদয়", dhuhr: "যোহর", asr: "আসর", maghrib: "মাগরিব", isha: "এশা", jumuah: "জুমার নামাজ",
@@ -796,6 +975,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    nav_cal: "کیلنڈر", nav_dua: "دعائیں", cal_title: "اسلامی کیلنڈر اور رمضان", cal_upcoming: "آنے والے دن", ev_ramadan: "رمضان کا آغاز", ev_fitr: "عید الفطر", ev_arafah: "یومِ عرفہ", ev_adha: "عید الاضحیٰ", ev_newyear: "اسلامی نیا سال", ev_ashura: "عاشورہ", cal_today: "آج", cal_tomorrow: "کل", cal_in: "{n} دن باقی", cal_note: "تاریخیں ام القریٰ کیلنڈر کے مطابق ہیں۔ چاند دیکھنے کے لحاظ سے اصل دن ایک دن آگے پیچھے ہو سکتا ہے — مسجد کے اعلان پر عمل کریں۔", cal_month: "ماہانہ اوقاتِ نماز", cal_ram: "🌙 رمضان {y}", cal_mon: "📅 یہ مہینہ", cal_print: "🖨 پرنٹ", sehri_s: "سحری", cal_rday: "رمضان", dua_title: "دعائیں اور تسبیح", src: "حوالہ", dua_iftar: "افطار کے وقت", dua_iftar_m: "پیاس بجھ گئی، رگیں تر ہو گئیں، اور اگر اللہ نے چاہا تو اجر ثابت ہو گیا۔", dua_enter: "مسجد میں داخل ہوتے وقت", dua_enter_m: "اے اللہ، میرے لیے اپنی رحمت کے دروازے کھول دے۔", dua_leave: "مسجد سے نکلتے وقت", dua_leave_m: "اے اللہ، میں تجھ سے تیرا فضل مانگتا ہوں۔", dua_qadr: "شبِ قدر", dua_qadr_m: "اے اللہ، تو معاف کرنے والا ہے، معافی کو پسند کرتا ہے، پس مجھے معاف فرما۔", tas_title: "تسبیح شمار", tas_after: "نماز کے بعد (33 · 33 · 34)", tas_free: "آزاد گنتی", tas_reset: "↺ دوبارہ", tas_tap: "گنتی کے لیے دائرے پر ٹیپ کریں", tas_done: "مکمل — اللہ قبول فرمائے", v6: "دوسرے مذاہب کے لوگوں سمیت سب کو خوش آمدید۔ بلا جھجک سوال کریں۔", v7: "نماز کے دوران نمازیوں کے سامنے سے نہ گزریں۔ آپ پیچھے سے خاموشی سے دیکھ سکتے ہیں۔", v8: "کسی کی تصویر لینے سے پہلے اجازت لیں۔", share_title: "یہ سائٹ دوسروں تک پہنچائیں", share_text: "QR کوڈ اسکین کرنے سے یہ سائٹ کھلے گی۔ پوسٹر پرنٹ کر کے مسجد یا دکانوں میں لگائیں۔", share_poster: "🖨 پوسٹر پرنٹ کریں", share_copy: "🔗 لنک کاپی کریں", share_copied: "✓ لنک کاپی ہو گیا",
     reload: "ریفریش کرنے کے لیے ٹیپ کریں",
     sehri: "سحری کا آخری وقت", iftar: "افطار", fast_today: "آج کی سحری اور افطار", fast_tom: "کل کی سحری اور افطار", fast_note: "فجر کا وقت شروع ہوتے ہی سحری کا وقت ختم۔ افطار مغرب کے وقت۔",
     fajr: "فجر", sunrise: "طلوعِ آفتاب", dhuhr: "ظہر", asr: "عصر", maghrib: "مغرب", isha: "عشاء", jumuah: "نمازِ جمعہ",
@@ -831,6 +1011,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    nav_cal: "कैलेंडर", nav_dua: "दुआएँ", cal_title: "इस्लामी कैलेंडर और रमज़ान", cal_upcoming: "आने वाले दिन", ev_ramadan: "रमज़ान की शुरुआत", ev_fitr: "ईद-उल-फ़ित्र", ev_arafah: "अरफ़ा का दिन", ev_adha: "ईद-उल-अज़हा", ev_newyear: "इस्लामी नया साल", ev_ashura: "आशूरा", cal_today: "आज", cal_tomorrow: "कल", cal_in: "{n} दिन बाकी", cal_note: "तारीख़ें उम्म-उल-क़ुरा कैलेंडर के अनुसार हैं। चाँद दिखने के अनुसार असली दिन एक दिन आगे-पीछे हो सकता है — मस्जिद की घोषणा का पालन करें।", cal_month: "महीने का नमाज़ टाइम टेबल", cal_ram: "🌙 रमज़ान {y}", cal_mon: "📅 यह महीना", cal_print: "🖨 प्रिंट", sehri_s: "सहरी", cal_rday: "रमज़ान", dua_title: "दुआएँ और तस्बीह", src: "स्रोत", dua_iftar: "इफ़्तार के समय", dua_iftar_m: "प्यास बुझ गई, रगें तर हो गईं, और अगर अल्लाह ने चाहा तो सवाब पक्का हो गया।", dua_enter: "मस्जिद में दाख़िल होते समय", dua_enter_m: "ऐ अल्लाह, मेरे लिए अपनी रहमत के दरवाज़े खोल दे।", dua_leave: "मस्जिद से निकलते समय", dua_leave_m: "ऐ अल्लाह, मैं तुझसे तेरा फ़ज़्ल माँगता हूँ।", dua_qadr: "शब-ए-क़द्र", dua_qadr_m: "ऐ अल्लाह, तू माफ़ करने वाला है, माफ़ी को पसंद करता है, तो मुझे माफ़ कर दे।", tas_title: "तस्बीह काउंटर", tas_after: "नमाज़ के बाद (33 · 33 · 34)", tas_free: "खुली गिनती", tas_reset: "↺ फिर से", tas_tap: "गिनने के लिए गोले पर टैप करें", tas_done: "पूरा हुआ — अल्लाह क़बूल करे", v6: "दूसरे धर्मों के लोगों समेत सबका स्वागत है। बेझिझक सवाल पूछें।", v7: "नमाज़ के दौरान नमाज़ियों के सामने से न गुज़रें। आप पीछे से चुपचाप देख सकते हैं।", v8: "किसी की फ़ोटो लेने से पहले इजाज़त लें।", share_title: "यह साइट दूसरों तक पहुँचाएँ", share_text: "QR कोड स्कैन करने पर यह साइट खुलेगी। पोस्टर प्रिंट करके मस्जिद या दुकानों में लगाएँ।", share_poster: "🖨 पोस्टर प्रिंट करें", share_copy: "🔗 लिंक कॉपी करें", share_copied: "✓ लिंक कॉपी हो गया",
     reload: "रीफ़्रेश करने के लिए टैप करें",
     sehri: "सहरी का अंतिम समय", iftar: "इफ़्तार", fast_today: "आज की सहरी और इफ़्तार", fast_tom: "कल की सहरी और इफ़्तार", fast_note: "फ़ज्र का समय शुरू होते ही सहरी का समय ख़त्म। इफ़्तार मग़रिब के समय।",
     fajr: "फ़ज्र", sunrise: "सूर्योदय", dhuhr: "ज़ुहर", asr: "अस्र", maghrib: "मग़रिब", isha: "इशा", jumuah: "जुमा की नमाज़",
@@ -866,6 +1047,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    nav_cal: "التقويم", nav_dua: "الأدعية", cal_title: "التقويم الهجري ورمضان", cal_upcoming: "المناسبات القادمة", ev_ramadan: "بداية رمضان", ev_fitr: "عيد الفطر", ev_arafah: "يوم عرفة", ev_adha: "عيد الأضحى", ev_newyear: "رأس السنة الهجرية", ev_ashura: "عاشوراء", cal_today: "اليوم", cal_tomorrow: "غدًا", cal_in: "بعد {n} يومًا", cal_note: "التواريخ وفق تقويم أم القرى، وقد يختلف اليوم الفعلي يومًا واحدًا بحسب رؤية الهلال — يُرجى اتباع إعلان المسجد.", cal_month: "جدول مواقيت الشهر", cal_ram: "🌙 رمضان {y}", cal_mon: "📅 هذا الشهر", cal_print: "🖨 طباعة", sehri_s: "السحور", cal_rday: "رمضان", dua_title: "الأدعية والتسبيح", src: "المصدر", dua_iftar: "عند الإفطار", dua_iftar_m: "", dua_enter: "عند دخول المسجد", dua_enter_m: "", dua_leave: "عند الخروج من المسجد", dua_leave_m: "", dua_qadr: "ليلة القدر", dua_qadr_m: "", tas_title: "عدّاد التسبيح", tas_after: "بعد الصلاة (33 · 33 · 34)", tas_free: "عدّ حر", tas_reset: "↺ إعادة", tas_tap: "اضغط على الدائرة للعدّ", tas_done: "تمّ — تقبّل الله", v6: "الجميع مرحَّب بهم، ومنهم أتباع الديانات الأخرى. لا تتردد في السؤال.", v7: "أثناء الصلاة، يُرجى عدم المرور أمام المصلين، ويمكنك المشاهدة بهدوء من الخلف.", v8: "يُرجى الاستئذان قبل تصوير الأشخاص.", share_title: "شارك هذا الموقع", share_text: "امسح رمز QR لفتح هذا الموقع. اطبع الملصق وضعه في المسجد أو المتاجر.", share_poster: "🖨 طباعة الملصق", share_copy: "🔗 نسخ الرابط", share_copied: "✓ تم نسخ الرابط",
     reload: "اضغط للتحديث",
     sehri: "نهاية السحور", iftar: "الإفطار", fast_today: "سحور وإفطار اليوم", fast_tom: "سحور وإفطار الغد", fast_note: "ينتهي السحور بدخول وقت الفجر، والإفطار عند المغرب.",
     fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", jumuah: "صلاة الجمعة",
@@ -1053,6 +1235,7 @@ function renderTimes() {
     </tr>`;
   }
   document.getElementById("weekBody").innerHTML = rows;
+  renderCal();
   tick();
 }
 
@@ -1126,12 +1309,180 @@ function renderQibla() {
   h.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
 })();
 
+/* ===================== Islamic calendar, monthly / Ramadan timetable ===================== */
+// Hijri dates: the browser's Umm al-Qura calendar (no server). Real dates can move by a day (moon sighting).
+const HIJ = (() => { try { return new Intl.DateTimeFormat("en-u-ca-islamic-umalqura-nu-latn", { timeZone: "Asia/Tokyo", year: "numeric", month: "numeric", day: "numeric" }); } catch { return null; } })();
+const hParts = day => {
+  const o = {}; HIJ.formatToParts(noonOf(day)).forEach(p => { if (p.type === "year" || p.type === "month" || p.type === "day") o[p.type] = parseInt(p.value, 10); });
+  return { y: o.year, m: o.month, d: o.day };
+};
+const EVS = { "9-1": ["ev_ramadan", "🌙"], "10-1": ["ev_fitr", "🎉"], "12-9": ["ev_arafah", "⛰️"], "12-10": ["ev_adha", "🐑"], "1-1": ["ev_newyear", "✨"], "1-10": ["ev_ashura", "🤲"] };
+const mt = { mode: "month", y: 0, m: 0 };
+const noEra = (fmt, d) => fmt.formatToParts(d).filter(p => p.type !== "era").map(p => p.value).join("").replace(/[\s,،]+$/u, "").trim();
+const escH = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let ramDays = null;
+
+function findRamadan(today) {
+  // this Ramadan (if we are in it) or the next one
+  for (let i = -30; i < 400; i++) {
+    const day = addDays(today, i), h = hParts(day);
+    if (h.m !== 9 || h.d !== 1) continue;
+    let k = 0;
+    while (k < 31 && hParts(addDays(day, k)).m === 9) k++;
+    if (noonOf(addDays(day, k - 1)) >= noonOf(today)) return { day, len: k, y: h.y };
+    i += 25;
+  }
+  return null;
+}
+
+function renderEvents(today) {
+  const grid = document.getElementById("evGrid");
+  if (!HIJ) { grid.closest("section").querySelector(".sub-h").hidden = true; grid.hidden = true; return; }
+  const seen = {}, list = [];
+  for (let i = 0; i < 400 && list.length < 6; i++) {
+    const day = addDays(today, i), h = hParts(day), k = h.m + "-" + h.d;
+    if (EVS[k] && !seen[k]) { seen[k] = 1; list.push({ k, day, i }); }
+  }
+  const df = new Intl.DateTimeFormat(lang, { timeZone: "Asia/Tokyo", year: "numeric", month: "short", day: "numeric", weekday: "short" });
+  const hf = new Intl.DateTimeFormat(lang + "-u-ca-islamic-umalqura", { timeZone: "Asia/Tokyo", year: "numeric", month: "long", day: "numeric" });
+  grid.innerHTML = list.map((e, n) => {
+    const when = e.i === 0 ? T("cal_today") : e.i === 1 ? T("cal_tomorrow") : T("cal_in").replace("{n}", localDigits(String(e.i)));
+    return `<div class="ev${n === 0 ? " soon" : ""}"><span class="ic">${EVS[e.k][1]}</span><b>${T(EVS[e.k][0])}</b>`
+      + `<span class="d">${df.format(noonOf(e.day))}</span><span class="d">${noEra(hf, noonOf(e.day))}</span><span class="in">${when}</span></div>`;
+  }).join("");
+}
+
+function renderMonth() {
+  const today = tokyoYMD();
+  if (!mt.y) { mt.y = today.y; mt.m = today.m; }
+  let days = [];
+  const ram = mt.mode === "ram" && ramDays;
+  if (ram) {
+    for (let i = 0; i < ramDays.len; i++) days.push(addDays(ramDays.day, i));
+  } else {
+    const n = new Date(Date.UTC(mt.y, mt.m, 0)).getUTCDate();
+    for (let d = 1; d <= n; d++) days.push({ y: mt.y, m: mt.m, d });
+  }
+  const monFmt = new Intl.DateTimeFormat(lang, { timeZone: "UTC", year: "numeric", month: "long" });
+  const hyFmt = HIJ ? new Intl.DateTimeFormat(lang + "-u-ca-islamic-umalqura", { timeZone: "Asia/Tokyo", year: "numeric" }) : null;
+  const label = ram ? T("cal_ram").replace("{y}", noEra(hyFmt, noonOf(ramDays.day))).replace(/^🌙\s*/, "") : monFmt.format(new Date(Date.UTC(mt.y, mt.m - 1, 15)));
+  document.getElementById("mtLabel").textContent = label;
+  document.getElementById("mtPrev").disabled = document.getElementById("mtNext").disabled = !!ram;
+  const rb = document.getElementById("mtRam");
+  rb.hidden = !ramDays;
+  rb.textContent = ram ? T("cal_mon") : (ramDays ? T("cal_ram").replace("{y}", noEra(hyFmt, noonOf(ramDays.day))) : "");
+  rb.setAttribute("aria-pressed", ram ? "true" : "false");
+  document.getElementById("printHead").innerHTML = `<b>${escH(T("title"))}</b><span>${escH(label)} · ${escH(T("sub"))}</span>`;
+
+  const tbl = document.querySelector("table.mt");
+  tbl.classList.toggle("ram", !!ram);
+  const head = [ram ? T("cal_rday") : T("date"), ram ? T("date") : T("hijri"),
+    `${T("fajr")}<small>${T("sehri_s")}</small>`, T("sunrise"), T("dhuhr"), T("asr"), `${T("maghrib")}<small>${T("iftar")}</small>`, T("isha")];
+  document.getElementById("mtHead").innerHTML = head.map(h => `<th>${h}</th>`).join("");
+  const dayFmt = new Intl.DateTimeFormat(lang, { timeZone: "Asia/Tokyo", month: ram ? "short" : undefined, day: "numeric", weekday: "short" });
+  const hdFmt = HIJ ? new Intl.DateTimeFormat(lang + "-u-ca-islamic-umalqura", { timeZone: "Asia/Tokyo", month: "short", day: "numeric" }) : null;
+  const hDay = (day, first) => { const h = hParts(day); return (first || h.d === 1) ? noEra(hdFmt, noonOf(day)) : localDigits(String(h.d)); };
+  const tk = `${today.y}-${today.m}-${today.d}`;
+  document.getElementById("mtBody").innerHTML = days.map((day, i) => {
+    const t = computeTimes(day.y, day.m, day.d, method, asr);
+    const isFri = noonOf(day).getUTCDay() === 5, isToday = `${day.y}-${day.m}-${day.d}` === tk;
+    const c1 = ram ? localDigits(String(i + 1)) : dayFmt.format(noonOf(day));
+    const c2 = ram ? dayFmt.format(noonOf(day)) : (hdFmt ? hDay(day, i === 0) : "");
+    const v = p => fmtTime(toDate(day, t[p]));
+    return `<tr class="${isToday ? "today" : ""}${isFri ? " friday" : ""}"><td>${c1}</td><td class="h">${c2}</td>`
+      + `<td class="sf">${v("fajr")}</td><td>${v("sunrise")}</td><td>${v("dhuhr")}</td><td>${v("asr")}</td><td class="if">${v("maghrib")}</td><td>${v("isha")}</td></tr>`;
+  }).join("");
+}
+
+function renderCal() {
+  const today = tokyoYMD();
+  try {
+    if (HIJ) { renderEvents(today); ramDays = findRamadan(today); }
+  } catch { ramDays = null; }
+  renderMonth();
+}
+
+(() => {
+  const step = d => { mt.mode = "month"; mt.m += d; if (mt.m < 1) { mt.m = 12; mt.y--; } if (mt.m > 12) { mt.m = 1; mt.y++; } renderMonth(); };
+  document.getElementById("mtPrev").addEventListener("click", () => step(-1));
+  document.getElementById("mtNext").addEventListener("click", () => step(1));
+  document.getElementById("mtRam").addEventListener("click", () => {
+    if (mt.mode === "ram") { const t = tokyoYMD(); mt.mode = "month"; mt.y = t.y; mt.m = t.m; } else mt.mode = "ram";
+    renderMonth();
+  });
+  document.getElementById("mtPrint").addEventListener("click", () => {
+    document.body.classList.add("p-cal");
+    const off = () => document.body.classList.remove("p-cal");
+    window.addEventListener("afterprint", off, { once: true });
+    window.print();
+    setTimeout(off, 1500);
+  });
+})();
+
+/* ===================== Tasbih counter ===================== */
+(() => {
+  const PH = [["سُبْحَانَ ٱللَّٰهِ", 33], ["ٱلْحَمْدُ لِلَّٰهِ", 33], ["ٱللَّٰهُ أَكْبَرُ", 34]];
+  const btn = document.getElementById("tasBtn"); if (!btn) return;
+  const ring = document.getElementById("tasRing"), nEl = document.getElementById("tasN"), ofEl = document.getElementById("tasOf");
+  const arEl = document.getElementById("tasAr"), st = document.getElementById("tasSt");
+  const C = 2 * Math.PI * 54;
+  let s = { m: "after", n: 0 };
+  try { Object.assign(s, JSON.parse(store.get("tas") || "{}")); } catch {}
+  const save = () => store.set("tas", JSON.stringify(s));
+  const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch {} };
+  function phase(n) { let a = 0; for (let i = 0; i < PH.length; i++) { if (n < a + PH[i][1]) return [i, n - a]; a += PH[i][1]; } return [PH.length, 0]; }
+  function draw() {
+    document.querySelectorAll(".tas-mode .chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.m === s.m ? "true" : "false"));
+    let shown, of = "", ar = "", frac;
+    if (s.m === "after") {
+      const [i, k] = phase(s.n);
+      if (i >= PH.length) { shown = 100; ar = ""; frac = 1; st.textContent = T("tas_done"); }
+      else { shown = k; of = "/ " + PH[i][1]; ar = PH[i][0]; frac = k / PH[i][1]; st.textContent = s.n ? "" : T("tas_tap"); }
+    } else {
+      shown = s.n; frac = (s.n % 33) / 33; st.textContent = s.n ? "" : T("tas_tap");
+    }
+    nEl.textContent = localDigits(String(shown)); ofEl.textContent = localDigits(of); arEl.textContent = ar;
+    ring.style.strokeDashoffset = String(C * (1 - frac));
+  }
+  btn.addEventListener("click", () => {
+    if (s.m === "after" && s.n >= 100) s.n = 0;
+    else s.n++;
+    if (s.m === "after") { const [i, k] = phase(s.n); buzz(i >= PH.length ? [60, 60, 60] : k === 0 ? 80 : 12); }
+    else buzz(s.n % 33 === 0 ? 80 : 12);
+    save(); draw();
+  });
+  document.querySelectorAll(".tas-mode .chip").forEach(c => c.addEventListener("click", () => { s.m = c.dataset.m; s.n = 0; save(); draw(); }));
+  document.getElementById("tasReset").addEventListener("click", () => { s.n = 0; save(); draw(); });
+  window.tasDraw = draw;
+})();
+
+/* ===================== Share: copy link ===================== */
+(() => {
+  const b = document.getElementById("copyLink"); if (!b) return;
+  b.addEventListener("click", () => {
+    const url = "https://masjid.iwate-bd.org/";
+    const ok = () => { b.textContent = T("share_copied"); setTimeout(() => { b.textContent = T("share_copy"); }, 2500); };
+    (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(ok, () => { window.prompt("", url); });
+  });
+})();
+
+/* ===================== Works without internet (after the first visit) ===================== */
+// sw.js keeps a copy of the pages; prayer times, Qibla and the calendar are worked out on the phone itself.
+if ("serviceWorker" in navigator && window.isSecureContext) {
+  window.addEventListener("load", () => setTimeout(() => {
+    navigator.serviceWorker.register("/sw.js", { scope: "/" }).then(() => navigator.serviceWorker.ready).then(r => {
+      if (r.active) r.active.postMessage({ keep: [location.pathname, "/qr.svg", "/icon-192.png"] });
+    }).catch(() => {});
+  }, 3000));
+}
+
 function renderAll() {
   renderTexts();
   renderDates();
   renderTimes();
   renderQibla();
   quranLang();
+  if (window.tasDraw) window.tasDraw();
   if (typeof notif !== "undefined") notif.render();
 }
 
@@ -1317,42 +1668,42 @@ const I18N_N = {
     n_ns: "This browser cannot show notifications. Please open the site in Chrome or Safari.",
     n_denied: "Notifications are blocked for this site. Allow them in the phone or browser settings, then try again.",
     n_err: "Could not turn on notifications. Check the internet and try again.",
-    n_prayer: "Adhan time (5 daily prayers)", n_jumu: "Jumu'ah reminder (Friday)", n_isl: "Islamic special days (Ramadan, Eid …)", n_jpdz: "Earthquake / tsunami alerts in Japan",
+    n_prayer: "Adhan time (5 daily prayers)", n_ramz: "Sehri & Iftar in Ramadan (45 min before Sehri ends, and at Iftar)", n_jumu: "Jumu'ah reminder (Friday)", n_isl: "Islamic special days (Ramadan, Eid …)", n_jpdz: "Earthquake / tsunami alerts in Japan",
     n_note: "Times follow the calculation method chosen above. Notifications are sent through iwate-bd.org (Japan Probashe)." },
   ja: { n_lang: "🌐 通知の言語：", nav_notif: "🔔 アザーン通知", n_title: "🔔 礼拝の通知", n_btn: "🔔 通知をオンにする", n_on: "✓ この端末で通知がオンになっています", n_off: "オフにする",
     n_wait: "お待ちください…", n_ios: "iPhoneでは、まずこのサイトをホーム画面に追加してください：共有ボタン ⬆ →「ホーム画面に追加」。その後、マスジドのアイコンから開き、ここで通知をオンにしてください。",
     n_ns: "このブラウザは通知に対応していません。ChromeまたはSafariで開いてください。",
     n_denied: "このサイトの通知がブロックされています。端末またはブラウザの設定で許可してから、もう一度お試しください。",
     n_err: "通知をオンにできませんでした。インターネット接続を確認して、もう一度お試しください。",
-    n_prayer: "アザーンの時刻（1日5回の礼拝）", n_jumu: "金曜礼拝（ジュムア）のお知らせ", n_isl: "イスラームの特別な日（ラマダン、イードなど）", n_jpdz: "日本の地震・津波の警報",
+    n_prayer: "アザーンの時刻（1日5回の礼拝）", n_ramz: "ラマダンのサフールとイフタール（サフール終了45分前とイフタール時）", n_jumu: "金曜礼拝（ジュムア）のお知らせ", n_isl: "イスラームの特別な日（ラマダン、イードなど）", n_jpdz: "日本の地震・津波の警報",
     n_note: "時刻は上で選んだ計算方法によります。通知は iwate-bd.org（Japan Probashe）から送られます。" },
   bn: { n_lang: "🌐 নোটিফিকেশনের ভাষা:", nav_notif: "🔔 আজানের নোটিফিকেশন", n_title: "🔔 নামাজের নোটিফিকেশন", n_btn: "🔔 নোটিফিকেশন চালু করুন", n_on: "✓ এই ফোনে নোটিফিকেশন চালু আছে", n_off: "বন্ধ করুন",
     n_wait: "একটু অপেক্ষা করুন…", n_ios: "iPhone-এ আগে এই সাইটটি হোম স্ক্রিনে যোগ করুন: শেয়ার ⬆ চাপুন → “Add to Home Screen”। তারপর মসজিদের আইকন থেকে খুলে এখানে নোটিফিকেশন চালু করুন।",
     n_ns: "এই ব্রাউজারে নোটিফিকেশন চলে না। Chrome বা Safari-তে খুলুন।",
     n_denied: "এই সাইটের নোটিফিকেশন বন্ধ করা আছে। ফোন বা ব্রাউজারের সেটিংসে অনুমতি দিয়ে আবার চেষ্টা করুন।",
     n_err: "নোটিফিকেশন চালু করা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।",
-    n_prayer: "আজানের সময় (পাঁচ ওয়াক্ত)", n_jumu: "জুমার রিমাইন্ডার (শুক্রবার)", n_isl: "ইসলামি বিশেষ দিন (রমজান, ঈদ …)", n_jpdz: "জাপানে ভূমিকম্প / সুনামির সতর্কতা",
+    n_prayer: "আজানের সময় (পাঁচ ওয়াক্ত)", n_ramz: "রমজানে সেহরি ও ইফতার (সেহরি শেষের ৪৫ মিনিট আগে, আর ইফতারে)", n_jumu: "জুমার রিমাইন্ডার (শুক্রবার)", n_isl: "ইসলামি বিশেষ দিন (রমজান, ঈদ …)", n_jpdz: "জাপানে ভূমিকম্প / সুনামির সতর্কতা",
     n_note: "সময় ওপরে বাছা হিসাবের নিয়মে। নোটিফিকেশন পাঠায় iwate-bd.org (জাপান প্রবাসে)।" },
   ur: { n_lang: "🌐 اطلاعات کی زبان:", nav_notif: "🔔 اذان کی اطلاع", n_title: "🔔 نماز کی اطلاعات", n_btn: "🔔 اطلاعات آن کریں", n_on: "✓ اس فون پر اطلاعات آن ہیں", n_off: "بند کریں",
     n_wait: "براہ کرم انتظار کریں…", n_ios: "آئی فون پر پہلے اس سائٹ کو ہوم اسکرین پر شامل کریں: شیئر ⬆ دبائیں ← “Add to Home Screen”۔ پھر مسجد کے آئیکن سے کھولیں اور یہاں اطلاعات آن کریں۔",
     n_ns: "یہ براؤزر اطلاعات نہیں دکھا سکتا۔ براہ کرم Chrome یا Safari میں کھولیں۔",
     n_denied: "اس سائٹ کی اطلاعات بند ہیں۔ فون یا براؤزر کی سیٹنگز میں اجازت دیں، پھر دوبارہ کوشش کریں۔",
     n_err: "اطلاعات آن نہیں ہو سکیں۔ انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔",
-    n_prayer: "اذان کا وقت (پانچ نمازیں)", n_jumu: "جمعہ کی یاد دہانی", n_isl: "اسلامی خاص دن (رمضان، عید …)", n_jpdz: "جاپان میں زلزلہ / سونامی کی وارننگ",
+    n_prayer: "اذان کا وقت (پانچ نمازیں)", n_ramz: "رمضان میں سحری و افطار (سحری ختم ہونے سے 45 منٹ پہلے، اور افطار پر)", n_jumu: "جمعہ کی یاد دہانی", n_isl: "اسلامی خاص دن (رمضان، عید …)", n_jpdz: "جاپان میں زلزلہ / سونامی کی وارننگ",
     n_note: "اوقات اوپر منتخب کیے گئے حساب کے طریقے کے مطابق ہیں۔ اطلاعات iwate-bd.org (Japan Probashe) سے بھیجی جاتی ہیں۔" },
   hi: { n_lang: "🌐 सूचनाओं की भाषा:", nav_notif: "🔔 अज़ान की सूचना", n_title: "🔔 नमाज़ की सूचनाएँ", n_btn: "🔔 सूचनाएँ चालू करें", n_on: "✓ इस फ़ोन पर सूचनाएँ चालू हैं", n_off: "बंद करें",
     n_wait: "कृपया प्रतीक्षा करें…", n_ios: "iPhone पर पहले इस साइट को होम स्क्रीन पर जोड़ें: शेयर ⬆ दबाएँ → “Add to Home Screen”। फिर मस्जिद के आइकन से खोलें और यहाँ सूचनाएँ चालू करें।",
     n_ns: "यह ब्राउज़र सूचनाएँ नहीं दिखा सकता। कृपया Chrome या Safari में खोलें।",
     n_denied: "इस साइट की सूचनाएँ बंद हैं। फ़ोन या ब्राउज़र की सेटिंग में अनुमति दें, फिर दोबारा कोशिश करें।",
     n_err: "सूचनाएँ चालू नहीं हो सकीं। इंटरनेट जाँचकर दोबारा कोशिश करें।",
-    n_prayer: "अज़ान का समय (पाँच नमाज़ें)", n_jumu: "जुमे की याद (शुक्रवार)", n_isl: "इस्लामी ख़ास दिन (रमज़ान, ईद …)", n_jpdz: "जापान में भूकंप / सुनामी की चेतावनी",
+    n_prayer: "अज़ान का समय (पाँच नमाज़ें)", n_ramz: "रमज़ान में सहरी और इफ़्तार (सहरी ख़त्म होने से 45 मिनट पहले, और इफ़्तार पर)", n_jumu: "जुमे की याद (शुक्रवार)", n_isl: "इस्लामी ख़ास दिन (रमज़ान, ईद …)", n_jpdz: "जापान में भूकंप / सुनामी की चेतावनी",
     n_note: "समय ऊपर चुने गए गणना तरीके के अनुसार हैं। सूचनाएँ iwate-bd.org (Japan Probashe) से भेजी जाती हैं।" },
   ar: { n_lang: "🌐 لغة الإشعارات:", nav_notif: "🔔 تنبيه الأذان", n_title: "🔔 إشعارات الصلاة", n_btn: "🔔 تفعيل الإشعارات", n_on: "✓ الإشعارات مفعّلة على هذا الهاتف", n_off: "إيقاف",
     n_wait: "يرجى الانتظار…", n_ios: "على iPhone أضف هذا الموقع أولًا إلى الشاشة الرئيسية: اضغط مشاركة ⬆ ← «إضافة إلى الشاشة الرئيسية». ثم افتح أيقونة المسجد وفعّل الإشعارات من هنا.",
     n_ns: "هذا المتصفح لا يدعم الإشعارات. افتح الموقع في Chrome أو Safari.",
     n_denied: "الإشعارات محظورة لهذا الموقع. اسمح بها من إعدادات الهاتف أو المتصفح ثم حاول مرة أخرى.",
     n_err: "تعذّر تفعيل الإشعارات. تحقق من الاتصال بالإنترنت وحاول مرة أخرى.",
-    n_prayer: "وقت الأذان (الصلوات الخمس)", n_jumu: "تذكير بصلاة الجمعة", n_isl: "المناسبات الإسلامية (رمضان، العيد …)", n_jpdz: "تحذيرات الزلازل والتسونامي في اليابان",
+    n_prayer: "وقت الأذان (الصلوات الخمس)", n_ramz: "السحور والإفطار في رمضان (قبل انتهاء السحور بـ45 دقيقة، وعند الإفطار)", n_jumu: "تذكير بصلاة الجمعة", n_isl: "المناسبات الإسلامية (رمضان، العيد …)", n_jpdz: "تحذيرات الزلازل والتسونامي في اليابان",
     n_note: "الأوقات حسب طريقة الحساب المختارة أعلاه. تُرسل الإشعارات عبر iwate-bd.org (Japan Probashe)." }
 };
 for (const l in I18N_N) Object.assign(I18N[l], I18N_N[l]);
@@ -1427,8 +1778,8 @@ const notif = (function () {
   const ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const app = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
   const can = "serviceWorker" in navigator && "PushManager" in window && "Notification" in window && window.isSecureContext;
-  const TYPES = ["prayer", "jumu", "isl", "jpdz"];
-  let types = { prayer: 1, jumu: 1, isl: 1, jpdz: 1 };
+  const TYPES = ["prayer", "ramz", "jumu", "isl", "jpdz"];
+  let types = { prayer: 1, ramz: 1, jumu: 1, isl: 1, jpdz: 1 };
   try { Object.assign(types, JSON.parse(store.get("n_types") || "{}")); } catch {}
   let sub = null, busy = false, msg = "", err = false;
   // notification language: chosen once, then it no longer follows the page language
@@ -1508,7 +1859,7 @@ const notif = (function () {
       endpoint: s.endpoint, lat: LAT, lng: LNG, tz: "Asia/Tokyo",
       method, asr: asr === "hanafi" ? "hanafi" : "standard",
       name: (I18N[NL()] || {}).title || T("title"), mosque: (I18N[NL()] || {}).title || T("title"), jamaat: [], lang: NL(),
-      types: { prayer: types.prayer ? 1 : 0, jumu: types.jumu ? 1 : 0, isl: types.isl ? 1 : 0, jpdz: types.jpdz ? 1 : 0, post: 0, live: 0, sunnah: 0 },
+      types: { prayer: types.prayer ? 1 : 0, ramz: types.ramz ? 1 : 0, jumu: types.jumu ? 1 : 0, isl: types.isl ? 1 : 0, jpdz: types.jpdz ? 1 : 0, post: 0, live: 0, sunnah: 0 },
       dev: dev()
     }) }).then(r => { if (!r.ok) throw new Error("http " + r.status); store.set("n_sig", sig()); });
   }

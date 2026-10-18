@@ -138,6 +138,11 @@
     line-height: 1.3;
     letter-spacing: 0.01em;
   }
+  #reload { cursor: pointer; -webkit-tap-highlight-color: transparent; user-select: none; }
+  #reload:active { opacity: .7; }
+  .rl-ic { display: inline-block; margin-inline-start: .3em; font-size: .55em; vertical-align: middle; opacity: .6; }
+  #reload.busy .rl-ic { animation: rl-spin .8s linear infinite; }
+  @keyframes rl-spin { to { transform: rotate(360deg); } }
   .hero .sub { margin: 6px 0 0; opacity: 0.85; font-size: 1.05rem; }
   .hero .welcome { margin: 16px auto 0; max-width: 40ch; font-size: 1.1rem; }
   .dates {
@@ -441,7 +446,7 @@
       <button class="lang-btn" data-lang="ar" >العربية</button>
     </div>
     <p class="bismillah">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
-    <h1 data-i18n="title">マスジド・アル・タウヒード</h1>
+    <h1 id="reload"><span data-i18n="title">マスジド・アル・タウヒード</span><span class="rl-ic" aria-hidden="true">↻</span></h1>
     <p class="sub" data-i18n="sub">盛岡マスジド ・ 岩手県盛岡市</p>
     <p class="welcome" data-i18n="welcome">ようこそ。岩手の礼拝・学び・交流の場です。</p>
     <div class="dates">
@@ -686,6 +691,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    reload: "Tap to refresh",
     sehri: "Sehri ends", iftar: "Iftar", fast_today: "Today's Sehri & Iftar", fast_tom: "Tomorrow's Sehri & Iftar", fast_note: "Sehri ends when Fajr begins. Iftar is at Maghrib.",
     fajr: "Fajr", sunrise: "Sunrise", dhuhr: "Dhuhr", asr: "Asr", maghrib: "Maghrib", isha: "Isha", jumuah: "Jumu'ah (Friday Prayer)",
     next_tpl: "Next: {p} in {t}",
@@ -720,6 +726,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    reload: "タップして更新",
     sehri: "サフール終了", iftar: "イフタール", fast_today: "今日のサフールとイフタール", fast_tom: "明日のサフールとイフタール", fast_note: "サフール（夜明け前の食事）はファジュルの開始までに終えます。イフタール（断食明け）はマグリブの時刻です。",
     fajr: "ファジュル", sunrise: "日の出", dhuhr: "ズフル", asr: "アスル", maghrib: "マグリブ", isha: "イシャー", jumuah: "ジュムア（金曜礼拝）",
     next_tpl: "次の礼拝：{p}（あと {t}）",
@@ -754,6 +761,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    reload: "চাপ দিলে রিফ্রেশ হবে",
     sehri: "সেহরির শেষ সময়", iftar: "ইফতার", fast_today: "আজকের সেহরি ও ইফতার", fast_tom: "আগামীকালের সেহরি ও ইফতার", fast_note: "ফজরের ওয়াক্ত শুরু হলে সেহরির সময় শেষ। মাগরিবের সময় ইফতার।",
     fajr: "ফজর", sunrise: "সূর্যোদয়", dhuhr: "যোহর", asr: "আসর", maghrib: "মাগরিব", isha: "এশা", jumuah: "জুমার নামাজ",
     next_tpl: "পরবর্তী নামাজ: {p} — আর {t}",
@@ -788,6 +796,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    reload: "ریفریش کرنے کے لیے ٹیپ کریں",
     sehri: "سحری کا آخری وقت", iftar: "افطار", fast_today: "آج کی سحری اور افطار", fast_tom: "کل کی سحری اور افطار", fast_note: "فجر کا وقت شروع ہوتے ہی سحری کا وقت ختم۔ افطار مغرب کے وقت۔",
     fajr: "فجر", sunrise: "طلوعِ آفتاب", dhuhr: "ظہر", asr: "عصر", maghrib: "مغرب", isha: "عشاء", jumuah: "نمازِ جمعہ",
     next_tpl: "اگلی نماز: {p} — {t} باقی",
@@ -822,6 +831,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    reload: "रीफ़्रेश करने के लिए टैप करें",
     sehri: "सहरी का अंतिम समय", iftar: "इफ़्तार", fast_today: "आज की सहरी और इफ़्तार", fast_tom: "कल की सहरी और इफ़्तार", fast_note: "फ़ज्र का समय शुरू होते ही सहरी का समय ख़त्म। इफ़्तार मग़रिब के समय।",
     fajr: "फ़ज्र", sunrise: "सूर्योदय", dhuhr: "ज़ुहर", asr: "अस्र", maghrib: "मग़रिब", isha: "इशा", jumuah: "जुमा की नमाज़",
     next_tpl: "अगली नमाज़: {p} — {t} बाकी",
@@ -856,6 +866,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    reload: "اضغط للتحديث",
     sehri: "نهاية السحور", iftar: "الإفطار", fast_today: "سحور وإفطار اليوم", fast_tom: "سحور وإفطار الغد", fast_note: "ينتهي السحور بدخول وقت الفجر، والإفطار عند المغرب.",
     fajr: "الفجر", sunrise: "الشروق", dhuhr: "الظهر", asr: "العصر", maghrib: "المغرب", isha: "العشاء", jumuah: "صلاة الجمعة",
     next_tpl: "الصلاة القادمة: {p} — بعد {t}",
@@ -992,6 +1003,8 @@ function renderTexts() {
   document.title = T("title") + " – " + T("sub");
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T(el.dataset.i18n); });
   document.querySelectorAll(".lang-btn").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
+  const rl = document.getElementById("reload");
+  if (rl) { rl.title = T("reload"); rl.setAttribute("aria-label", T("title") + " — " + T("reload")); }
   document.querySelectorAll("a[data-more]").forEach(a => { a.href = moreUrl(a.dataset.more, lang); });
 }
 
@@ -1096,6 +1109,22 @@ function renderQibla() {
   document.getElementById("qiblaDeg").textContent = T("qibla_deg").replace("{d}", f1.format(bearing));
   document.getElementById("qiblaDist").textContent = T("qibla_dist").replace("{km}", f0.format(Math.round(km / 10) * 10));
 }
+
+/* Tap the masjid name: reload the page (the Home Screen app has no refresh button).
+   The page is fetched fresh first, so the browser cache does not show the old one again. */
+(() => {
+  const h = document.getElementById("reload"); if (!h) return;
+  h.setAttribute("role", "button"); h.tabIndex = 0;      // its label is set in renderTexts()
+  const go = () => {
+    if (h.classList.contains("busy")) return;
+    h.classList.add("busy");
+    const done = () => location.reload();
+    fetch(location.href, { cache: "reload", credentials: "same-origin" }).then(done, done);
+    setTimeout(done, 4000);
+  };
+  h.addEventListener("click", go);
+  h.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+})();
 
 function renderAll() {
   renderTexts();

@@ -3386,6 +3386,24 @@ function qSpeak(a) {
   u.onerror = u.onend;
   tts.speak(u);
 }
+// verse by verse without a pause: the next verses are fetched ahead into the phone's memory and played from there
+const qPre = new Map();   // address → { u: memory address once it has come }
+function qFetchAhead(url) {
+  if (!url || qPre.has(url) || !window.URL || !URL.createObjectURL) return;
+  const e = { u: "" };
+  qPre.set(url, e);
+  fetch(url, { credentials: "omit" }).then(r => { if (!r.ok) throw r.status; return r.blob(); })
+    .then(b => { e.u = URL.createObjectURL(b); }).catch(() => { qPre.delete(url); });
+  while (qPre.size > 10) { const [k, v] = qPre.entries().next().value; if (v.u) URL.revokeObjectURL(v.u); qPre.delete(k); }
+}
+const qFast = url => { const e = qPre.get(url); return e && e.u ? e.u : url; };
+function qAhead(a) {
+  const n = q.ar[q.surah] ? q.ar[q.surah].length : 0, lsn = qLsn();
+  for (let k = a; k <= Math.min(n, a + 1); k++) {
+    if (lsn !== "tr") qFetchAhead(Q_AYAH(q.surah, k));
+    if (lsn !== "ar" && Q_TRA[lang]) qFetchAhead(Q_TRA[lang](q.surah, k));
+  }
+}
 function qNext() {
   if (q.phase === "ar" && qLsn() === "both") return qPlayAyah(q.ayah, "tr");
   qPlayAyah(q.ayah + 1);
@@ -3399,9 +3417,11 @@ function qPlayAyah(a, phase) {
   q.mode = "ayah"; q.ayah = a; q.paused = false; au.hidden = true;
   q.phase = phase || (lsn === "tr" ? "tr" : "ar");
   if (tts) tts.cancel();
-  if (q.phase === "ar") { au.src = Q_AYAH(q.surah, a); au.play().catch(() => {}); }
-  else if (Q_TRA[lang]) { au.src = Q_TRA[lang](q.surah, a); au.play().catch(() => {}); }
+  if (q.phase === "ar") { au.src = qFast(Q_AYAH(q.surah, a)); au.play().catch(() => {}); }
+  else if (Q_TRA[lang]) { au.src = qFast(Q_TRA[lang](q.surah, a)); au.play().catch(() => {}); }
   else { au.pause(); qSpeak(a); }
+  if (q.phase === "ar" && lsn === "both" && Q_TRA[lang]) qFetchAhead(Q_TRA[lang](q.surah, a));   // this verse's meaning next
+  qAhead(a + 1);
   qMark();
 }
 (function quranInit() {

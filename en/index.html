@@ -329,6 +329,11 @@
   .notif .n-msg { margin: 10px 0 0; font-size: .88rem; color: var(--text); }
   .notif .n-msg.err { color: #b32d2e; }
   /* floating "add the app" button */
+  .to-top { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom)); inset-inline-start: 16px; z-index: 50; width: 46px; height: 46px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--green); color: #fff; font-size: 1.3rem; line-height: 1; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.25);
+    opacity: .92; transition: opacity .2s, transform .2s; }
+  .to-top[hidden] { display: none; }
+  .to-top:active { transform: scale(.94); }
   .app-fab { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom)); inset-inline-end: 16px; z-index: 50; display: flex; align-items: center; gap: 4px; }
   .app-fab[hidden] { display: none; }
   .app-fab-btn { display: flex; align-items: center; gap: .5em; padding: .45em 1em .45em .45em; border-radius: 999px; border: 1px solid var(--line);
@@ -936,6 +941,8 @@
   </div>
 </div>
 
+<button type="button" class="to-top" id="toTop" hidden></button>
+
 <div class="app-fab" id="appFab" hidden>
   <button type="button" class="app-fab-btn"><img src="/icon-192.png" alt="" width="28" height="28"><span></span></button>
   <button type="button" class="app-fab-x" aria-label="✕">✕</button>
@@ -977,6 +984,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    to_top: "Back to top",
     th_auto: "🌓 Auto", th_light: "☀️ Day", th_dark: "🌙 Night", th_hint: "Colours: tap to switch (Auto follows the phone)",
     q_listen: "🎧 What to hear", q_l_ar: "Arabic recitation only", q_l_both: "Arabic + translation", q_l_tr: "Translation only", q_seq: "▶ Verse by verse", q_pause: "⏸ Pause", q_resume: "▶ Resume", q_stop: "⏹ Stop", q_now: "Verse {n} of {t}", q_v_en: "Translation voice: Ibrahim Walk (Saheeh International — the same as the text).", q_v_ur: "Urdu voice: Shamshad Ali Khan (his own translation — the text shown is Jalandhry's).", q_v_tts: "The translation is read aloud by the phone's own voice.", q_v_none: "This phone has no voice for this language, so the translation cannot be read aloud. You can add one in the phone's text-to-speech settings.",
     nt_title: "Notices", nt_until: "Until {d}", k_eid: "Eid", k_ramadan: "Ramadan / Iftar", k_event: "Event", k_closed: "Closed / change", k_other: "Notice", ad_link: "🔐 Notice board (admin)", n_notice: "Masjid notices (Eid, programs …)", ad_title: "🔐 Masjid notice board", ad_login_h: "Log in with your email", ad_login_p: "Only people added by the site admin can log in. A 6-digit code will come to your email — no password.", ad_email: "Email", ad_send: "Send the code", ad_code_p: "Enter the 6-digit code sent to {e}. If it does not come, check the spam folder.", ad_code: "Code", ad_verify: "Log in", ad_back: "← Use another email", ad_hi: "Logged in: {n}", ad_role_w: "✍️ Writer — your notice is shown after approval", ad_role_a: "✅ Approver — your notice is shown at once", ad_new: "✍️ New notice", ad_list: "📋 Notices", ad_kind: "Type", ad_t: "Title", ad_b: "Details", ad_from: "Show from", ad_to: "Show until", ad_pin: "Keep it at the top", ad_notify: "Send a notification when it is shown", ad_submit: "Submit", ad_sent_w: "✓ Sent. It will be shown after an approver approves it.", ad_sent_a: "✓ The notice is on the site now.", ad_none: "No notices yet.", st_wait: "⏳ Waiting for approval", st_live: "✅ On the site", st_rejected: "❌ Not approved", st_ended: "Ended", st_draft: "Not shown", ad_ok: "✅ Approve", ad_no: "❌ Do not approve", ad_rm: "🗑 Remove", ad_rm_q: "Remove this notice from the site?", ad_out: "Log out", ad_by: "By {e}", ad_err_wait: "Please wait a minute and try again.", ad_err_mail: "The email could not be sent. Please ask the site admin for a code.", ad_err_code: "The code is not right, or it has expired.", ad_err_tries: "Too many wrong codes. Please ask for a new code.", ad_err: "Something went wrong. Please check the connection and try again.", ad_need_t: "Please write a title.",
@@ -1016,6 +1024,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    to_top: "ページの先頭へ",
     th_auto: "🌓 自動", th_light: "☀️ ライト", th_dark: "🌙 ダーク", th_hint: "表示の明るさ：タップで切り替え（自動は端末の設定どおり）",
     q_listen: "🎧 聞く内容", q_l_ar: "アラビア語の朗誦のみ", q_l_both: "アラビア語＋日本語訳", q_l_tr: "日本語訳のみ", q_seq: "▶ 1節ずつ再生", q_pause: "⏸ 一時停止", q_resume: "▶ 再開", q_stop: "⏹ 停止", q_now: "{t}節中 第{n}節", q_v_en: "", q_v_ur: "", q_v_tts: "日本語訳は端末の音声で読み上げます。", q_v_none: "この端末には日本語の音声がないため、訳を読み上げられません。端末の読み上げ設定で追加できます。",
     nt_title: "お知らせ", nt_until: "{d}まで", k_eid: "イード", k_ramadan: "ラマダン・イフタール", k_event: "行事", k_closed: "休館・変更", k_other: "お知らせ", ad_link: "🔐 お知らせの管理", n_notice: "マスジドのお知らせ（イード、行事など）", ad_title: "🔐 マスジドのお知らせ管理", ad_login_h: "メールアドレスでログイン", ad_login_p: "サイト管理者が登録した人だけがログインできます。メールに6桁のコードが届きます（パスワードは不要）。", ad_email: "メールアドレス", ad_send: "コードを送る", ad_code_p: "{e} に届いた6桁のコードを入力してください。届かない場合は迷惑メールフォルダもご確認ください。", ad_code: "コード", ad_verify: "ログイン", ad_back: "← 別のメールアドレス", ad_hi: "ログイン中：{n}", ad_role_w: "✍️ 投稿者 — 承認後に表示されます", ad_role_a: "✅ 承認者 — すぐに表示されます", ad_new: "✍️ 新しいお知らせ", ad_list: "📋 お知らせ一覧", ad_kind: "種類", ad_t: "タイトル", ad_b: "内容", ad_from: "表示開始日", ad_to: "表示終了日", ad_pin: "いちばん上に表示", ad_notify: "表示が始まったら通知を送る", ad_submit: "送信", ad_sent_w: "✓ 送信しました。承認されると表示されます。", ad_sent_a: "✓ お知らせを表示しました。", ad_none: "お知らせはまだありません。", st_wait: "⏳ 承認待ち", st_live: "✅ 表示中", st_rejected: "❌ 承認されませんでした", st_ended: "終了", st_draft: "非表示", ad_ok: "✅ 承認", ad_no: "❌ 承認しない", ad_rm: "🗑 取り下げ", ad_rm_q: "このお知らせをサイトから取り下げますか？", ad_out: "ログアウト", ad_by: "投稿：{e}", ad_err_wait: "少し待ってからもう一度お試しください。", ad_err_mail: "メールを送れませんでした。サイト管理者にコードを依頼してください。", ad_err_code: "コードが正しくないか、期限切れです。", ad_err_tries: "間違いが多すぎます。新しいコードを依頼してください。", ad_err: "問題が発生しました。接続を確認してもう一度お試しください。", ad_need_t: "タイトルを入力してください。",
@@ -1055,6 +1064,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    to_top: "একদম উপরে যান",
     th_auto: "🌓 অটো", th_light: "☀️ দিন", th_dark: "🌙 রাত", th_hint: "রং: চাপ দিয়ে বদলান (অটো = ফোনের সেটিং)",
     q_listen: "🎧 কী শুনবেন", q_l_ar: "শুধু আরবি তিলাওয়াত", q_l_both: "আরবি + বাংলা অর্থ", q_l_tr: "শুধু বাংলা অর্থ", q_seq: "▶ আয়াত ধরে ধরে", q_pause: "⏸ থামান", q_resume: "▶ আবার চালান", q_stop: "⏹ বন্ধ", q_now: "আয়াত {n} / {t}", q_v_en: "", q_v_ur: "", q_v_tts: "বাংলা অর্থ ফোনের নিজের কণ্ঠে পড়া হয়।", q_v_none: "এই ফোনে বাংলা কণ্ঠ নেই, তাই অর্থ পড়ে শোনানো যাচ্ছে না। ফোনের Text-to-speech সেটিংসে বাংলা কণ্ঠ যোগ করা যায়।",
     nt_title: "নোটিশ", nt_until: "{d} পর্যন্ত", k_eid: "ঈদ", k_ramadan: "রমজান / ইফতার", k_event: "অনুষ্ঠান", k_closed: "বন্ধ / পরিবর্তন", k_other: "নোটিশ", ad_link: "🔐 নোটিশ বোর্ড (অ্যাডমিন)", n_notice: "মসজিদের নোটিশ (ঈদ, অনুষ্ঠান …)", ad_title: "🔐 মসজিদের নোটিশ বোর্ড", ad_login_h: "ইমেইল দিয়ে লগইন", ad_login_p: "সাইটের অ্যাডমিন যাদের যোগ করেছেন, শুধু তারাই লগইন করতে পারবেন। ইমেইলে ৬ অঙ্কের কোড আসবে — কোনো পাসওয়ার্ড নেই।", ad_email: "ইমেইল", ad_send: "কোড পাঠান", ad_code_p: "{e}-এ পাঠানো ৬ অঙ্কের কোড লিখুন। না এলে স্প্যাম ফোল্ডার দেখুন।", ad_code: "কোড", ad_verify: "লগইন", ad_back: "← অন্য ইমেইল", ad_hi: "লগইন: {n}", ad_role_w: "✍️ লেখক — অনুমোদনের পর নোটিশ দেখাবে", ad_role_a: "✅ অনুমোদনকারী — আপনার নোটিশ সাথে সাথে দেখাবে", ad_new: "✍️ নতুন নোটিশ", ad_list: "📋 নোটিশগুলো", ad_kind: "ধরন", ad_t: "শিরোনাম", ad_b: "বিস্তারিত", ad_from: "কবে থেকে", ad_to: "কবে পর্যন্ত", ad_pin: "সবার উপরে রাখুন", ad_notify: "দেখানো শুরু হলে নোটিফিকেশন পাঠান", ad_submit: "জমা দিন", ad_sent_w: "✓ পাঠানো হয়েছে। অনুমোদনকারী অনুমোদন দিলে দেখাবে।", ad_sent_a: "✓ নোটিশ এখন সাইটে দেখাচ্ছে।", ad_none: "এখনো কোনো নোটিশ নেই।", st_wait: "⏳ অনুমোদনের অপেক্ষায়", st_live: "✅ সাইটে আছে", st_rejected: "❌ অনুমোদন হয়নি", st_ended: "শেষ হয়েছে", st_draft: "দেখানো হচ্ছে না", ad_ok: "✅ অনুমোদন", ad_no: "❌ বাতিল", ad_rm: "🗑 সরিয়ে দিন", ad_rm_q: "এই নোটিশ সাইট থেকে সরাবেন?", ad_out: "লগআউট", ad_by: "লিখেছেন {e}", ad_err_wait: "এক মিনিট পর আবার চেষ্টা করুন।", ad_err_mail: "ইমেইল পাঠানো যায়নি। সাইটের অ্যাডমিনের কাছে কোড চান।", ad_err_code: "কোড ঠিক নয়, বা মেয়াদ শেষ।", ad_err_tries: "অনেকবার ভুল কোড। নতুন কোড চান।", ad_err: "কিছু একটা সমস্যা হয়েছে। ইন্টারনেট দেখে আবার চেষ্টা করুন।", ad_need_t: "শিরোনাম লিখুন।",
@@ -1094,6 +1104,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    to_top: "اوپر جائیں",
     th_auto: "🌓 خودکار", th_light: "☀️ دن", th_dark: "🌙 رات", th_hint: "رنگ: بدلنے کے لیے ٹیپ کریں (خودکار = فون کی سیٹنگ)",
     q_listen: "🎧 کیا سنیں", q_l_ar: "صرف عربی تلاوت", q_l_both: "عربی + اردو ترجمہ", q_l_tr: "صرف اردو ترجمہ", q_seq: "▶ آیت بہ آیت", q_pause: "⏸ روکیں", q_resume: "▶ جاری رکھیں", q_stop: "⏹ بند", q_now: "آیت {n} / {t}", q_v_en: "", q_v_ur: "اردو آواز: شمشاد علی خان (ان کا اپنا ترجمہ — لکھا ہوا ترجمہ جالندھری کا ہے)۔", q_v_tts: "ترجمہ فون کی اپنی آواز میں پڑھا جاتا ہے۔", q_v_none: "اس فون میں اس زبان کی آواز نہیں، اس لیے ترجمہ سنایا نہیں جا سکتا۔ فون کی Text-to-speech سیٹنگ میں شامل کی جا سکتی ہے۔",
     nt_title: "اعلانات", nt_until: "{d} تک", k_eid: "عید", k_ramadan: "رمضان / افطار", k_event: "پروگرام", k_closed: "بند / تبدیلی", k_other: "اعلان", ad_link: "🔐 اعلانات (ایڈمن)", n_notice: "مسجد کے اعلانات (عید، پروگرام …)",
@@ -1133,6 +1144,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    to_top: "ऊपर जाएँ",
     th_auto: "🌓 ऑटो", th_light: "☀️ दिन", th_dark: "🌙 रात", th_hint: "रंग: बदलने के लिए टैप करें (ऑटो = फ़ोन की सेटिंग)",
     q_listen: "🎧 क्या सुनें", q_l_ar: "सिर्फ़ अरबी तिलावत", q_l_both: "अरबी + हिंदी अनुवाद", q_l_tr: "सिर्फ़ हिंदी अनुवाद", q_seq: "▶ आयत-दर-आयत", q_pause: "⏸ रोकें", q_resume: "▶ फिर चलाएँ", q_stop: "⏹ बंद", q_now: "आयत {n} / {t}", q_v_en: "", q_v_ur: "", q_v_tts: "हिंदी अनुवाद फ़ोन की अपनी आवाज़ में पढ़ा जाता है।", q_v_none: "इस फ़ोन में हिंदी आवाज़ नहीं है, इसलिए अनुवाद पढ़कर नहीं सुनाया जा सकता। फ़ोन की Text-to-speech सेटिंग में जोड़ी जा सकती है।",
     nt_title: "सूचनाएँ", nt_until: "{d} तक", k_eid: "ईद", k_ramadan: "रमज़ान / इफ़्तार", k_event: "कार्यक्रम", k_closed: "बंद / बदलाव", k_other: "सूचना", ad_link: "🔐 सूचना बोर्ड (एडमिन)", n_notice: "मस्जिद की सूचनाएँ (ईद, कार्यक्रम …)",
@@ -1172,6 +1184,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    to_top: "العودة إلى الأعلى",
     th_auto: "🌓 تلقائي", th_light: "☀️ نهاري", th_dark: "🌙 ليلي", th_hint: "الألوان: اضغط للتبديل (تلقائي = إعداد الهاتف)",
     q_listen: "🎧 الاستماع", q_l_ar: "التلاوة", q_l_both: "التلاوة", q_l_tr: "التلاوة", q_seq: "▶ آية آية", q_pause: "⏸ إيقاف مؤقت", q_resume: "▶ متابعة", q_stop: "⏹ إيقاف", q_now: "الآية {n} من {t}", q_v_en: "", q_v_ur: "", q_v_tts: "", q_v_none: "",
     nt_title: "الإعلانات", nt_until: "حتى {d}", k_eid: "العيد", k_ramadan: "رمضان / الإفطار", k_event: "فعالية", k_closed: "إغلاق / تغيير", k_other: "إعلان", ad_link: "🔐 لوحة الإعلانات (المشرف)", n_notice: "إعلانات المسجد (العيد، الفعاليات …)",
@@ -1429,7 +1442,12 @@ function renderQibla() {
   const go = () => {
     if (h.classList.contains("busy")) return;
     h.classList.add("busy");
-    const done = () => location.reload();
+    const done = () => {
+      try { sessionStorage.setItem("mm_top", "1"); } catch {}
+      if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+      window.scrollTo(0, 0);
+      location.reload();
+    };
     fetch(location.href, { cache: "reload", credentials: "same-origin" }).then(done, done);
     setTimeout(done, 4000);
   };
@@ -1787,9 +1805,35 @@ const theme = (() => {
   return { apply };
 })();
 
+/* ===================== Back to top ===================== */
+// after the masjid-name refresh: start at the top; while far down the page: a ↑ button
+(() => {
+  try { if (sessionStorage.getItem("mm_top")) { sessionStorage.removeItem("mm_top"); if ("scrollRestoration" in history) history.scrollRestoration = "manual"; window.scrollTo(0, 0); } } catch {}
+  const b = document.getElementById("toTop"); if (!b) return;
+  b.textContent = "↑";
+  let on = false, tk = 0;
+  const check = () => { tk = 0; const want = window.scrollY > 900; if (want !== on) { on = want; b.hidden = !on; } };
+  window.addEventListener("scroll", () => { if (!tk) tk = requestAnimationFrame(check); }, { passive: true });
+  // menu links scroll without leaving #section in the address (else a later refresh jumps there)
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    const el = document.getElementById(a.getAttribute("href").slice(1));
+    if (!el) return;
+    e.preventDefault();
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  b.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  });
+  check();
+})();
+
 function renderAll() {
   renderTexts();
   theme.apply();
+  { const tt = document.getElementById("toTop"); if (tt) { tt.title = T("to_top"); tt.setAttribute("aria-label", T("to_top")); } }
   renderDates();
   renderTimes();
   renderQibla();

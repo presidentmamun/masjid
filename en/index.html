@@ -326,6 +326,10 @@
   .notif .btn[disabled] { opacity: .6; cursor: default; }
   .notif .n-off { background: none; border: 0; padding: 0; font: inherit; font-size: .88rem; color: var(--muted); text-decoration: underline; cursor: pointer; }
   .notif .n-st { font-weight: 600; color: var(--green); }
+  .notif.mini { padding: 8px 12px; }
+  .n-mini { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .n-gear { flex: none; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-size: .84rem; font-weight: 600; cursor: pointer; }
+  .notif .n-row .n-gear { margin-inline-start: auto; }
   .notif .n-types { display: grid; gap: 6px; margin: 12px 0 0; padding: 0; border: 0; }
   .notif .n-types label { display: flex; gap: 8px; align-items: center; font-size: .92rem; }
   .notif .n-types input { width: 18px; height: 18px; accent-color: var(--green); }
@@ -361,7 +365,9 @@
   .notif .n-gi { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 9px; background: var(--surface-2); color: #0a84ff; }
   .notif .n-ios { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--gold-soft); border: 1px solid var(--gold); font-size: .9rem; }
 
-  .week-title { margin: 28px 0 10px; font-size: 1.05rem; color: var(--text); }
+  .month-link { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 16px; padding: 11px 14px; border-radius: 12px;
+    border: 1.5px solid var(--line); background: var(--surface-2); color: var(--green); font-weight: 700; text-decoration: none; }
+  .month-link:hover { border-color: var(--green); }
   .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
   table { width: 100%; border-collapse: collapse; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
   th, td { padding: 9px 12px; text-align: center; white-space: nowrap; border-bottom: 1px solid var(--line); }
@@ -913,13 +919,7 @@
 
     <div class="notif" id="notif" hidden></div>
 
-    <h3 class="week-title" data-i18n="week">Next 7 days</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr id="weekHead"></tr></thead>
-        <tbody id="weekBody"></tbody>
-      </table>
-    </div>
+    <a class="month-link" href="#cal" data-i18n="month_link">📅 Whole month's timetable (with Sehri &amp; Iftar) →</a>
   </section>
 
   <section id="cal" class="card">
@@ -1231,6 +1231,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    month_link: "📅 Whole month's timetable (with Sehri & Iftar) →",
     sehri_end: "Sehri ends",
     pd_pill: "🔔 {n} waiting for your approval", pd_tab: "⏳ Waiting", pd_none: "✓ Nothing is waiting for approval.",
     rq_open: "✍️ Propose a notice or a meal", rq_title: "✍️ Proposals for the masjid", rq_login_h: "Check your email first", rq_login_p: "Anyone can propose a notice or a meal. Your proposal is shown to everyone only after a masjid admin approves it. A 6-digit code comes to your email.", rq_hi: "Email checked: {e}", rq_t_notice: "📢 Notice", rq_t_meal: "🍽 Meal", rq_t_mine: "📋 My proposals", rq_name: "Your name", rq_phone: "Your phone number", rq_who: "The masjid admins see your name, phone and email.", rq_make: "👁 Make a preview", rq_made: "✓ Preview made — only you see it. Check it, then press “📢 Send for publishing”.", rq_send: "📢 Send for publishing", rq_sent: "✓ Sent. It will be shown after an admin approves it. You get an email.", rq_del: "🗑 Delete", rq_del_q: "Delete this proposal?", rq_none: "No proposals yet.", gs_prev: "👁 Preview — only you see it", gs_wait: "⏳ Waiting for approval", gs_live: "✅ Approved — shown to everyone", gs_rej: "❌ Not approved", rq_list_ask: "📋 Ask for the full list", rq_list_wait: "⏳ List request sent to the admins", rq_list_no: "The full list stays with the admins.", rq_list: "👥 List", rq_err_day: "No more proposals today (3 a day).", rq_err_open: "Please wait until your 2 open proposals are answered.", rq_meal_p: "Propose a meal at the masjid (e.g. you will give the dinner). After approval, people can register on the site.", mo_g: "🙋 Proposed by a visitor: {w}", mo_ok: "✅ Approve", mo_no: "❌ Do not approve", mo_lr: "📋 {n} asks for the full list:", mo_ly: "✅ Allow", mo_ln: "❌ No", mo_wait: "⏳ Waiting for approval", mo_rej: "❌ Not approved", ad_by_g: "{n} · {p} (visitor)",
@@ -1283,6 +1284,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    month_link: "📅 1か月の礼拝時間表（サフール・イフタール付き）→",
     sehri_end: "サフール終了",
     pd_pill: "🔔 承認待ち {n}件", pd_tab: "⏳ 承認待ち", pd_none: "✓ 承認待ちはありません。",
     rq_open: "✍️ お知らせ・食事の提案", rq_title: "✍️ マスジドへの提案", rq_login_h: "まずメールアドレスの確認", rq_login_p: "どなたでもお知らせや食事の提案ができます。マスジドの管理者が承認すると全員に表示されます。メールに6桁のコードが届きます。", rq_hi: "確認済みメール：{e}", rq_t_notice: "📢 お知らせ", rq_t_meal: "🍽 食事", rq_t_mine: "📋 自分の提案", rq_name: "お名前", rq_phone: "電話番号", rq_who: "管理者があなたのお名前・電話番号・メールを見ます。", rq_make: "👁 プレビューを作る", rq_made: "✓ プレビューを作りました（あなただけに表示）。確認して「📢 公開を申請」を押してください。", rq_send: "📢 公開を申請", rq_sent: "✓ 申請しました。管理者が承認すると表示されます（メールでお知らせします）。", rq_del: "🗑 削除", rq_del_q: "この提案を削除しますか？", rq_none: "まだ提案はありません。", gs_prev: "👁 プレビュー（あなただけ）", gs_wait: "⏳ 承認待ち", gs_live: "✅ 承認済み — 全員に表示", gs_rej: "❌ 承認されませんでした", rq_list_ask: "📋 名簿を依頼", rq_list_wait: "⏳ 名簿の依頼を送りました", rq_list_no: "名簿は管理者が保管します。", rq_list: "👥 名簿", rq_err_day: "今日はもう提案できません（1日3件まで）。", rq_err_open: "未回答の提案が2件あります。回答をお待ちください。", rq_meal_p: "マスジドでの食事の提案（例：夕食を提供します）。承認後、みなさんがサイトで申し込めます。", mo_g: "🙋 訪問者の提案：{w}", mo_ok: "✅ 承認", mo_no: "❌ 承認しない", mo_lr: "📋 {n} さんが名簿を希望：", mo_ly: "✅ 許可", mo_ln: "❌ 不可", mo_wait: "⏳ 承認待ち", mo_rej: "❌ 承認されませんでした", ad_by_g: "{n} · {p}（訪問者）",
@@ -1335,6 +1337,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    month_link: "📅 পুরো মাসের সময়সূচি (সেহরি ও ইফতারসহ) →",
     sehri_end: "সেহরি শেষ",
     pd_pill: "🔔 {n}টি অনুমোদনের অপেক্ষায়", pd_tab: "⏳ অপেক্ষায়", pd_none: "✓ অনুমোদনের অপেক্ষায় কিছু নেই।",
     rq_open: "✍️ নোটিশ বা খাবারের আয়োজনের প্রস্তাব দিন", rq_title: "✍️ মসজিদের জন্য প্রস্তাব", rq_login_h: "আগে ইমেইল যাচাই", rq_login_p: "যে কেউ নোটিশ বা খাবারের আয়োজনের প্রস্তাব দিতে পারেন। মসজিদের অ্যাডমিন অনুমোদন দিলে তবেই সবার জন্য দেখাবে। ইমেইলে ৬ অঙ্কের কোড আসবে।", rq_hi: "যাচাই করা ইমেইল: {e}", rq_t_notice: "📢 নোটিশ", rq_t_meal: "🍽 খাবারের আয়োজন", rq_t_mine: "📋 আমার প্রস্তাব", rq_name: "আপনার নাম", rq_phone: "আপনার ফোন নম্বর", rq_who: "মসজিদের অ্যাডমিনরা আপনার নাম, ফোন আর ইমেইল দেখবেন।", rq_make: "👁 প্রিভিউ বানান", rq_made: "✓ প্রিভিউ তৈরি — শুধু আপনি দেখছেন। দেখে নিয়ে “📢 পাবলিশের জন্য পাঠান” চাপুন।", rq_send: "📢 পাবলিশের জন্য পাঠান", rq_sent: "✓ পাঠানো হয়েছে। অ্যাডমিন অনুমোদন দিলে দেখাবে — ইমেইলে জানানো হবে।", rq_del: "🗑 মুছুন", rq_del_q: "এই প্রস্তাব মুছে ফেলবেন?", rq_none: "এখনো কোনো প্রস্তাব নেই।", gs_prev: "👁 প্রিভিউ — শুধু আপনি দেখছেন", gs_wait: "⏳ অনুমোদনের অপেক্ষায়", gs_live: "✅ অনুমোদিত — সবাই দেখছে", gs_rej: "❌ অনুমোদন হয়নি", rq_list_ask: "📋 পুরো তালিকা চাই", rq_list_wait: "⏳ তালিকার অনুরোধ অ্যাডমিনদের কাছে গেছে", rq_list_no: "পুরো তালিকা অ্যাডমিনদের কাছেই থাকছে।", rq_list: "👥 তালিকা", rq_err_day: "আজ আর প্রস্তাব দেওয়া যাবে না (দিনে ৩টি)।", rq_err_open: "আগের ২টি প্রস্তাবের উত্তর আসা পর্যন্ত অপেক্ষা করুন।", rq_meal_p: "মসজিদে খাবারের আয়োজনের প্রস্তাব (যেমন আপনি ডিনার দেবেন)। অনুমোদনের পর সবাই সাইটে নাম দিতে পারবেন।", mo_g: "🙋 দর্শকের প্রস্তাব: {w}", mo_ok: "✅ অনুমোদন", mo_no: "❌ বাতিল", mo_lr: "📋 {n} পুরো তালিকা চান:", mo_ly: "✅ দিন", mo_ln: "❌ না", mo_wait: "⏳ অনুমোদনের অপেক্ষায়", mo_rej: "❌ অনুমোদন হয়নি", ad_by_g: "{n} · {p} (দর্শক)",
@@ -1387,6 +1390,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    month_link: "📅 پورے مہینے کے اوقات (سحری و افطار سمیت) ←",
     sehri_end: "سحری ختم",
     rq_open: "✍️ اعلان یا کھانے کی تجویز دیں",
     to_bottom: "نیچے جائیں",
@@ -1437,6 +1441,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    month_link: "📅 पूरे महीने का टाइम टेबल (सहरी व इफ़्तार समेत) →",
     sehri_end: "सहरी ख़त्म",
     rq_open: "✍️ सूचना या खाने का प्रस्ताव दें",
     to_bottom: "नीचे जाएँ",
@@ -1487,6 +1492,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    month_link: "📅 جدول الشهر كاملًا (مع السحور والإفطار) ←",
     sehri_end: "نهاية السحور",
     rq_open: "✍️ اقترح إعلانًا أو وجبة",
     to_bottom: "الانتقال إلى الأسفل",
@@ -1674,21 +1680,6 @@ function renderTimes() {
 
   renderFast();
 
-  // 7-day table
-  document.getElementById("weekHead").innerHTML =
-    `<th>${T("date")}</th>` + PRAYERS.map(p => `<th>${T(p)}</th>`).join("");
-  const dayFmt = new Intl.DateTimeFormat(lang, { timeZone: "Asia/Tokyo", month: "short", day: "numeric", weekday: "short" });
-  let rows = "";
-  for (let i = 0; i < 7; i++) {
-    const day = addDays(today, i);
-    const dt = computeTimes(day.y, day.m, day.d, method, asr);
-    const isFri = noonOf(day).getUTCDay() === 5;
-    rows += `<tr class="${i === 0 ? "today" : ""}${isFri ? " friday" : ""}">
-      <td>${dayFmt.format(noonOf(day))}</td>
-      ${PRAYERS.map(p => `<td>${fmtTime(toDate(day, dt[p]))}</td>`).join("")}
-    </tr>`;
-  }
-  document.getElementById("weekBody").innerHTML = rows;
   renderCal();
   tick();
 }
@@ -3186,42 +3177,42 @@ function qPlayAyah(a, phase) {
    The masjid site keeps its own subscription (so it works from this site's Home Screen icon on iPhone),
    but the sending is done by iwate-bd.org's Prayer Times plugin — same server, same schedule. */
 const I18N_N = {
-  en: { n_lang: "🌐 Notification language:", nav_notif: "🔔 Azan alerts", n_title: "🔔 Prayer notifications", n_btn: "🔔 Turn on notifications", n_on: "✓ Notifications are on for this phone", n_off: "Turn off",
+  en: { n_on_s: "🔔 Prayer notifications are on ✓", n_more: "⚙ Change", n_less: "▲ Hide", n_lang: "🌐 Notification language:", nav_notif: "🔔 Azan alerts", n_title: "🔔 Prayer notifications", n_btn: "🔔 Turn on notifications", n_on: "✓ Notifications are on for this phone", n_off: "Turn off",
     n_wait: "Please wait…", n_ios: "On iPhone, first add this site to your Home Screen: tap Share ⬆ → “Add to Home Screen”. Then open the Masjid icon and turn on notifications here.",
     n_ns: "This browser cannot show notifications. Please open the site in Chrome or Safari.",
     n_denied: "Notifications are blocked for this site. Allow them in the phone or browser settings, then try again.",
     n_err: "Could not turn on notifications. Check the internet and try again.",
     n_prayer: "Adhan time (5 daily prayers)", n_ramz: "Sehri & Iftar in Ramadan (45 min before Sehri ends, and at Iftar)", n_jumu: "Jumu'ah reminder (Friday)", n_isl: "Islamic special days (Ramadan, Eid …)", n_jpdz: "Earthquake / tsunami alerts in Japan",
     n_note: "Times follow the calculation method chosen above. Notifications are sent through iwate-bd.org (Japan Probashe)." },
-  ja: { n_lang: "🌐 通知の言語：", nav_notif: "🔔 アザーン通知", n_title: "🔔 礼拝の通知", n_btn: "🔔 通知をオンにする", n_on: "✓ この端末で通知がオンになっています", n_off: "オフにする",
+  ja: { n_on_s: "🔔 礼拝の通知はオン ✓", n_more: "⚙ 設定", n_less: "▲ 閉じる", n_lang: "🌐 通知の言語：", nav_notif: "🔔 アザーン通知", n_title: "🔔 礼拝の通知", n_btn: "🔔 通知をオンにする", n_on: "✓ この端末で通知がオンになっています", n_off: "オフにする",
     n_wait: "お待ちください…", n_ios: "iPhoneでは、まずこのサイトをホーム画面に追加してください：共有ボタン ⬆ →「ホーム画面に追加」。その後、マスジドのアイコンから開き、ここで通知をオンにしてください。",
     n_ns: "このブラウザは通知に対応していません。ChromeまたはSafariで開いてください。",
     n_denied: "このサイトの通知がブロックされています。端末またはブラウザの設定で許可してから、もう一度お試しください。",
     n_err: "通知をオンにできませんでした。インターネット接続を確認して、もう一度お試しください。",
     n_prayer: "アザーンの時刻（1日5回の礼拝）", n_ramz: "ラマダンのサフールとイフタール（サフール終了45分前とイフタール時）", n_jumu: "金曜礼拝（ジュムア）のお知らせ", n_isl: "イスラームの特別な日（ラマダン、イードなど）", n_jpdz: "日本の地震・津波の警報",
     n_note: "時刻は上で選んだ計算方法によります。通知は iwate-bd.org（Japan Probashe）から送られます。" },
-  bn: { n_lang: "🌐 নোটিফিকেশনের ভাষা:", nav_notif: "🔔 আজানের নোটিফিকেশন", n_title: "🔔 নামাজের নোটিফিকেশন", n_btn: "🔔 নোটিফিকেশন চালু করুন", n_on: "✓ এই ফোনে নোটিফিকেশন চালু আছে", n_off: "বন্ধ করুন",
+  bn: { n_on_s: "🔔 নামাজের নোটিফিকেশন চালু ✓", n_more: "⚙ বদলান", n_less: "▲ লুকান", n_lang: "🌐 নোটিফিকেশনের ভাষা:", nav_notif: "🔔 আজানের নোটিফিকেশন", n_title: "🔔 নামাজের নোটিফিকেশন", n_btn: "🔔 নোটিফিকেশন চালু করুন", n_on: "✓ এই ফোনে নোটিফিকেশন চালু আছে", n_off: "বন্ধ করুন",
     n_wait: "একটু অপেক্ষা করুন…", n_ios: "iPhone-এ আগে এই সাইটটি হোম স্ক্রিনে যোগ করুন: শেয়ার ⬆ চাপুন → “Add to Home Screen”। তারপর মসজিদের আইকন থেকে খুলে এখানে নোটিফিকেশন চালু করুন।",
     n_ns: "এই ব্রাউজারে নোটিফিকেশন চলে না। Chrome বা Safari-তে খুলুন।",
     n_denied: "এই সাইটের নোটিফিকেশন বন্ধ করা আছে। ফোন বা ব্রাউজারের সেটিংসে অনুমতি দিয়ে আবার চেষ্টা করুন।",
     n_err: "নোটিফিকেশন চালু করা যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।",
     n_prayer: "আজানের সময় (পাঁচ ওয়াক্ত)", n_ramz: "রমজানে সেহরি ও ইফতার (সেহরি শেষের ৪৫ মিনিট আগে, আর ইফতারে)", n_jumu: "জুমার রিমাইন্ডার (শুক্রবার)", n_isl: "ইসলামি বিশেষ দিন (রমজান, ঈদ …)", n_jpdz: "জাপানে ভূমিকম্প / সুনামির সতর্কতা",
     n_note: "সময় ওপরে বাছা হিসাবের নিয়মে। নোটিফিকেশন পাঠায় iwate-bd.org (জাপান প্রবাসে)।" },
-  ur: { n_lang: "🌐 اطلاعات کی زبان:", nav_notif: "🔔 اذان کی اطلاع", n_title: "🔔 نماز کی اطلاعات", n_btn: "🔔 اطلاعات آن کریں", n_on: "✓ اس فون پر اطلاعات آن ہیں", n_off: "بند کریں",
+  ur: { n_on_s: "🔔 نماز کی اطلاعات آن ہیں ✓", n_more: "⚙ تبدیل کریں", n_less: "▲ چھپائیں", n_lang: "🌐 اطلاعات کی زبان:", nav_notif: "🔔 اذان کی اطلاع", n_title: "🔔 نماز کی اطلاعات", n_btn: "🔔 اطلاعات آن کریں", n_on: "✓ اس فون پر اطلاعات آن ہیں", n_off: "بند کریں",
     n_wait: "براہ کرم انتظار کریں…", n_ios: "آئی فون پر پہلے اس سائٹ کو ہوم اسکرین پر شامل کریں: شیئر ⬆ دبائیں ← “Add to Home Screen”۔ پھر مسجد کے آئیکن سے کھولیں اور یہاں اطلاعات آن کریں۔",
     n_ns: "یہ براؤزر اطلاعات نہیں دکھا سکتا۔ براہ کرم Chrome یا Safari میں کھولیں۔",
     n_denied: "اس سائٹ کی اطلاعات بند ہیں۔ فون یا براؤزر کی سیٹنگز میں اجازت دیں، پھر دوبارہ کوشش کریں۔",
     n_err: "اطلاعات آن نہیں ہو سکیں۔ انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔",
     n_prayer: "اذان کا وقت (پانچ نمازیں)", n_ramz: "رمضان میں سحری و افطار (سحری ختم ہونے سے 45 منٹ پہلے، اور افطار پر)", n_jumu: "جمعہ کی یاد دہانی", n_isl: "اسلامی خاص دن (رمضان، عید …)", n_jpdz: "جاپان میں زلزلہ / سونامی کی وارننگ",
     n_note: "اوقات اوپر منتخب کیے گئے حساب کے طریقے کے مطابق ہیں۔ اطلاعات iwate-bd.org (Japan Probashe) سے بھیجی جاتی ہیں۔" },
-  hi: { n_lang: "🌐 सूचनाओं की भाषा:", nav_notif: "🔔 अज़ान की सूचना", n_title: "🔔 नमाज़ की सूचनाएँ", n_btn: "🔔 सूचनाएँ चालू करें", n_on: "✓ इस फ़ोन पर सूचनाएँ चालू हैं", n_off: "बंद करें",
+  hi: { n_on_s: "🔔 नमाज़ की सूचनाएँ चालू ✓", n_more: "⚙ बदलें", n_less: "▲ छिपाएँ", n_lang: "🌐 सूचनाओं की भाषा:", nav_notif: "🔔 अज़ान की सूचना", n_title: "🔔 नमाज़ की सूचनाएँ", n_btn: "🔔 सूचनाएँ चालू करें", n_on: "✓ इस फ़ोन पर सूचनाएँ चालू हैं", n_off: "बंद करें",
     n_wait: "कृपया प्रतीक्षा करें…", n_ios: "iPhone पर पहले इस साइट को होम स्क्रीन पर जोड़ें: शेयर ⬆ दबाएँ → “Add to Home Screen”। फिर मस्जिद के आइकन से खोलें और यहाँ सूचनाएँ चालू करें।",
     n_ns: "यह ब्राउज़र सूचनाएँ नहीं दिखा सकता। कृपया Chrome या Safari में खोलें।",
     n_denied: "इस साइट की सूचनाएँ बंद हैं। फ़ोन या ब्राउज़र की सेटिंग में अनुमति दें, फिर दोबारा कोशिश करें।",
     n_err: "सूचनाएँ चालू नहीं हो सकीं। इंटरनेट जाँचकर दोबारा कोशिश करें।",
     n_prayer: "अज़ान का समय (पाँच नमाज़ें)", n_ramz: "रमज़ान में सहरी और इफ़्तार (सहरी ख़त्म होने से 45 मिनट पहले, और इफ़्तार पर)", n_jumu: "जुमे की याद (शुक्रवार)", n_isl: "इस्लामी ख़ास दिन (रमज़ान, ईद …)", n_jpdz: "जापान में भूकंप / सुनामी की चेतावनी",
     n_note: "समय ऊपर चुने गए गणना तरीके के अनुसार हैं। सूचनाएँ iwate-bd.org (Japan Probashe) से भेजी जाती हैं।" },
-  ar: { n_lang: "🌐 لغة الإشعارات:", nav_notif: "🔔 تنبيه الأذان", n_title: "🔔 إشعارات الصلاة", n_btn: "🔔 تفعيل الإشعارات", n_on: "✓ الإشعارات مفعّلة على هذا الهاتف", n_off: "إيقاف",
+  ar: { n_on_s: "🔔 تنبيهات الصلاة مفعّلة ✓", n_more: "⚙ تغيير", n_less: "▲ إخفاء", n_lang: "🌐 لغة الإشعارات:", nav_notif: "🔔 تنبيه الأذان", n_title: "🔔 إشعارات الصلاة", n_btn: "🔔 تفعيل الإشعارات", n_on: "✓ الإشعارات مفعّلة على هذا الهاتف", n_off: "إيقاف",
     n_wait: "يرجى الانتظار…", n_ios: "على iPhone أضف هذا الموقع أولًا إلى الشاشة الرئيسية: اضغط مشاركة ⬆ ← «إضافة إلى الشاشة الرئيسية». ثم افتح أيقونة المسجد وفعّل الإشعارات من هنا.",
     n_ns: "هذا المتصفح لا يدعم الإشعارات. افتح الموقع في Chrome أو Safari.",
     n_denied: "الإشعارات محظورة لهذا الموقع. اسمح بها من إعدادات الهاتف أو المتصفح ثم حاول مرة أخرى.",
@@ -3310,7 +3301,7 @@ const notif = (function () {
   const TYPES = ["prayer", "ramz", "notice", "jumu", "isl", "jpdz"];
   let types = { prayer: 1, ramz: 1, notice: 1, jumu: 1, isl: 1, jpdz: 1 };
   try { Object.assign(types, JSON.parse(store.get("n_types") || "{}")); } catch {}
-  let sub = null, busy = false, msg = "", err = false;
+  let sub = null, busy = false, msg = "", err = false, nOpen = false;
   // notification language: chosen once, then it no longer follows the page language
   const NLANGS = { ja: "日本語", bn: "বাংলা", en: "English", ur: "اردو", hi: "हिन्दी", ar: "العربية" };
   let nlang = NLANGS[store.get("n_lang")] ? store.get("n_lang") : "";
@@ -3438,6 +3429,16 @@ const notif = (function () {
     box.hidden = false;
     const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; };
     box.innerHTML = "";
+    box.classList.toggle("mini", !!sub && !nOpen && !msg);
+    if (sub && !nOpen && !msg) {                   // on: just one line
+      const r = el("div", "n-mini");
+      r.appendChild(el("span", "n-st", T("n_on_s")));
+      const g = el("button", "n-gear", T("n_more")); g.type = "button"; g.setAttribute("aria-expanded", "false");
+      g.onclick = () => { nOpen = true; render(); };
+      r.appendChild(g);
+      box.appendChild(r);
+      return;
+    }
     box.appendChild(el("h3", "", T("n_title")));
     if (inapp || (ios && !app)) {          // first the app on the Home Screen (iPhone) / the real browser
       if (!inapp) box.appendChild(el("p", "n-msg", T("n_ios_lead")));
@@ -3450,6 +3451,9 @@ const notif = (function () {
       row.appendChild(el("span", "n-st", T("n_on")));
       const off = el("button", "n-off", T("n_off")); off.type = "button"; off.disabled = busy; off.onclick = turnOff;
       row.appendChild(off);
+      const cl = el("button", "n-gear", T("n_less")); cl.type = "button"; cl.setAttribute("aria-expanded", "true");
+      cl.onclick = () => { nOpen = false; msg = ""; render(); };
+      row.appendChild(cl);
     } else {
       const on = el("button", "btn", busy ? T("n_wait") : T("n_btn")); on.type = "button"; on.disabled = busy; on.onclick = turnOn;
       row.appendChild(on);

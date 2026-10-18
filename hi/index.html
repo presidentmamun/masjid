@@ -575,6 +575,45 @@
   .q-size { display: inline-flex; gap: 6px; margin-inline-start: auto; }
   .q-vn:empty { display: none; }
 
+  /* Quran: book view (like a printed Mushaf, page by page) */
+  .q-player .q-size button.q-view { font-size: 1.05rem; border-inline-end: 1px solid rgba(255, 255, 255, .2); }
+  .q-list.book { max-height: none; overflow: visible; border: 0; border-radius: 0; }
+  .bk-page { position: relative; padding: 22px 18px 14px; border-radius: 6px; background: #fffaf0; color: #1f2a24;
+    border: 3px double #b8893b; box-shadow: 0 0 0 6px #fffaf0, 0 0 0 8px #d9c08a, 0 10px 28px rgba(0, 0, 0, .18); margin: 8px; }
+  :root[data-theme="dark"] .bk-page { background: #1b2620; color: #efe9da; box-shadow: 0 0 0 6px #1b2620, 0 0 0 8px #6f5a2c, 0 10px 28px rgba(0, 0, 0, .4); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bk-page { background: #1b2620; color: #efe9da; box-shadow: 0 0 0 6px #1b2620, 0 0 0 8px #6f5a2c, 0 10px 28px rgba(0, 0, 0, .4); } }
+  .bk-head { margin: 0 auto 10px; padding: 6px 14px; max-width: 320px; text-align: center; border: 1.5px solid #b8893b; border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(184, 137, 59, .18), transparent); font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: 1.35rem; color: #8a6420; }
+  :root[data-theme="dark"] .bk-head { color: #e9cf8f; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bk-head { color: #e9cf8f; } }
+  .bk-bism { text-align: center; font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: calc(1.45rem * var(--qz)); margin: 0 0 6px; }
+  .bk-text { direction: rtl; text-align: justify; text-align-last: center; font-family: "Amiri Quran", "Amiri", "Noto Naskh Arabic", serif;
+    font-size: calc(1.6rem * var(--qz)); line-height: 2.35; word-spacing: .05em; }
+  .bk-text.ltr { direction: ltr; text-align: start; text-align-last: auto; font-family: inherit; font-size: calc(1rem * var(--qz)); line-height: 1.85; }
+  .bk-v { cursor: pointer; border-radius: 6px; transition: background .2s; }
+  .bk-v:hover { background: rgba(184, 137, 59, .12); }
+  .bk-v.on { background: rgba(184, 137, 59, .3); }
+  .bk-v .q-no { font-size: .8em; }
+  .bk-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 8px 4px; }
+  .bk-foot button { padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--green); font: inherit; font-weight: 700; cursor: pointer; }
+  .bk-foot button:disabled { opacity: .35; cursor: default; }
+  .bk-no { text-align: center; font-size: .85rem; color: var(--muted); }
+  .bk-no b { display: block; font-size: 1rem; color: var(--gold); }
+  /* turning a page: a copy of the old page swings over the spine (right edge = next, left edge = back) */
+  .q-list.book { position: relative; }
+  .bk-flip { z-index: 4; pointer-events: none; backface-visibility: hidden; -webkit-backface-visibility: hidden; will-change: transform; }
+  .bk-flip::after { content: ""; position: absolute; inset: 0; border-radius: 6px; pointer-events: none; animation: bkShade .8s ease-in forwards; }
+  .bk-flip.fwd { transform-origin: right center; animation: bkFwd .8s cubic-bezier(.3, .1, .4, 1) forwards; }
+  .bk-flip.fwd::after { background: linear-gradient(to left, rgba(0, 0, 0, .35), transparent 60%); }
+  .bk-flip.back { transform-origin: left center; animation: bkBack .8s cubic-bezier(.3, .1, .4, 1) forwards; }
+  .bk-flip.back::after { background: linear-gradient(to right, rgba(0, 0, 0, .35), transparent 60%); }
+  @keyframes bkFwd { from { transform: perspective(1800px) rotateY(0); } to { transform: perspective(1800px) rotateY(178deg); } }
+  @keyframes bkBack { from { transform: perspective(1800px) rotateY(0); } to { transform: perspective(1800px) rotateY(-178deg); } }
+  @keyframes bkShade { from { opacity: 0; } to { opacity: 1; } }
+  .q-list.book .bk-page.under { animation: bkUnder .8s ease-out; }
+  @keyframes bkUnder { from { filter: brightness(.85); } to { filter: none; } }
+  @media (prefers-reduced-motion: reduce) { .bk-flip { display: none; } .q-list.book .bk-page.under { animation: none; } }
+
   /* Quran player */
   .q-player { display: grid; gap: 12px; padding: 14px; margin-bottom: 10px; border-radius: 18px; color: #fff;
     background: radial-gradient(circle at 15% 0%, #1a7a52 0%, #0f5a3c 45%, #0b4330 100%); box-shadow: 0 8px 24px rgba(15, 90, 60, .25); }
@@ -883,6 +922,7 @@
       <div class="q-opts">
         <label id="qTrWrap" class="q-sw"><input type="checkbox" id="qTl"><i aria-hidden="true"></i><span data-i18n="q_tl">उच्चारण दिखाएँ (अंग्रेज़ी अक्षरों में)</span></label>
         <span class="q-size" role="group" aria-label="Text size">
+          <button type="button" id="qView" class="q-view"></button>
           <button type="button" id="qSm" aria-label="A−">A<sub>−</sub></button>
           <button type="button" id="qLg" aria-label="A+">A<sup>+</sup></button>
         </span>
@@ -1095,6 +1135,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    q_v_book: "Book view (like a printed Quran)", q_v_list: "List view", bk_page: "Page {p}", bk_of: "{i} of {n} in this surah", bk_next: "Next page", bk_prev: "Previous page", bk_next_s: "Next surah",
     q_tl: "Show pronunciation", q_tl_src: " · Pronunciation: Quran.com",
     q_s_ar: "Arabic", q_s_both: "Arabic + meaning", q_s_tr: "Meaning", q_seq_t: "Verse by verse", q_whole: "Play the whole surah (one recording)",
     q_end_stop: "At the end of the surah: stop", q_end_repeat: "At the end of the surah: repeat it", q_end_next: "At the end of the surah: go on to the next one",
@@ -1139,6 +1180,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    q_v_book: "本の形で表示（印刷版のように）", q_v_list: "一覧で表示", bk_page: "{p}ページ", bk_of: "このスーラの {i}/{n}", bk_next: "次のページ", bk_prev: "前のページ", bk_next_s: "次のスーラ",
     q_tl: "読み方を表示（ローマ字）", q_tl_src: " · 読み方：Quran.com",
     q_s_ar: "アラビア語", q_s_both: "アラビア語＋訳", q_s_tr: "訳のみ", q_seq_t: "1節ずつ再生", q_whole: "スーラ全体を再生",
     q_end_stop: "スーラの終わりで停止", q_end_repeat: "スーラを繰り返し再生", q_end_next: "終わったら次のスーラへ",
@@ -1183,6 +1225,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    q_v_book: "বইয়ের মতো দেখান (ছাপা কুরআনের মতো)", q_v_list: "তালিকা আকারে দেখান", bk_page: "পৃষ্ঠা {p}", bk_of: "এই সূরার {i} / {n}", bk_next: "পরের পৃষ্ঠা", bk_prev: "আগের পৃষ্ঠা", bk_next_s: "পরের সূরা",
     q_tl: "উচ্চারণ দেখান (ইংরেজি অক্ষরে)", q_tl_src: " · উচ্চারণ: Quran.com",
     q_s_ar: "আরবি", q_s_both: "আরবি + অর্থ", q_s_tr: "শুধু অর্থ", q_seq_t: "আয়াত ধরে ধরে শুনুন", q_whole: "পুরো সূরা একটানা শুনুন",
     q_end_stop: "সূরা শেষ হলে থামবে", q_end_repeat: "একই সূরা আবার শুরু হবে", q_end_next: "সূরা শেষ হলে পরের সূরা চলবে",
@@ -1227,6 +1270,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    q_v_book: "کتاب کی طرح دکھائیں (چھپے قرآن کی طرح)", q_v_list: "فہرست کی صورت میں", bk_page: "صفحہ {p}", bk_of: "اس سورت کا {i} / {n}", bk_next: "اگلا صفحہ", bk_prev: "پچھلا صفحہ", bk_next_s: "اگلی سورت",
     q_tl: "تلفظ دکھائیں (انگریزی حروف میں)", q_tl_src: " · تلفظ: Quran.com",
     q_s_ar: "عربی", q_s_both: "عربی + ترجمہ", q_s_tr: "صرف ترجمہ", q_seq_t: "آیت بہ آیت سنیں", q_whole: "پوری سورت ایک ساتھ سنیں",
     q_end_stop: "سورت ختم ہونے پر رک جائے", q_end_repeat: "یہی سورت دوبارہ چلے", q_end_next: "سورت ختم ہونے پر اگلی سورت چلے",
@@ -1271,6 +1315,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    q_v_book: "किताब की तरह दिखाएँ (छपे क़ुरआन जैसा)", q_v_list: "सूची के रूप में", bk_page: "पृष्ठ {p}", bk_of: "इस सूरह का {i} / {n}", bk_next: "अगला पृष्ठ", bk_prev: "पिछला पृष्ठ", bk_next_s: "अगली सूरह",
     q_tl: "उच्चारण दिखाएँ (अंग्रेज़ी अक्षरों में)", q_tl_src: " · उच्चारण: Quran.com",
     q_s_ar: "अरबी", q_s_both: "अरबी + अनुवाद", q_s_tr: "सिर्फ़ अनुवाद", q_seq_t: "आयत-दर-आयत सुनें", q_whole: "पूरी सूरह एक साथ सुनें",
     q_end_stop: "सूरह ख़त्म होने पर रुक जाए", q_end_repeat: "यही सूरह फिर से चले", q_end_next: "सूरह ख़त्म होने पर अगली सूरह चले",
@@ -1315,6 +1360,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    q_v_book: "عرض المصحف", q_v_list: "عرض القائمة", bk_page: "صفحة {p}", bk_of: "{i} من {n} في هذه السورة", bk_next: "الصفحة التالية", bk_prev: "الصفحة السابقة", bk_next_s: "السورة التالية",
     q_tl: "إظهار النطق بالحروف اللاتينية", q_tl_src: " · النطق: Quran.com",
     q_s_ar: "التلاوة", q_s_both: "التلاوة", q_s_tr: "التلاوة", q_seq_t: "آية آية", q_whole: "السورة كاملة",
     q_end_stop: "التوقف عند نهاية السورة", q_end_repeat: "تكرار السورة", q_end_next: "الانتقال إلى السورة التالية",
@@ -2279,7 +2325,7 @@ const Q_API = "https://api.alquran.cloud/v1/";
 const Q_SURAH = [n => `https://server8.mp3quran.net/afs/${String(n).padStart(3, "0")}.mp3`,
                  n => `https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/${String(n).padStart(3, "0")}.mp3`];
 const Q_AYAH = (s, a) => `https://everyayah.com/data/Alafasy_128kbps/${String(s).padStart(3, "0")}${String(a).padStart(3, "0")}.mp3`;
-const q = { started: false, list: null, surah: 1, ar: {}, tr: {}, tl: {}, tlOn: false, mode: "", ayah: 0, src: 0, phase: "", paused: false, after: "" };
+const q = { started: false, list: null, surah: 1, ar: {}, tr: {}, tl: {}, pg: {}, view: "list", bk: 0, tlOn: false, mode: "", ayah: 0, src: 0, phase: "", paused: false, after: "" };
 // what the list shows follows the pills: Arabic / Arabic + meaning / meaning only
 function qShow() {
   const l = $q("qList"); if (!l) return;
@@ -2344,7 +2390,7 @@ function qGoSurah(s) {
 function qSurahEnd(kind) {
   const au = $q("qAudio");
   if (q.end === "stop" || (q.end === "next" && q.surah >= 114)) { if (kind === "ayah") qStopAll(); else { q.mode = ""; } return; }
-  if (q.end === "next") qGoSurah(q.surah + 1);
+  if (q.end === "next") { qGoSurah(q.surah + 1); q.bk = 0; }
   if (kind === "surah") {
     if (q.end === "next") quranLoad();
     q.mode = "surah"; q.src = 0; au.src = Q_SURAH[0](q.surah); au.play().catch(() => {}); qMark();
@@ -2406,6 +2452,7 @@ function quranLoad() {
   qGet(`surah/${s}/editions/${need.join(",")}`).then(d => {
     d.forEach(e => {
       const txt = e.ayahs.map(a => a.text);
+      if (e.edition.identifier === "quran-uthmani") q.pg[s] = e.ayahs.map(a => a.page || 0);
       if (e.edition.identifier === "quran-uthmani") {
         // Bismillah is shown once above — take its four words off verse 1 (the letters vary, so by words)
         if (s !== 1 && s !== 9 && txt[0] && /^﻿?بِسْمِ\s/.test(txt[0])) txt[0] = txt[0].replace(/^﻿?(\S+\s+){4}/, "");
@@ -2415,9 +2462,80 @@ function quranLoad() {
     if (s === q.surah) quranDraw();
   }).catch(() => { if (s === q.surah && !q.ar[s]) qStatus("quran_fail"); });
 }
+// book view: the surah cut into the printed Mushaf's pages; one page at a time
+function qPages(s) {
+  const pg = q.pg[s] || [], out = [];
+  (q.ar[s] || []).forEach((_, i) => { const p = pg[i] || 0; if (!out.length || out[out.length - 1].p !== p) out.push({ p, a: [] }); out[out.length - 1].a.push(i + 1); });
+  return out;
+}
+function bookDraw() {
+  const s = q.surah, ar = q.ar[s], list = $q("qList");
+  const ed = Q_TR[lang], tr = ed && q.tr[ed] ? q.tr[ed][s] : null;
+  const pages = qPages(s);
+  q.bk = Math.max(0, Math.min(q.bk, pages.length - 1));
+  const pgx = pages[q.bk];
+  const esc = t => String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const meaning = list.dataset.show === "tr" && tr;
+  let h = '<div class="bk-page">';
+  if (pgx.a[0] === 1) {
+    const nm = q.list && q.list[s - 1] ? q.list[s - 1].name : "";
+    h += `<div class="bk-head">${esc(nm)}</div>`;
+    if (s !== 1 && s !== 9 && !meaning) h += '<div class="bk-bism" lang="ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>';
+  }
+  h += meaning
+    ? `<div class="bk-text ltr">${pgx.a.map(n => `<span class="bk-v" data-a="${n}"><b>${localDigits(String(n))}.</b> ${esc(tr[n - 1] || "")} </span>`).join("")}</div>`
+    : `<div class="bk-text" lang="ar">${pgx.a.map(n => `<span class="bk-v" data-a="${n}">${esc(ar[n - 1])}<span class="q-no">﴿${qArDigits(n)}﴾</span></span> `).join("")}</div>`;
+  h += "</div>";
+  const last = q.bk >= pages.length - 1, first = q.bk <= 0;
+  // like a printed Quran: the next page is on the left
+  const next = last && s < 114 ? `◀ ${esc(T("bk_next_s"))}` : `◀ ${esc(T("bk_next"))}`;
+  h += `<div class="bk-foot" dir="ltr"><button type="button" data-bk="next"${last && s >= 114 ? " disabled" : ""}>${next}</button>`
+    + `<div class="bk-no"><b>${esc(T("bk_page").replace("{p}", localDigits(String(pgx.p || q.bk + 1))))}</b>${esc(T("bk_of").replace("{i}", localDigits(String(q.bk + 1))).replace("{n}", localDigits(String(pages.length))))}</div>`
+    + `<button type="button" data-bk="prev"${first ? " disabled" : ""}>${esc(T("bk_prev"))} ▶</button></div>`;
+  list.innerHTML = h;
+}
+function bookShow(idx, d) {
+  const list = $q("qList"), old = list.querySelector(".bk-page:not(.bk-flip)");
+  let fl = null;
+  if (old && d) {
+    const r = old.getBoundingClientRect(), lr = list.getBoundingClientRect();
+    fl = old.cloneNode(true);
+    fl.classList.add("bk-flip", d > 0 ? "fwd" : "back");
+    fl.style.cssText = `position:absolute;left:${r.left - lr.left}px;top:${r.top - lr.top}px;width:${r.width}px;height:${r.height}px;margin:0`;
+  }
+  q.bk = idx; bookDraw();
+  if (fl) {
+    const pg = list.querySelector(".bk-page"); if (pg) pg.classList.add("under");
+    list.appendChild(fl);
+    const gone = () => fl.remove();
+    fl.addEventListener("animationend", e => { if (e.target === fl) gone(); });
+    setTimeout(gone, 1200);
+  }
+}
+function bookTurn(d) {
+  const pages = qPages(q.surah);
+  if (d > 0 && q.bk >= pages.length - 1) {          // after the last page: the next surah, first page
+    if (q.surah >= 114) return;
+    qStopAll(); qGoSurah(q.surah + 1); q.bk = 0; quranLoad(); return;
+  }
+  const to = Math.max(0, Math.min(pages.length - 1, q.bk + d));
+  if (to === q.bk) return;
+  // first bring the page's top into view (at once), then turn it — so the turn is seen
+  const top = $q("qList").getBoundingClientRect().top;
+  if (top < 60 || top > innerHeight * .5) window.scrollTo({ top: window.scrollY + top - 70, behavior: "instant" });
+  bookShow(to, d); qMark();
+}
 function quranDraw() {
   const s = q.surah, ar = q.ar[s];
   if (!ar) return;
+  $q("qList").classList.toggle("book", q.view === "book");
+  if (q.view === "book") {
+    qShow();
+    bookDraw();
+    if (q.after === "ayah") { const ed0 = Q_TR[lang]; if (!ed0 || (q.tr[ed0] && q.tr[ed0][s])) { q.after = ""; qPlayAyah(1); return; } }
+    qMark();
+    return;
+  }
   const ed = Q_TR[lang], tr = ed && q.tr[ed] ? q.tr[ed][s] : null;
   const bism = (s !== 1 && s !== 9) ? `<div class="q-ay q-bism" style="cursor:default"><div class="q-ar" style="text-align:center">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div></div>` : "";
   const esc = t => String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
@@ -2439,15 +2557,26 @@ function quranLang() {
   if (q.mode === "ayah") qStopAll();
   if ($q("qLsn")) qVoiceNote();
   qEndDraw();
+  if (window.qViewDraw) window.qViewDraw();
   cmp.text();
   if (q.started) quranLoad();
 }
 function qMark() {
-  document.querySelectorAll(".q-ay.on").forEach(e => e.classList.remove("on"));
+  document.querySelectorAll(".q-ay.on, .bk-v.on").forEach(e => e.classList.remove("on"));
   document.querySelectorAll(".q-tr.say").forEach(e => e.classList.remove("say"));
   const bar = $q("qNow");
   if (q.mode !== "ayah" || !q.ayah) { if (bar) bar.hidden = true; return; }
-  const el = document.querySelector(`.q-ay[data-a="${q.ayah}"]`);
+  if (q.view === "book" && q.ar[q.surah]) {
+    const pages = qPages(q.surah), want = pages.findIndex(p => p.a.includes(q.ayah));
+    if (want > -1 && want !== q.bk) bookShow(want, want > q.bk ? 1 : -1);
+    const v = document.querySelector(`.bk-v[data-a="${q.ayah}"]`);
+    if (v) {
+      v.classList.add("on");
+      const r = v.getBoundingClientRect();
+      if (r.top < 70 || r.bottom > innerHeight - 20) v.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+  }
+  const el = q.view === "book" ? null : document.querySelector(`.q-ay[data-a="${q.ayah}"]`);
   if (el) {
     el.classList.add("on");
     if (q.phase === "tr") { const t = el.querySelector(".q-tr"); if (t) t.classList.add("say"); }
@@ -2516,14 +2645,14 @@ function qPlayAyah(a, phase) {
   if (document.readyState === "complete") later(); else window.addEventListener("load", later, { once: true });
   $q("qSel").addEventListener("change", e => {
     q.surah = +e.target.value; store.set("q_surah", q.surah);
-    q.after = ""; qStopAll(); qLabels(); au.removeAttribute("src"); au.hidden = true;
+    q.after = ""; q.bk = 0; qStopAll(); qLabels(); au.removeAttribute("src"); au.hidden = true;
     quranLoad();
   });
   // what to hear (kept on this phone)
   const ls = $q("qLsn");
   ls.value = ["ar", "both", "tr"].includes(store.get("q_lsn")) ? store.get("q_lsn") : "both";
   qShow();
-  ls.addEventListener("change", () => { store.set("q_lsn", ls.value); qVoiceNote(); qLabels(); qShow(); });
+  ls.addEventListener("change", () => { store.set("q_lsn", ls.value); qVoiceNote(); qLabels(); qShow(); if (q.view === "book" && q.ar[q.surah]) { bookDraw(); qMark(); } });
   document.querySelectorAll(".q-seg [data-l]").forEach(b => b.addEventListener("click", () => {
     ls.value = b.dataset.l; ls.dispatchEvent(new Event("change"));
   }));
@@ -2553,6 +2682,25 @@ function qPlayAyah(a, phase) {
   setZ(qz);
   $q("qSm").addEventListener("click", () => setZ(qz - 0.15));
   $q("qLg").addEventListener("click", () => setZ(qz + 0.15));
+  // list / book view (kept on this phone)
+  q.view = store.get("q_view") === "book" ? "book" : "list";
+  const vb = $q("qView");
+  const vDraw = () => { vb.textContent = q.view === "book" ? "☰" : "📖"; vb.title = T(q.view === "book" ? "q_v_list" : "q_v_book"); vb.setAttribute("aria-label", vb.title); };
+  vDraw();
+  vb.addEventListener("click", () => {
+    q.view = q.view === "book" ? "list" : "book"; store.set("q_view", q.view);
+    if (q.view === "book") { const pages = qPages(q.surah); const w = q.ayah ? pages.findIndex(p => p.a.includes(q.ayah)) : -1; q.bk = w > -1 ? w : 0; }
+    vDraw(); quranDraw(); qTip(vb.textContent + " " + T(q.view === "book" ? "q_v_book" : "q_v_list"));
+  });
+  window.qViewDraw = vDraw;
+  // swipe in the book: to the right = next page (like turning a printed Quran's page)
+  let sx = 0, sy = 0;
+  $q("qList").addEventListener("touchstart", e => { if (q.view !== "book") return; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  $q("qList").addEventListener("touchend", e => {
+    if (q.view !== "book" || !sx) return;
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; sx = 0;
+    if (Math.abs(dx) > 60 && Math.abs(dy) < 50) bookTurn(dx > 0 ? 1 : -1);
+  }, { passive: true });
   const tlb = $q("qTl");
   q.tlOn = store.get("q_tl") === "1"; tlb.checked = q.tlOn;
   tlb.addEventListener("change", () => { q.tlOn = tlb.checked; store.set("q_tl", q.tlOn ? "1" : ""); qShow(); if (q.tlOn) qTlLoad(q.surah); });
@@ -2577,7 +2725,9 @@ function qPlayAyah(a, phase) {
     store.set("q_end", q.end); qEndDraw(); qTip(Q_END[q.end] + " " + T("q_end_" + q.end));
   }));
   $q("qList").addEventListener("click", e => {
-    const el = e.target.closest(".q-ay[data-a]");
+    const bk = e.target.closest("[data-bk]");
+    if (bk) { bookTurn(bk.dataset.bk === "next" ? 1 : -1); return; }
+    const el = e.target.closest(".q-ay[data-a], .bk-v[data-a]");
     if (el) qPlayAyah(+el.dataset.a);
   });
 })();

@@ -351,6 +351,34 @@
   .notif .n-types label { display: flex; gap: 8px; align-items: center; font-size: .92rem; }
   .notif .n-types input { width: 18px; height: 18px; accent-color: var(--green); }
   .notif .n-lang { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 12px; font-size: .92rem; }
+  /* garbage-day reminder (inside the notification box) and the day's card */
+  .notif .n-gomi { display: grid; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+  .notif .n-gsw { display: flex; gap: 8px; align-items: center; font-size: .92rem; font-weight: 600; }
+  .notif .n-gsw input { width: 18px; height: 18px; accent-color: var(--green); flex: none; }
+  .g-area, .g-when { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: .9rem; }
+  .g-area span { font-weight: 600; }
+  .g-when select, .g-when input, .g-pick select, .g-towns input { font: inherit; font-size: .9rem; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: inherit; max-width: 100%; }
+  .g-pick, .g-towns { display: grid; gap: 8px; }
+  .g-pick .g-gps { justify-self: start; }
+  .g-list { list-style: none; margin: 0; padding: 0; max-height: 220px; overflow: auto; overscroll-behavior: contain; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+  .g-list li + li { border-top: 1px solid var(--line); }
+  .g-list button { display: block; width: 100%; text-align: start; padding: 9px 12px; border: 0; background: none; color: inherit; font: inherit; font-size: .92rem; cursor: pointer; }
+  .g-list button:hover, .g-list button:focus-visible { background: var(--surface-2); }
+  .g-hint, .g-note { margin: 0; font-size: .8rem; color: var(--muted); }
+  .g-list .g-note { padding: 9px 12px; }
+  .g-peek, .g-pick > .n-gear { justify-self: start; }
+  .g-ov { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: flex-end; justify-content: center; padding: 16px; background: rgba(0,0,0,.55); animation: gFade .18s ease-out; }
+  @media (min-width: 640px) { .g-ov { align-items: center; } }
+  .g-sheet { width: min(560px, 100%); max-height: 88vh; overflow: auto; display: grid; gap: 10px; padding: 14px; border-radius: 18px; background: var(--surface); color: var(--text); box-shadow: 0 12px 40px rgba(0,0,0,.35); animation: gUp .22s ease-out; }
+  .g-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 1.02rem; }
+  .g-x { flex: none; width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--surface-2); color: inherit; font-size: 1rem; cursor: pointer; }
+  .g-body { display: grid; gap: 10px; }
+  .g-body img { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; border-radius: 14px; background: var(--surface-2); }
+  .g-none { margin: 8px 0; text-align: center; font-weight: 600; }
+  .g-cal { padding: 8px; text-align: center; font-weight: 700; color: var(--green); text-decoration: none; }
+  @keyframes gFade { from { opacity: 0; } }
+  @keyframes gUp { from { transform: translateY(24px); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .g-ov, .g-sheet { animation: none; } }
   .notif .n-lang select { font: inherit; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: inherit; }
   .notif .n-msg { margin: 10px 0 0; font-size: .88rem; color: var(--text); }
   .notif .n-msg.err { color: #b32d2e; }
@@ -3441,6 +3469,231 @@ const I18N_I = {
     i_done: "✓ تمت الإضافة! افتح تطبيق المسجد من الشاشة الرئيسية." }
 };
 for (const l in I18N_I) Object.assign(I18N[l], I18N_I[l]);
+const I18N_G = {
+  en: {"g_on": "🗑 Garbage day reminder (your area)", "g_gps": "📍 Find my area from my location", "g_wait": "Finding your location…", "g_or": "or pick from the list:", "g_city": "— Choose your city —", "g_find": "Neighbourhood in Japanese (e.g. 青山)", "g_hint": "The neighbourhood part of your address (住所), as on your residence card.", "g_loading": "Loading…", "g_cands": "which one is yours?", "g_nomatch": "not exactly in the list; please pick yours below.", "g_notjp": "No address in Japan was found for your location — pick from the list.", "g_err": "Could not get it right now — please try again, or pick from the list.", "g_denied": "Location permission was denied. Allow it in the browser settings, or pick from the list.", "g_notyet": "Your city ({p}) is not added yet. We have noted it — the more people ask, the sooner it comes.", "g_chg": "Change", "g_when": "When:", "g_prev": "The day before", "g_same": "On the day", "g_peek": "👁 See the next garbage day", "g_today": "Today", "g_tmr": "Tomorrow", "g_none": "No collection on this day.", "g_close": "Close", "g_how": "put it out in the morning, in the city's bag.", "g_cal": "📅 Full garbage calendar →"},
+  ja: {"g_on": "🗑 ごみの日のお知らせ（お住まいの地域）", "g_gps": "📍 現在地から地域を探す", "g_wait": "現在地を確認中…", "g_or": "または一覧から選ぶ：", "g_city": "— 市町村を選択 —", "g_find": "町名を入力（例：青山）", "g_hint": "住所の町名（在留カードに書かれています）。", "g_loading": "読み込み中…", "g_cands": "どれがお住まいですか？", "g_nomatch": "一覧に同じ名前がありません。下から選んでください。", "g_notjp": "日本国内の住所が見つかりませんでした。一覧から選んでください。", "g_err": "今は取得できませんでした。もう一度試すか、一覧から選んでください。", "g_denied": "位置情報が許可されていません。ブラウザの設定で許可するか、一覧から選んでください。", "g_notyet": "お住まいの市町村（{p}）はまだ追加されていません。記録しました。希望が多いほど早く追加されます。", "g_chg": "変更", "g_when": "いつ：", "g_prev": "前の日", "g_same": "当日", "g_peek": "👁 次のごみの日を見る", "g_today": "今日", "g_tmr": "明日", "g_none": "この日は収集がありません。", "g_close": "閉じる", "g_how": "当日の朝、指定袋で出してください。", "g_cal": "📅 ごみカレンダーをすべて見る →"},
+  bn: {"g_on": "🗑 ময়লা ফেলার দিনের রিমাইন্ডার (আপনার এলাকা)", "g_gps": "📍 আমার অবস্থান থেকে এলাকা খুঁজুন", "g_wait": "অবস্থান খোঁজা হচ্ছে…", "g_or": "অথবা তালিকা থেকে বাছুন:", "g_city": "— আপনার শহর বাছুন —", "g_find": "পাড়ার নাম জাপানিতে (যেমন 青山)", "g_hint": "বাসার ঠিকানার (住所) পাড়ার নাম — রেসিডেন্স কার্ডে লেখা থাকে।", "g_loading": "লোড হচ্ছে…", "g_cands": "কোনটা আপনার?", "g_nomatch": "তালিকায় ঠিক এই নাম নেই, নিচ থেকে আপনারটা বাছুন।", "g_notjp": "আপনার অবস্থানে জাপানের কোনো ঠিকানা পাওয়া যায়নি — তালিকা থেকে বাছুন।", "g_err": "এখন পাওয়া গেল না — আবার চেষ্টা করুন, বা তালিকা থেকে বাছুন।", "g_denied": "অবস্থানের অনুমতি দেওয়া হয়নি। ব্রাউজারের সেটিংসে অনুমতি দিন, বা তালিকা থেকে বাছুন।", "g_notyet": "আপনার শহর ({p}) এখনো যোগ হয়নি। আমরা নোট করেছি — যত বেশি মানুষ চাইবেন, তত আগে যোগ হবে।", "g_chg": "বদলান", "g_when": "কখন:", "g_prev": "আগের দিন", "g_same": "সংগ্রহের দিন", "g_peek": "👁 পরের ময়লার দিন দেখুন", "g_today": "আজ", "g_tmr": "কাল", "g_none": "এই দিনে কোনো ময়লা নেওয়া হয় না।", "g_close": "বন্ধ", "g_how": "সকালে শহরের নির্দিষ্ট ব্যাগে দিন।", "g_cal": "📅 পুরো ময়লার ক্যালেন্ডার →"},
+  ur: {"g_on": "🗑 کچرا ڈالنے کے دن کی یاد دہانی (آپ کا علاقہ)", "g_gps": "📍 میرے مقام سے علاقہ تلاش کریں", "g_wait": "مقام تلاش ہو رہا ہے…", "g_or": "یا فہرست سے منتخب کریں:", "g_city": "— اپنا شہر منتخب کریں —", "g_find": "محلے کا نام جاپانی میں (مثلاً 青山)", "g_hint": "پتے (住所) میں محلے کا نام — رہائشی کارڈ پر لکھا ہوتا ہے۔", "g_loading": "لوڈ ہو رہا ہے…", "g_cands": "آپ کا کون سا ہے؟", "g_nomatch": "فہرست میں بالکل یہ نام نہیں، نیچے سے اپنا منتخب کریں۔", "g_notjp": "آپ کے مقام پر جاپان کا کوئی پتہ نہیں ملا — فہرست سے منتخب کریں۔", "g_err": "ابھی نہیں مل سکا — دوبارہ کوشش کریں، یا فہرست سے منتخب کریں۔", "g_denied": "مقام کی اجازت نہیں دی گئی۔ براؤزر کی سیٹنگ میں اجازت دیں، یا فہرست سے منتخب کریں۔", "g_notyet": "آپ کا شہر ({p}) ابھی شامل نہیں۔ ہم نے نوٹ کر لیا ہے — جتنے زیادہ لوگ چاہیں گے، اتنی جلدی شامل ہوگا۔", "g_chg": "تبدیل کریں", "g_when": "کب:", "g_prev": "ایک دن پہلے", "g_same": "اسی دن", "g_peek": "👁 کچرے کا اگلا دن دیکھیں", "g_today": "آج", "g_tmr": "کل", "g_none": "اس دن کچرا نہیں اٹھایا جاتا۔", "g_close": "بند", "g_how": "صبح شہر کے مقررہ تھیلے میں رکھیں۔", "g_cal": "📅 کچرے کا پورا کیلنڈر ←"},
+  hi: {"g_on": "🗑 कूड़ा डालने के दिन की याद (आपका इलाका)", "g_gps": "📍 मेरी लोकेशन से इलाका खोजें", "g_wait": "लोकेशन खोजी जा रही है…", "g_or": "या सूची से चुनें:", "g_city": "— अपना शहर चुनें —", "g_find": "मोहल्ले का नाम जापानी में (जैसे 青山)", "g_hint": "पते (住所) में मोहल्ले का नाम — रेज़िडेंस कार्ड पर लिखा होता है।", "g_loading": "लोड हो रहा है…", "g_cands": "आपका कौन-सा है?", "g_nomatch": "सूची में ठीक यही नाम नहीं, नीचे से अपना चुनें।", "g_notjp": "आपकी लोकेशन पर जापान का कोई पता नहीं मिला — सूची से चुनें।", "g_err": "अभी नहीं मिल पाया — फिर कोशिश करें, या सूची से चुनें।", "g_denied": "लोकेशन की अनुमति नहीं दी गई। ब्राउज़र की सेटिंग में अनुमति दें, या सूची से चुनें।", "g_notyet": "आपका शहर ({p}) अभी जुड़ा नहीं है। हमने नोट कर लिया है — जितने ज़्यादा लोग चाहेंगे, उतनी जल्दी जुड़ेगा।", "g_chg": "बदलें", "g_when": "कब:", "g_prev": "एक दिन पहले", "g_same": "उसी दिन", "g_peek": "👁 कूड़े का अगला दिन देखें", "g_today": "आज", "g_tmr": "कल", "g_none": "इस दिन कूड़ा नहीं उठाया जाता।", "g_close": "बंद", "g_how": "सुबह शहर के तय बैग में रखें।", "g_cal": "📅 कूड़े का पूरा कैलेंडर →"},
+  ar: {"g_on": "🗑 تذكير بيوم جمع النفايات (منطقتك)", "g_gps": "📍 ابحث عن منطقتي من موقعي", "g_wait": "جارٍ تحديد موقعك…", "g_or": "أو اختر من القائمة:", "g_city": "— اختر مدينتك —", "g_find": "اسم الحي باليابانية (مثل 青山)", "g_hint": "اسم الحي في عنوانك (住所) — مكتوب على بطاقة الإقامة.", "g_loading": "جارٍ التحميل…", "g_cands": "أيّها منطقتك؟", "g_nomatch": "هذا الاسم ليس في القائمة تمامًا، اختر منطقتك من الأسفل.", "g_notjp": "لم يُعثر على عنوان داخل اليابان لموقعك — اختر من القائمة.", "g_err": "تعذّر ذلك الآن — حاول مرة أخرى، أو اختر من القائمة.", "g_denied": "لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح، أو اختر من القائمة.", "g_notyet": "مدينتك ({p}) لم تُضف بعد. سجّلنا طلبك — كلما زاد الطلب أُضيفت أسرع.", "g_chg": "تغيير", "g_when": "متى:", "g_prev": "في اليوم السابق", "g_same": "في اليوم نفسه", "g_peek": "👁 اعرض يوم الجمع التالي", "g_today": "اليوم", "g_tmr": "غدًا", "g_none": "لا يوجد جمع في هذا اليوم.", "g_close": "إغلاق", "g_how": "ضعها صباحًا في الكيس المخصص من المدينة.", "g_cal": "📅 تقويم النفايات كاملًا ←"}
+};
+for (const l in I18N_G) Object.assign(I18N[l], I18N_G[l]);
+
+/* ===================== Garbage-day reminder =====================
+   The Gomi Calendar on iwate-bd.org knows each area's collection days; its reminder goes out through
+   the same notification as the prayer times. Here: pick the area once (location or list), choose when,
+   and a tap on the reminder shows that day's picture card in the visitor's language. */
+const gomi = (function () {
+  const API = "https://iwate-bd.org/wp-json/gomi/v1/";
+  const IMG = "https://iwate-bd.org/wp-content/plugins/gomi-calendar/assets/notify/";
+  const CARD_LANGS = ["bn", "en", "ja", "ur", "hi", "ar"];
+  let G = { on: 0, c: "", k: "", tn: "", cn: "", w: "prev", t: "20:00" };
+  try { Object.assign(G, JSON.parse(store.get("gomi") || "{}")); } catch {}
+  const save = () => store.set("gomi", JSON.stringify(G));
+  let P = { open: false, msg: "", cands: null, city: "", cname: "", q: "", busy: false };   // the area picker
+  let cities = null, rer = () => {}, changed = () => {};
+  const hook = (render, sync) => { rer = render; changed = sync; };
+
+  function getJ(u, key, ttl) {
+    if (key) { try { const c = JSON.parse(store.get(key) || "null"); if (c && Date.now() - c.at < ttl) return Promise.resolve(c.d); } catch {} }
+    return fetch(API + u).then(r => { if (!r.ok) throw new Error("http " + r.status); return r.json(); })
+      .then(d => { if (key) store.set(key, JSON.stringify({ at: Date.now(), d })); return d; });
+  }
+  const bl = () => (lang === "bn" ? "bn" : "en");
+  function loadCities() {
+    return getJ("boot?l=" + bl(), "g_boot_" + bl(), 864e5)
+      .then(d => {
+        cities = d.cities || {};
+        if (lang === "ja" && d.cja) { cities = {}; Object.keys(d.cja).forEach(c => { cities[c] = String(d.cja[c]).split(" ").pop(); }); }   // "岩手県 盛岡市" → "盛岡市"
+      })
+      .catch(() => { cities = {}; });
+  }
+  const towns = c => getJ("towns?c=" + encodeURIComponent(c), "g_t_" + c, 864e5);
+  const area = () => getJ("area?c=" + encodeURIComponent(G.c) + "&k=" + encodeURIComponent(G.k), "g_a_" + G.k, 864e5);
+
+  // what the server needs (the notification's own subscription)
+  const param = () => ({ on: G.on && G.k ? 1 : 0, c: G.c, k: G.k, w: G.w === "same" ? "same" : "prev", t: G.t });
+  const sig = () => [G.on && G.k ? 1 : 0, G.k, G.w, G.t].join(",");
+
+  function choose(c, t) {
+    G.c = c; G.k = t[1]; G.tn = t[0]; G.cn = (cities && cities[c]) || P.cname || c; G.on = 1; save();
+    P = { open: false, msg: "", cands: null, city: "", cname: "", q: "", busy: false };
+    rer(); changed();
+  }
+  function gps() {
+    if (!navigator.geolocation || !window.isSecureContext) { P.msg = T("g_err"); rer(); return; }
+    P.busy = true; P.msg = ""; P.cands = null; rer();
+    navigator.geolocation.getCurrentPosition(pos => {
+      fetch(API + "where?lat=" + pos.coords.latitude.toFixed(5) + "&lon=" + pos.coords.longitude.toFixed(5))
+        .then(r => r.json()).then(w => {
+          P.busy = false; w = w || {};
+          if (w.status === "live" && w.c) {
+            P.city = w.c; P.cname = (w.place || "").split(" ")[1] || "";
+            if (w.pick) { choose(w.c, w.pick); return; }                        // sure match: done
+            if (w.cands && w.cands.length) { P.cands = w.cands; P.msg = "📍 " + (w.place || "") + " — " + T("g_cands"); }
+            else { P.msg = "📍 " + (w.place || "") + " — " + T("g_nomatch"); P.q = w.base || ""; }
+          } else if (w.status === "notjp") P.msg = T("g_notjp");
+          else if (w.status === "error" || w.status === "busy") P.msg = T("g_err");
+          else P.msg = T("g_notyet").replace("{p}", w.place || w.name || "");
+          rer();
+        }).catch(() => { P.busy = false; P.msg = T("g_err"); rer(); });
+    }, e => { P.busy = false; P.msg = e && e.code === 1 ? T("g_denied") : T("g_err"); rer(); },
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 });
+  }
+
+  function picker(el) {
+    const p = el("div", "g-pick");
+    const gb = el("button", "btn g-gps", P.busy ? T("g_wait") : T("g_gps")); gb.type = "button"; gb.disabled = P.busy; gb.onclick = gps;
+    p.appendChild(gb);
+    if (P.msg) p.appendChild(el("p", "n-msg", P.msg));
+    const list = (arr, c) => {
+      const ul = el("ul", "g-list");
+      arr.forEach(t => { const li = el("li"), b = el("button", "", t[0]); b.type = "button"; b.onclick = () => choose(c, t); li.appendChild(b); ul.appendChild(li); });
+      return ul;
+    };
+    if (P.cands) p.appendChild(list(P.cands, P.city));
+    p.appendChild(el("p", "g-hint", T("g_or")));
+    const sel = el("select", "g-city");
+    const o0 = el("option", "", T("g_city")); o0.value = ""; sel.appendChild(o0);
+    if (cities) Object.keys(cities).forEach(c => { const o = el("option", "", cities[c]); o.value = c; sel.appendChild(o); });
+    else loadCities().then(() => rer());
+    if (P.city && cities && !cities[P.city]) { const o = el("option", "", P.cname || P.city); o.value = P.city; sel.appendChild(o); }
+    sel.value = P.city || "";
+    sel.onchange = () => { P.city = sel.value; P.q = ""; P.cands = null; rer(); };
+    p.appendChild(sel);
+    if (P.city) {
+      const box = el("div", "g-towns"), inp = el("input"), ul = el("ul", "g-list");
+      inp.type = "search"; inp.placeholder = T("g_find"); inp.value = P.q; inp.setAttribute("lang", "ja");
+      box.appendChild(inp); box.appendChild(el("p", "g-hint", T("g_hint"))); box.appendChild(ul);
+      ul.appendChild(el("li", "g-note", T("g_loading")));
+      towns(P.city).then(d => {
+        const all = d.towns || [];
+        const draw = () => {
+          P.q = inp.value.trim(); ul.innerHTML = ""; let n = 0;
+          all.forEach(t => {
+            if (n >= 80 || (P.q && t[0].indexOf(P.q) < 0)) return;
+            n++;
+            const li = el("li"), b = el("button", "", t[0]); b.type = "button"; b.onclick = () => choose(P.city, t);
+            li.appendChild(b); ul.appendChild(li);
+          });
+          if (!n) ul.appendChild(el("li", "g-note", "—"));
+        };
+        inp.oninput = draw; draw();
+      }).catch(() => { ul.innerHTML = ""; ul.appendChild(el("li", "g-note", T("g_err"))); });
+      p.appendChild(box);
+    }
+    if (G.k) {
+      const x = el("button", "n-gear", T("n_less")); x.type = "button";
+      x.onclick = () => { P.open = false; P.msg = ""; P.cands = null; rer(); };
+      p.appendChild(x);
+    }
+    return p;
+  }
+
+  // the part inside the notification box
+  function ui(el) {
+    const wrap = el("div", "n-gomi");
+    const lb = el("label", "n-gsw"), cb = el("input");
+    cb.type = "checkbox"; cb.checked = !!G.on;
+    cb.onchange = () => { G.on = cb.checked ? 1 : 0; save(); if (G.on && !G.k) P.open = true; rer(); changed(); };
+    lb.appendChild(cb); lb.appendChild(document.createTextNode(T("g_on")));
+    wrap.appendChild(lb);
+    if (!G.on) return wrap;
+    if (!G.k || P.open) { wrap.appendChild(picker(el)); return wrap; }
+    const a = el("div", "g-area");
+    a.appendChild(el("span", "", "📍 " + [G.cn, G.tn].filter(Boolean).join(" · ")));
+    const ch = el("button", "n-gear", T("g_chg")); ch.type = "button"; ch.onclick = () => { P.open = true; rer(); };
+    a.appendChild(ch);
+    wrap.appendChild(a);
+    const wr = el("div", "g-when"), sw = el("select"), tm = el("input");
+    wr.appendChild(el("span", "", T("g_when")));
+    [["prev", T("g_prev")], ["same", T("g_same")]].forEach(([v, t]) => { const o = el("option", "", t); o.value = v; sw.appendChild(o); });
+    sw.value = G.w === "same" ? "same" : "prev";
+    tm.type = "time"; tm.value = G.t; tm.step = 300;
+    sw.onchange = () => { G.w = sw.value; G.t = G.w === "same" ? "06:30" : "20:00"; tm.value = G.t; save(); changed(); };
+    tm.onchange = () => { if (/^\d\d:\d\d$/.test(tm.value)) { G.t = tm.value; save(); changed(); } };
+    wr.appendChild(sw); wr.appendChild(tm);
+    wrap.appendChild(wr);
+    const pv = el("button", "n-gear g-peek", T("g_peek")); pv.type = "button"; pv.onclick = () => next();
+    wrap.appendChild(pv);
+    return wrap;
+  }
+
+  /* ── the day's card (same rules as the plugin: gc_kinds_on / gc_kind_card) ── */
+  function kindsOn(a, iso, dow) {
+    if ((a.off || []).some(o => iso >= o[0] && iso <= o[1])) return [];
+    const out = [];
+    (a.w || []).forEach(w => { if ((w[1] || []).map(Number).includes(dow) && !(w[2] || []).includes(iso) && !out.includes(w[0])) out.push(w[0]); });
+    Object.keys(a.d || {}).forEach(k => { if ((a.d[k] || []).includes(iso) && !out.includes(k)) out.push(k); });
+    return out;
+  }
+  function cardKey(a, k, iso, dow) {
+    let lab = ((a.dl || {})[iso] || {})[k] || "";
+    if (!lab) (a.w || []).forEach(w => { if (w[0] === k && w[3] && (w[1] || []).map(Number).includes(dow)) lab = w[3]; });
+    lab = lab || (a.lab || {})[k] || "";
+    if (k === "plastic" && lab.indexOf("製品") > -1) return "plastic_seihin";
+    if (k === "other" && lab.indexOf("家電") > -1) return "other_kaden";
+    return ["burn", "plastic", "bottle", "nonburn", "paper", "spray", "hazard", "bulky"].includes(k) ? k : "other";
+  }
+  const isoOf = ({ y, m, d }) => y + "-" + String(m).padStart(2, "0") + "-" + String(d).padStart(2, "0");
+  const dowOf = iso => new Date(iso + "T12:00:00Z").getUTCDay();
+
+  let ov = null, back = null;
+  function close() {
+    if (!ov) return;
+    ov.remove(); ov = null; document.removeEventListener("keydown", onKey);
+    if (back && back.focus) back.focus();
+  }
+  const onKey = e => { if (e.key === "Escape") close(); };
+  function show(iso) {
+    if (!G.k || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return;
+    close();
+    back = document.activeElement;
+    ov = document.createElement("div");
+    ov.className = "g-ov";
+    ov.innerHTML = `<div class="g-sheet" role="dialog" aria-modal="true" aria-labelledby="gHead"><div class="g-head"><b id="gHead">🗑</b>`
+      + `<button type="button" class="g-x" aria-label="${escH(T("g_close"))}">✕</button></div>`
+      + `<div class="g-body"><p class="g-note">${escH(T("g_loading"))}</p></div>`
+      + `<a class="g-cal" href="https://iwate-bd.org/#pt-gomi" target="_blank" rel="noopener">${escH(T("g_cal"))}</a></div>`;
+    document.body.appendChild(ov);
+    ov.addEventListener("click", e => { if (e.target === ov) close(); });
+    ov.querySelector(".g-x").onclick = close;
+    ov.querySelector(".g-x").focus();
+    document.addEventListener("keydown", onKey);
+    const today = isoOf(tokyoYMD()), tmr = isoOf(addDays(tokyoYMD(), 1));
+    const dl = new Intl.DateTimeFormat(lang, { timeZone: "UTC", month: "long", day: "numeric", weekday: "long" }).format(new Date(iso + "T12:00:00Z"));
+    ov.querySelector("#gHead").textContent = "🗑 " + (iso === today ? T("g_today") + " · " : iso === tmr ? T("g_tmr") + " · " : "") + dl;
+    const sheet = ov;
+    area().then(a => {
+      if (sheet !== ov) return;
+      const dow = dowOf(iso), ks = kindsOn(a, iso, dow), body = ov.querySelector(".g-body");
+      body.innerHTML = "";
+      if (!ks.length) { body.appendChild(Object.assign(document.createElement("p"), { className: "g-none", textContent: T("g_none") })); return; }
+      const cl = CARD_LANGS.includes(lang) ? lang : "en";
+      ks.forEach(k => {
+        const f = cardKey(a, k, iso, dow), img = document.createElement("img");
+        img.alt = ""; img.width = 720; img.height = 360; img.decoding = "async";
+        img.onerror = () => { if (!/-en\.png$/.test(img.src)) img.src = IMG + f + "-en.png"; };   // card not yet in this language
+        img.src = IMG + f + "-" + cl + ".png";
+        body.appendChild(img);
+      });
+      body.appendChild(Object.assign(document.createElement("p"), { className: "g-note", textContent: "📍 " + [G.cn, G.tn].filter(Boolean).join(" · ") + " — " + T("g_how") }));
+    }).catch(() => { if (sheet === ov) ov.querySelector(".g-body").innerHTML = `<p class="g-note">${escH(T("g_err"))}</p>`; });
+  }
+  // "see the next garbage day" (also a way to check it without waiting)
+  function next() {
+    area().then(a => {
+      const t = tokyoYMD();
+      for (let i = 0; i < 21; i++) { const iso = isoOf(addDays(t, i)); if (kindsOn(a, iso, dowOf(iso)).length) return show(iso); }
+      show(isoOf(t));
+    }).catch(() => show(isoOf(tokyoYMD())));
+  }
+  function start(query) {
+    const d = query && query.get("gomi");
+    if (d) show(d);
+  }
+  return { hook, ui, param, sig, start };
+})();
 
 const notif = (function () {
   const PUSH = {
@@ -3545,7 +3798,7 @@ const notif = (function () {
   };
   const getSub = () => navigator.serviceWorker.getRegistration("/")
     .then(r => r ? r.pushManager.getSubscription() : null).catch(() => null);
-  const sig = () => [NL(), method, asr, TYPES.map(k => types[k] ? 1 : 0).join(""), LAT.toFixed(3) + "," + LNG.toFixed(3)].join("|");
+  const sig = () => [NL(), method, asr, TYPES.map(k => types[k] ? 1 : 0).join(""), LAT.toFixed(3) + "," + LNG.toFixed(3), gomi.sig()].join("|");
   const dev = () => {
     const os = /Android/i.test(ua) ? "Android" : ios ? "iPhone" : /Windows/i.test(ua) ? "Windows" : /Mac OS/i.test(ua) ? "Mac" : "";
     return (os ? os + " · " : "") + "Masjid " + (app ? "app" : "browser");
@@ -3557,6 +3810,7 @@ const notif = (function () {
       name: place.mode === "me" ? (place.n || (I18N[NL()] || {}).ts_my || "My area") : (I18N[NL()] || {}).title || T("title"),
       mosque: (I18N[NL()] || {}).title || T("title"), jamaat: [], lang: NL(),
       types: { prayer: types.prayer ? 1 : 0, ramz: types.ramz ? 1 : 0, jumu: types.jumu ? 1 : 0, isl: types.isl ? 1 : 0, jpdz: types.jpdz ? 1 : 0, post: 0, live: 0, sunnah: 0 },
+      gomi: gomi.param(),
       dev: dev()
     }) }).then(r => { if (!r.ok) throw new Error("http " + r.status); store.set("n_sig", sig()); mnFollow(s.endpoint, types.notice); });
   }
@@ -3625,6 +3879,7 @@ const notif = (function () {
         fs.appendChild(lb);
       });
       box.appendChild(fs);
+      box.appendChild(gomi.ui(el));
       const lb = el("label", "n-lang"), sel = el("select");
       lb.appendChild(el("span", "", T("n_lang")));
       Object.keys(NLANGS).forEach(k => { const o = el("option", "", NLANGS[k]); o.value = k; sel.appendChild(o); });
@@ -3671,6 +3926,7 @@ const notif = (function () {
 
   function start() {
     if (!box) return;
+    gomi.hook(render, sync);
     render();
     if (can && !(ios && !app)) getSub().then(s => {
       sub = s;
@@ -3782,7 +4038,8 @@ function setUrl() {
   renderAll();
   notif.start();
   azan.start(query);
-  if (query.has("azan")) try { history.replaceState(null, "", location.pathname + location.hash); } catch {}
+  gomi.start(query);
+  if (query.has("azan") || query.has("gomi")) try { history.replaceState(null, "", location.pathname + location.hash); } catch {}
   setInterval(tick, 1000);
 })();
 </script>

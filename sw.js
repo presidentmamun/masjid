@@ -79,6 +79,9 @@ self.addEventListener('notificationclick', function (e) {
     var q = u.searchParams, ai = q.get('pt_adhan');
     if (ai === null && q.get('pt_card') !== null && q.get('k') !== 'j') ai = q.get('pt_card');
     if (ai !== null && /^[0-5]$/.test(ai)) url = '/?azan=' + ai + '&t=' + encodeURIComponent(q.get('pt_t') || '') + '#times';
+    // garbage-day reminder: this site shows that day's picture card, in the visitor's language
+    var gd = q.get('pt_gomi');
+    if (gd && /^\d{4}-\d{2}-\d{2}$/.test(gd)) url = '/?gomi=' + gd + '#notif';
     if (u.hostname === self.location.hostname) url = u.pathname + u.search + u.hash;   // this site's own page (masjid notice)
     var mine = u.hostname === 'iwate-bd.org' && u.pathname === '/'
       && !/[?&](p|page_id|hs_code)=/.test(u.search) && (nd.id ? /pt_/.test(u.search) : true);

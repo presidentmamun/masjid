@@ -577,35 +577,41 @@
 
   /* Quran: book view — a printed Quran: paper, spine shade (right: Arabic books open from the right), stacked page edges, ornate frame */
   .q-player .q-size button.q-view { font-size: 1.05rem; border-inline-end: 1px solid rgba(255, 255, 255, .2); }
-  .q-list.book { max-height: none; overflow: visible; border: 0; border-radius: 0; position: relative; perspective: 2200px; padding: 6px 14px 10px 4px; }
+  .q-list.book { max-height: none; overflow: visible; border: 0; border-radius: 0; position: relative; perspective: 2200px; padding: 6px 4px 10px 12px; }
   .bk-page { --paper: #fdf8ec; --paper2: #f3e6c8; --ink: #1f2a24; --orn: #b8893b; --edge: #e4d5b2;
-    position: relative; max-width: 560px; margin: 0 auto; padding: 18px 18px 14px; color: var(--ink); direction: ltr;
+    position: relative; max-width: 560px; margin: 0 auto; padding: 12px 11px 10px; color: var(--ink); direction: ltr;
+    height: var(--bkh, 620px); display: flex; flex-direction: column;
     background: linear-gradient(to left, rgba(90, 60, 20, .16), rgba(90, 60, 20, 0) 7%), radial-gradient(ellipse at 45% 40%, var(--paper) 55%, var(--paper2) 100%);
     border-radius: 12px 3px 3px 12px;
     box-shadow: -1px 1px 0 var(--edge), -3px 3px 0 var(--paper), -4px 4px 0 var(--edge), -6px 6px 0 var(--paper), -7px 7px 0 var(--edge),
       -9px 9px 0 var(--paper), -10px 10px 0 #d6c398, -14px 16px 26px rgba(40, 30, 10, .28); }
   :root[data-theme="dark"] .bk-page { --paper: #22302a; --paper2: #18221d; --ink: #efe9da; --orn: #d7b56d; --edge: #3a4a40; }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bk-page { --paper: #22302a; --paper2: #18221d; --ink: #efe9da; --orn: #d7b56d; --edge: #3a4a40; } }
-  .bk-in { position: relative; padding: 12px 14px 10px; border: 1.5px solid var(--orn); outline: 3px double var(--orn); outline-offset: 3px; border-radius: 6px; }
+  .bk-in { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; position: relative; padding: 10px 10px 6px; border: 1.5px solid var(--orn); outline: 3px double var(--orn); outline-offset: 3px; border-radius: 6px; }
   .bk-in::before, .bk-in::after { content: "❖"; position: absolute; top: -12px; color: var(--orn); background: var(--paper); padding: 0 4px; font-size: .9rem; line-height: 1; }
   .bk-in::before { left: 10px; } .bk-in::after { right: 10px; }
-  .bk-top { display: flex; justify-content: space-between; gap: 8px; margin: -2px 0 8px; padding-bottom: 6px; border-bottom: 1px solid color-mix(in srgb, var(--orn) 45%, transparent);
-    font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: .95rem; color: var(--orn); direction: rtl; }
-  .bk-head { margin: 4px auto 10px; padding: 6px 18px; max-width: 300px; text-align: center; border: 1.5px solid var(--orn); border-radius: 999px; direction: rtl;
-    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--orn) 22%, transparent), transparent); font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: 1.35rem; color: var(--orn); }
-  .bk-bism { text-align: center; font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: calc(1.45rem * var(--qz)); margin: 0 0 4px; direction: rtl; }
+  .bk-top { display: flex; justify-content: space-between; gap: 8px; margin: -2px 0 6px; padding-bottom: 4px; border-bottom: 1px solid color-mix(in srgb, var(--orn) 45%, transparent);
+    font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: .85rem; color: var(--orn); direction: rtl; }
+  .bk-head { margin: 2px auto 6px; padding: 3px 16px; max-width: 300px; text-align: center; border: 1.5px solid var(--orn); border-radius: 999px; direction: rtl;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--orn) 22%, transparent), transparent); font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: 1.2rem; color: var(--orn); }
+  .bk-bism { text-align: center; font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: calc(1.3rem * var(--qz)); margin: 0 0 2px; direction: rtl; }
   .bk-text { direction: rtl; text-align: justify; text-align-last: center; font-family: "Amiri Quran", "Amiri", "Noto Naskh Arabic", serif;
-    font-size: calc(1.6rem * var(--qz)); line-height: 2.3; word-spacing: .04em; }
-  .bk-sep { display: flex; align-items: center; gap: 10px; margin: 10px 0 6px; color: var(--orn); font-size: .8rem; font-weight: 700; letter-spacing: .03em; }
+    font-size: calc(1.36rem * var(--qz)); line-height: 2.05; word-spacing: .03em; }
+  .bk-sep { display: none; align-items: center; gap: 10px; margin: 10px 0 6px; color: var(--orn); font-size: .8rem; font-weight: 700; letter-spacing: .03em; }
   .bk-sep::before, .bk-sep::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--orn), transparent); }
-  .bk-tl { direction: ltr; text-align: start; font-style: italic; font-size: calc(.92rem * var(--qz)); line-height: 1.8; color: color-mix(in srgb, var(--orn) 80%, var(--ink)); }
-  .bk-tr { text-align: start; font-size: calc(.98rem * var(--qz)); line-height: 1.85; }
-  [dir="rtl"] .bk-tr { direction: rtl; }
-  .bk-tl b, .bk-tr b { font-style: normal; color: var(--orn); font-size: .85em; }
+  .bk-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; }
+  .bk-ay { padding: 4px 3px 6px; border-bottom: 1px dashed color-mix(in srgb, var(--orn) 35%, transparent); border-radius: 6px; cursor: pointer; transition: background .2s; }
+  .bk-ay:last-child { border-bottom: 0; }
+  .bk-ay.on { background: color-mix(in srgb, var(--orn) 22%, transparent); }
+  .bk-ay .bk-ar { direction: rtl; text-align: right; font-family: "Amiri Quran", "Amiri", "Noto Naskh Arabic", serif; font-size: calc(1.32rem * var(--qz)); line-height: 1.95; }
+  .bk-ay .bk-tl { direction: ltr; text-align: start; margin-top: 1px; font-style: italic; font-size: calc(.76rem * var(--qz)); line-height: 1.45; color: color-mix(in srgb, var(--orn) 75%, var(--ink)); }
+  .bk-ay .bk-tr { margin-top: 2px; font-size: calc(.82rem * var(--qz)); line-height: 1.5; }
+  .bk-ay .bk-tr b { color: var(--orn); font-size: .85em; margin-inline-end: 4px; }
+  .bk-only .bk-ay .bk-tr { font-size: calc(.98rem * var(--qz)); }
   .bk-v { cursor: pointer; border-radius: 5px; transition: background .2s; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
   .bk-v.on { background: color-mix(in srgb, var(--orn) 30%, transparent); }
   .bk-text .q-no { font-size: .8em; }
-  .bk-pno { display: flex; justify-content: center; margin-top: 10px; }
+  .bk-pno { display: flex; justify-content: center; margin-top: 6px; }
   .bk-pno span { min-width: 2.4em; padding: 2px 10px; border: 1.5px solid var(--orn); border-radius: 999px; text-align: center; color: var(--orn); font-weight: 700; font-size: .9rem; background: color-mix(in srgb, var(--orn) 10%, transparent); }
   .bk-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; max-width: 560px; margin: 16px auto 4px; }
   .bk-foot button { padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--green); font: inherit; font-weight: 700; cursor: pointer; }
@@ -2482,35 +2488,80 @@ function quranLoad() {
     if (s === q.surah) quranDraw();
   }).catch(() => { if (s === q.surah && !q.ar[s]) qStatus("quran_fail"); });
 }
-// book view: the surah cut into the printed Mushaf's pages; one page at a time
+// book view: pages of one size (fits the phone's screen); as many verses as fit on each page.
+// Arabic only: one flowing text like a printed Mushaf. With pronunciation / meaning: under each verse, small.
+const BK = { key: "", pages: [] };
+function bkSize() {
+  const list = $q("qList");
+  const w = Math.min(560, Math.max(260, (list ? list.clientWidth : 360) - 18));
+  const h = Math.round(Math.min(820, Math.max(460, innerHeight - 120)));
+  return { w, h };
+}
+function bkVerse(n, mode, ar, tl, tr, esc) {
+  if (mode === "flow") return `<span class="bk-v" data-a="${n}">${esc(ar[n - 1])}<span class="q-no">﴿${qArDigits(n)}﴾</span></span> `;
+  let h = `<div class="bk-ay" data-a="${n}">`;
+  if (mode !== "tr") h += `<div class="bk-ar" lang="ar">${esc(ar[n - 1])}<span class="q-no">﴿${qArDigits(n)}﴾</span></div>`;
+  if (mode !== "tr" && tl && tl[n - 1]) h += `<div class="bk-tl">${esc(tl[n - 1])}</div>`;
+  if (mode !== "ar" && tr && tr[n - 1]) h += `<div class="bk-tr"><b>${localDigits(String(n))}</b>${esc(tr[n - 1])}</div>`;
+  return h + "</div>";
+}
+function bkParts(s) {
+  const ed = Q_TR[lang], tr = ed && q.tr[ed] ? q.tr[ed][s] : null, tl = q.tlOn ? q.tl[s] : null;
+  const show = ($q("qList").dataset.show) || "both";
+  // Arabic only (or nothing else to show): flowing text; otherwise one block per verse
+  const mode = show === "tr" && tr ? "tr" : (show === "ar" || !tr) && !tl ? "flow" : show === "ar" ? "ar" : "both";
+  return { tr, tl, mode };
+}
+function bkShell(s, first, body, mode) {
+  const esc = t => String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const nm = q.list && q.list[s - 1] ? q.list[s - 1].name : "";
+  let h = "";
+  if (first) {
+    h += `<div class="bk-head">${esc(nm)}</div>`;
+    if (s !== 1 && s !== 9 && mode !== "tr") h += '<div class="bk-bism" lang="ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>';
+  }
+  return h + (mode === "flow" ? `<div class="bk-text" lang="ar">${body}</div>` : body);
+}
 function qPages(s) {
-  const pg = q.pg[s] || [], out = [];
-  (q.ar[s] || []).forEach((_, i) => { const p = pg[i] || 0; if (!out.length || out[out.length - 1].p !== p) out.push({ p, a: [] }); out[out.length - 1].a.push(i + 1); });
-  return out;
+  const ar = q.ar[s] || [], { tr, tl, mode } = bkParts(s), sz = bkSize();
+  const key = [s, lang, mode, tl ? 1 : 0, getComputedStyle($q("qList")).getPropertyValue("--qz"), sz.w, sz.h, ar.length].join("|");
+  if (BK.key === key) return BK.pages;
+  const esc = t => String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  // measure in a hidden page of the real size
+  const list = $q("qList"), m = document.createElement("div");
+  m.className = "bk-page" + (mode === "tr" ? " bk-only" : "");
+  m.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;left:0;top:0;width:${sz.w}px;--bkh:${sz.h}px`;
+  m.innerHTML = '<div class="bk-in"><div class="bk-top"><span>x</span></div><div class="bk-body"></div><div class="bk-pno"><span>1</span></div></div>';
+  list.appendChild(m);
+  const body = m.querySelector(".bk-body"), pages = [];
+  let cur = [], first = true;
+  const fill = (a, f) => { body.innerHTML = bkShell(s, f, a.map(n => bkVerse(n, mode, ar, tl, tr, esc)).join(""), mode); return body.scrollHeight <= body.clientHeight + 1; };
+  for (let n = 1; n <= ar.length; n++) {
+    cur.push(n);
+    if (!fill(cur, first) && cur.length > 1) {        // did not fit: this verse starts the next page
+      cur.pop(); pages.push({ a: cur }); first = false; cur = [n];
+    }
+  }
+  if (cur.length) pages.push({ a: cur });
+  m.remove();
+  BK.key = key; BK.pages = pages;
+  return pages;
 }
 function bookDraw() {
   const s = q.surah, ar = q.ar[s], list = $q("qList");
-  const ed = Q_TR[lang], tr = ed && q.tr[ed] ? q.tr[ed][s] : null, tl = q.tlOn ? q.tl[s] : null;
-  const pages = qPages(s);
+  if (!ar) return;
+  const keepA = BK.pages[q.bk] ? BK.pages[q.bk].a[0] : 0, oldKey = BK.key;
+  const pages = qPages(s), { tr, tl, mode } = bkParts(s), sz = bkSize();
+  // the page size changed (rotated phone, text size): stay on the page that has the same first verse
+  if (oldKey && oldKey !== BK.key && keepA) { const w = pages.findIndex(p => p.a.includes(keepA)); if (w > -1) q.bk = w; }
   q.bk = Math.max(0, Math.min(q.bk, pages.length - 1));
-  const pgx = pages[q.bk], show = list.dataset.show || "both";
+  const pgx = pages[q.bk];
   const esc = t => String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   const nm = q.list && q.list[s - 1] ? q.list[s - 1].name : "";
   const jz = (q.jz[s] || [])[pgx.a[0] - 1];
-  let h = `<div class="bk-page"><div class="bk-in"><div class="bk-top"><span>${esc(nm)}</span><span>${jz ? esc(T("bk_juz").replace("{n}", localDigits(String(jz)))) : ""}</span></div>`;
-  if (pgx.a[0] === 1) {
-    h += `<div class="bk-head">${esc(nm)}</div>`;
-    if (s !== 1 && s !== 9 && show !== "tr") h += '<div class="bk-bism" lang="ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>';
-  }
-  if (show !== "tr") {
-    h += `<div class="bk-text" lang="ar">${pgx.a.map(n => `<span class="bk-v" data-a="${n}" data-k="ar">${esc(ar[n - 1])}<span class="q-no">﴿${qArDigits(n)}﴾</span></span> `).join("")}</div>`;
-    if (q.tlOn && tl) h += `<div class="bk-sep">${esc(T("bk_tl"))}</div><div class="bk-tl">${pgx.a.map(n => `<span class="bk-v" data-a="${n}" data-k="tl"><b>${n}</b> ${esc(tl[n - 1] || "")}</span> `).join("")}</div>`;
-  }
-  if (show !== "ar" && tr) {
-    h += (show === "tr" ? "" : `<div class="bk-sep">${esc(T("bk_tr"))}</div>`)
-      + `<div class="bk-tr">${pgx.a.map(n => `<span class="bk-v" data-a="${n}" data-k="tr"><b>${localDigits(String(n))}</b> ${esc(tr[n - 1] || "")}</span> `).join("")}</div>`;
-  }
-  h += `<div class="bk-pno"><span>${localDigits(String(pgx.p || q.bk + 1))}</span></div></div></div>`;
+  let h = `<div class="bk-page${mode === "tr" ? " bk-only" : ""}" style="--bkh:${sz.h}px"><div class="bk-in"><div class="bk-top"><span>${esc(nm)}</span><span>${jz ? esc(T("bk_juz").replace("{n}", localDigits(String(jz)))) : ""}</span></div>`
+    + `<div class="bk-body">${bkShell(s, pgx.a[0] === 1, pgx.a.map(n => bkVerse(n, mode, ar, tl, tr, esc)).join(""), mode)}</div>`
+    + `<div class="bk-pno"><span>${localDigits(String(q.bk + 1))}</span></div></div></div>`;
   const last = q.bk >= pages.length - 1, first = q.bk <= 0;
   // like a printed Quran: the next page is on the left
   const next = last && s < 114 ? `◀ ${esc(T("bk_next_s"))}` : `◀ ${esc(T("bk_next"))}`;
@@ -2520,6 +2571,12 @@ function bookDraw() {
   list.innerHTML = h;
   if (q.tlOn && !tl) qTlLoad(s);
 }
+// phone turned / window resized: lay the pages out again
+let bkRz = 0;
+window.addEventListener("resize", () => {
+  clearTimeout(bkRz);
+  bkRz = setTimeout(() => { if (q.view === "book" && q.ar[q.surah] && BK.key && BK.key.split("|").slice(5, 7).join("x") !== (({ w, h }) => w + "x" + h)(bkSize())) { bookDraw(); qMark(); } }, 250);
+});
 function bookShow(idx, d) {
   const list = $q("qList"), old = list.querySelector(".bk-page:not(.bk-flip)");
   let fl = null;
@@ -2588,17 +2645,18 @@ function quranLang() {
   if (q.started) quranLoad();
 }
 function qMark() {
-  document.querySelectorAll(".q-ay.on, .bk-v.on").forEach(e => e.classList.remove("on"));
+  document.querySelectorAll(".q-ay.on, .bk-v.on, .bk-ay.on").forEach(e => e.classList.remove("on"));
   document.querySelectorAll(".q-tr.say").forEach(e => e.classList.remove("say"));
   const bar = $q("qNow");
   if (q.mode !== "ayah" || !q.ayah) { if (bar) bar.hidden = true; return; }
   if (q.view === "book" && q.ar[q.surah]) {
     const pages = qPages(q.surah), want = pages.findIndex(p => p.a.includes(q.ayah));
     if (want > -1 && want !== q.bk) bookShow(want, want > q.bk ? 1 : -1);
-    const vs = document.querySelectorAll(`.bk-page:not(.bk-flip) .bk-v[data-a="${q.ayah}"]`);
-    vs.forEach(x => x.classList.add("on"));
-    const v = document.querySelector(`.bk-page:not(.bk-flip) .bk-v[data-a="${q.ayah}"][data-k="${q.phase === "tr" ? "tr" : "ar"}"]`) || vs[0];
+    const v = document.querySelector(`.bk-page:not(.bk-flip) [data-a="${q.ayah}"]`);
     if (v) {
+      v.classList.add("on");
+      const bd = v.closest(".bk-body");
+      if (bd) { const br = bd.getBoundingClientRect(), vr = v.getBoundingClientRect(); if (vr.top < br.top || vr.bottom > br.bottom) bd.scrollTop += vr.top - br.top - 8; }
       const r = v.getBoundingClientRect();
       if (r.top < 70 || r.bottom > innerHeight - 20) v.scrollIntoView({ block: "center", behavior: "smooth" });
     }
@@ -2705,7 +2763,7 @@ function qPlayAyah(a, phase) {
   $q("qStop").addEventListener("click", qStopAll);
   // text size
   let qz = Math.min(1.6, Math.max(0.85, +(store.get("q_z") || 1)));
-  const setZ = z => { qz = Math.round(Math.min(1.6, Math.max(0.85, z)) * 100) / 100; $q("qList").style.setProperty("--qz", qz); store.set("q_z", String(qz)); };
+  const setZ = z => { qz = Math.round(Math.min(1.6, Math.max(0.85, z)) * 100) / 100; $q("qList").style.setProperty("--qz", qz); store.set("q_z", String(qz)); if (q.view === "book" && q.ar[q.surah]) { bookDraw(); qMark(); } };
   setZ(qz);
   $q("qSm").addEventListener("click", () => setZ(qz - 0.15));
   $q("qLg").addEventListener("click", () => setZ(qz + 0.15));
@@ -2754,7 +2812,7 @@ function qPlayAyah(a, phase) {
   $q("qList").addEventListener("click", e => {
     const bk = e.target.closest("[data-bk]");
     if (bk) { bookTurn(bk.dataset.bk === "next" ? 1 : -1); return; }
-    const el = e.target.closest(".q-ay[data-a], .bk-v[data-a]");
+    const el = e.target.closest(".q-ay[data-a], .bk-v[data-a], .bk-ay[data-a]");
     if (el) qPlayAyah(+el.dataset.a);
   });
 })();

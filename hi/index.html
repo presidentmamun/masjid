@@ -431,6 +431,7 @@
   @media (max-width: 520px) { .qibla { justify-content: center; } .qibla-info { width: 100%; text-align: center; } }
   .qibla-info .deg { font-size: 2rem; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
   .qibla-info p { margin: 4px 0; }
+  .qibla-info .q-here { font-size: .88rem; font-weight: 600; color: var(--green); }
   #dial { transform-origin: 100px 100px; transition: transform .25s linear; }
   .compass.live #dial { transition: transform .12s linear; }
   .cmp-btn { margin-top: 12px; padding: 10px 20px; border-radius: 999px; border: 0; background: var(--green); color: #fff; font: inherit; font-weight: 600; cursor: pointer; box-shadow: 0 3px 10px rgba(15, 90, 60, .25); }
@@ -1079,6 +1080,7 @@
       <div class="qibla-info">
         <div class="deg" id="qiblaDeg"></div>
         <p id="qiblaDist"></p>
+        <p class="q-here" id="qiblaHere" hidden></p>
         <p class="note" data-i18n="qibla_hint">कंपास का उत्तर ऊपर रखकर तीर की दिशा में मुँह करें।</p>
         <p class="cmp-st" id="cmpSt" aria-live="polite"></p>
         <button type="button" class="cmp-btn" id="cmpBtn" hidden data-i18n="compass_btn">🧭 फ़ोन का कंपास इस्तेमाल करें</button>
@@ -1313,6 +1315,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    q_here: "📍 From where you are now",
     mt_today: "◉ Today",
     ts_masjid: "🕌 Masjid's times", ts_me: "📍 My area's times", ts_masjid_n: "Morioka Masjid", ts_my: "My area", ts_change: "⚙ Change", ts_wait: "Finding your location…", ts_denied: "Location permission was not given. Allow it in the phone's settings.", ts_out: "You seem to be outside Japan — this site's times are for Japan only.", ts_err: "Could not get your location. Please try again.", ts_again: "↻ Find again", note_me: "Times are calculated for {p}. Congregation (jamaat) times at the masjid may differ.",
     tas_p0: "SubhanAllah", tas_p1: "Alhamdulillah", tas_p2: "Allahu Akbar",
@@ -1370,6 +1373,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    q_here: "📍 現在地から",
     mt_today: "◉ 今日",
     ts_masjid: "🕌 マスジドの時刻", ts_me: "📍 現在地の時刻", ts_masjid_n: "盛岡マスジド", ts_my: "現在地", ts_change: "⚙ 変更", ts_wait: "現在地を確認しています…", ts_denied: "位置情報が許可されていません。端末の設定で許可してください。", ts_out: "日本国外にいるようです。このサイトの時刻は日本国内用です。", ts_err: "現在地を取得できませんでした。もう一度お試しください。", ts_again: "↻ もう一度", note_me: "時刻は{p}の位置に基づく計算値です。マスジドの集団礼拝の時刻とは異なる場合があります。",
     tas_p0: "スブハーナッラー", tas_p1: "アルハムドゥリッラー", tas_p2: "アッラーフ・アクバル",
@@ -1427,6 +1431,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    q_here: "📍 আপনার এখনকার অবস্থান থেকে",
     mt_today: "◉ আজ",
     ts_masjid: "🕌 মসজিদের সময়", ts_me: "📍 আমার এলাকার সময়", ts_masjid_n: "মরিওকা মসজিদ", ts_my: "আমার এলাকা", ts_change: "⚙ বদলান", ts_wait: "অবস্থান খোঁজা হচ্ছে…", ts_denied: "অবস্থানের অনুমতি পাওয়া যায়নি — ফোনের সেটিংসে অনুমতি দিন।", ts_out: "মনে হচ্ছে আপনি জাপানের বাইরে — এই সাইটের সময় শুধু জাপানের জন্য।", ts_err: "অবস্থান পাওয়া যায়নি। আবার চেষ্টা করুন।", ts_again: "↻ আবার খুঁজুন", note_me: "সময়গুলো {p}-এর অবস্থান অনুযায়ী হিসাব করা। মসজিদের জামাতের সময় আলাদা হতে পারে।",
     tas_p0: "সুবহানাল্লাহ", tas_p1: "আলহামদুলিল্লাহ", tas_p2: "আল্লাহু আকবার",
@@ -1484,6 +1489,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    q_here: "📍 آپ کے موجودہ مقام سے",
     mt_today: "◉ آج",
     ts_masjid: "🕌 مسجد کے اوقات", ts_me: "📍 میرے علاقے کے اوقات", ts_masjid_n: "موریوکا مسجد", ts_my: "میرا علاقہ", ts_change: "⚙ تبدیل", ts_wait: "مقام تلاش کیا جا رہا ہے…", ts_denied: "مقام کی اجازت نہیں ملی — فون کی سیٹنگ میں اجازت دیں۔", ts_out: "لگتا ہے آپ جاپان سے باہر ہیں — اس سائٹ کے اوقات صرف جاپان کے لیے ہیں۔", ts_err: "مقام نہیں مل سکا۔ دوبارہ کوشش کریں۔", ts_again: "↻ دوبارہ", note_me: "اوقات {p} کے مقام کے مطابق ہیں۔ مسجد کی جماعت کا وقت مختلف ہو سکتا ہے۔",
     tas_p0: "سبحان اللہ", tas_p1: "الحمد للہ", tas_p2: "اللہ اکبر",
@@ -1539,6 +1545,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    q_here: "📍 आपकी अभी की जगह से",
     mt_today: "◉ आज",
     ts_masjid: "🕌 मस्जिद का समय", ts_me: "📍 मेरे इलाक़े का समय", ts_masjid_n: "मोरिओका मस्जिद", ts_my: "मेरा इलाक़ा", ts_change: "⚙ बदलें", ts_wait: "जगह खोजी जा रही है…", ts_denied: "जगह की अनुमति नहीं मिली — फ़ोन की सेटिंग में अनुमति दें।", ts_out: "लगता है आप जापान से बाहर हैं — इस साइट का समय सिर्फ़ जापान के लिए है।", ts_err: "जगह नहीं मिल सकी। फिर कोशिश करें।", ts_again: "↻ फिर से", note_me: "समय {p} की जगह के हिसाब से है। मस्जिद की जमात का समय अलग हो सकता है।",
     tas_p0: "सुब्हानअल्लाह", tas_p1: "अल्हम्दुलिल्लाह", tas_p2: "अल्लाहु अकबर",
@@ -1594,6 +1601,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    q_here: "📍 من موقعك الحالي",
     mt_today: "◉ اليوم",
     ts_masjid: "🕌 مواقيت المسجد", ts_me: "📍 مواقيت منطقتي", ts_masjid_n: "مسجد موريوكا", ts_my: "منطقتي", ts_change: "⚙ تغيير", ts_wait: "جارٍ تحديد موقعك…", ts_denied: "لم يُسمح بالموقع — اسمح به من إعدادات الهاتف.", ts_out: "يبدو أنك خارج اليابان — مواقيت هذا الموقع لليابان فقط.", ts_err: "تعذّر تحديد الموقع. حاول مرة أخرى.", ts_again: "↻ مرة أخرى", note_me: "المواقيت محسوبة لموقع {p}. قد يختلف وقت الجماعة في المسجد.",
     tas_p0: "", tas_p1: "", tas_p2: "",
@@ -1830,8 +1838,11 @@ function tick() {
   document.getElementById("nextBadge").innerHTML = html;
 }
 
+// Qibla from where the phone is now (taken with the compass button); prayer times keep their own place
+let qHere = null;
 function renderQibla() {
-  const p1 = rad(LAT), p2 = rad(KAABA.lat), dl = rad(KAABA.lng - LNG);
+  const QLAT = qHere ? qHere.lat : LAT, QLNG = qHere ? qHere.lng : LNG;
+  const p1 = rad(QLAT), p2 = rad(KAABA.lat), dl = rad(KAABA.lng - QLNG);
   const bearing = fix(deg(Math.atan2(Math.sin(dl), Math.cos(p1) * Math.tan(p2) - Math.sin(p1) * Math.cos(dl))), 360);
   const a = Math.sin((p2 - p1) / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
   const km = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -1842,6 +1853,8 @@ function renderQibla() {
   const f0 = new Intl.NumberFormat(lang, { maximumFractionDigits: 0 });
   document.getElementById("qiblaDeg").textContent = T("qibla_deg").replace("{d}", f1.format(bearing));
   document.getElementById("qiblaDist").textContent = T("qibla_dist").replace("{km}", f0.format(Math.round(km / 10) * 10));
+  const qh = document.getElementById("qiblaHere");
+  if (qh) { qh.hidden = !qHere; qh.textContent = qHere ? T("q_here") : ""; }
 }
 
 /* Tap the masjid name: reload the page (the Home Screen app has no refresh button).
@@ -2821,18 +2834,30 @@ const cmp = (() => {
     else window.addEventListener("deviceorientation", onEv);
     setTimeout(() => { if (!got) { say("compass_na"); svg.classList.remove("live"); } }, 3000);
   }
+  // where the phone is now → Qibla from here (asked in the same tap; later only if already allowed)
+  function here(ask) {
+    if (!navigator.geolocation || !window.isSecureContext) return;
+    const get = () => navigator.geolocation.getCurrentPosition(p => {
+      qHere = { lat: p.coords.latitude, lng: p.coords.longitude }; renderQibla();
+    }, () => {}, { enableHighAccuracy: true, timeout: 20000, maximumAge: 120000 });
+    if (ask) return get();
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions.query({ name: "geolocation" }).then(r => { if (r.state === "granted") get(); }).catch(() => {});
+    }
+  }
   btn.addEventListener("click", () => {
     const D = window.DeviceOrientationEvent;
     store.set("cmp", "1");                                    // remember: this visitor uses the compass
     if (D && typeof D.requestPermission === "function") {
       D.requestPermission().then(r => { if (r === "granted") start(); else say("compass_na"); }).catch(() => say("compass_na"));
     } else start();
+    here(true);
   });
   // Used it before: listen quietly (no prompt). If the phone still allows it (Android always; iPhone until
   // the app is fully closed), the compass starts by itself. If not, nothing happens and the button stays.
   if (store.get("cmp") === "1") {
     const ev = "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
-    const probe = e => { if (heading(e) !== null) { window.removeEventListener(ev, probe); start(); } };
+    const probe = e => { if (heading(e) !== null) { window.removeEventListener(ev, probe); start(); here(false); } };
     window.addEventListener(ev, probe);
     setTimeout(() => window.removeEventListener(ev, probe), 4000);
   }

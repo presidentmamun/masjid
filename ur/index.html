@@ -511,6 +511,48 @@
   .chip.ok { background: var(--green); border-color: var(--green); color: #fff; }
   .chip.no { color: #a33; border-color: #e5b7b2; }
 
+  /* Meal registration */
+  .ml-card { border-top: 4px solid var(--green); }
+  .ml-lead { margin: -4px 0 14px; color: var(--muted); font-size: .92rem; }
+  .ml-list { display: grid; gap: 12px; }
+  .ml-ev { padding: 14px 16px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); }
+  .ml-ev.mine { border-color: var(--green); box-shadow: inset 4px 0 0 var(--green); }
+  .ml-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px; }
+  .ml-date { font-size: 1.1rem; font-weight: 700; color: var(--green); }
+  .ml-test { display: inline-block; margin-inline-start: 6px; padding: 1px 8px; border-radius: 999px; background: #fde7c2; color: #8a5a00; font-size: .75rem; font-weight: 700; }
+  .ml-dl { font-size: .85rem; color: var(--muted); }
+  .ml-dl.shut { color: #a33; font-weight: 700; }
+  .ml-note { margin: 6px 0 0; white-space: pre-wrap; }
+  .ml-meals { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+  .ml-m { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: .9rem; font-weight: 600; }
+  .ml-m small { color: var(--muted); font-weight: 400; }
+  .ml-me { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--gold-soft); font-size: .92rem; }
+  .ml-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .ml-acts .btn { margin: 0; border: 0; cursor: pointer; font: inherit; font-weight: 700; }
+  .ml-f { display: grid; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+  .ml-f label { display: grid; gap: 4px; font-size: .9rem; font-weight: 600; color: var(--muted); }
+  .ml-f input[type=text], .ml-f input[type=tel] { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; }
+  .ml-f small { font-weight: 400; }
+  .ml-step { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); }
+  .ml-step span { font-weight: 600; color: var(--text); font-size: .92rem; }
+  .ml-step div { display: flex; align-items: center; gap: 10px; }
+  .ml-step button { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--green); background: var(--surface); color: var(--green); font-size: 1.3rem; line-height: 1; cursor: pointer; }
+  .ml-step b { min-width: 2ch; text-align: center; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+  .ml-ck { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ml-ck label { display: inline-flex; flex-direction: row; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; }
+  .ml-ck label:has(input:checked) { border-color: var(--green); background: color-mix(in srgb, var(--green) 12%, var(--surface)); }
+  .ml-all { display: flex !important; flex-direction: row !important; align-items: center; gap: 8px; color: var(--text) !important; }
+  .ml-err { padding: 8px 12px; border-radius: 10px; background: #fbe3e1; color: #8c2a1f; font-weight: 600; }
+  .mo-ev { padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 10px; }
+  .mo-ev.past { opacity: .7; }
+  .mo-tot { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+  .mo-tot span { padding: 4px 10px; border-radius: 8px; background: var(--surface-2); font-weight: 700; }
+  .mo-tot small { font-weight: 400; color: var(--muted); }
+  .mo-regs { width: 100%; border-collapse: collapse; font-size: .86rem; margin-top: 8px; }
+  .mo-regs td, .mo-regs th { padding: 6px; border-top: 1px solid var(--line); text-align: start; }
+  .mo-regs a { color: var(--green); font-weight: 700; }
+  .mo-dup { color: #b4560b; font-weight: 700; }
+
   /* More services (open on the community site) */
   .more-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
   .more-item { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); text-decoration: none; }
@@ -646,6 +688,12 @@
   <section id="notice" class="card nt-card" hidden>
     <h2 data-i18n="nt_title">اعلانات</h2>
     <div class="nt-list" id="ntList"></div>
+  </section>
+
+  <section id="meal" class="card ml-card" hidden>
+    <h2 data-i18n="ml_title">🍽 مسجد میں کھانا</h2>
+    <p class="ml-lead" data-i18n="ml_lead">دیے گئے وقت سے پہلے نام لکھوائیں تاکہ مسجد صحیح مقدار میں کھانا بنا سکے۔ نام اور فون نمبر صرف منتظمین دیکھتے ہیں۔</p>
+    <div class="ml-list" id="mlList"></div>
   </section>
 
   <section id="times" class="card">
@@ -989,6 +1037,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    ml_title: "🍽 Meals at the masjid", ml_lead: "Please register before the time shown, so the masjid can cook the right amount. Your name and phone number are seen only by the organizers.", ml_today: "Today", ml_tomorrow: "Tomorrow", ml_dl: "Register by {d}", ml_closed: "Registration closed", ml_people: "{n} people", ml_mine: "✓ You are registered: {a} aged 7+{k} — {m}", ml_kids: ", {k} under 7", ml_reg: "✍️ Register", ml_edit: "✏️ Change", ml_cancel: "✕ Cancel", ml_cancel_q: "Cancel your registration for this day?", ml_name: "Name", ml_phone: "Phone number", ml_phone_h: "Japanese phone number — only the organizers see it", ml_a: "Age 7 and over (with you)", ml_k: "Children under 7", ml_meals: "Which meals", ml_all: "Same for the other open days ({n})", ml_save: "Save", ml_saved: "✓ Saved. Jazakallahu khairan!", ml_err_name: "Please write your name.", ml_err_phone: "Please check the phone number (e.g. 090-1234-5678).", ml_err_count: "Please check the number of people and choose at least one meal.", ml_err_closed: "Registration for this day is closed.", ml_err: "Something went wrong. Please check the connection and try again.", m_sehri: "Sehri", m_lunch: "Lunch", m_iftar: "Iftar", m_dinner: "Dinner", ml_test: "TEST", ad_meal: "🍽 Meals", mo_new: "➕ New day", mo_ram: "🌙 Make all Ramadan days", mo_ram_q: "Ramadan {y}: {a} – {b} ({n} days). Every day: Sehri, Iftar, Dinner; registration until {t} the same day. Days that already exist are skipped. Make them?", mo_ram_none: "Could not work out Ramadan on this phone.", mo_date: "Date", mo_meals: "Meals", mo_custom: "Other (name)", mo_dl: "Registration closes", mo_same: "the same day", mo_before: "the day before", mo_note: "Note (optional)", mo_test: "Test only — only people with the test link see it", mo_notice: "Also post a notice (with notification)", mo_save: "Save", mo_list: "👥 Names", mo_print: "🖨 Print", mo_del: "🗑 Delete", mo_del_q: "Delete this day and its names?", mo_link: "🔗 Copy test link", mo_copied: "✓ Copied", mo_none: "No days yet. Make one with ➕.", mo_regs: "{n} registrations", mo_sent: "✓ Sent to the organizers", mo_made: "✓ Made: {n} day(s)", mo_dup: "⚠ same phone twice", mo_edit: "✏️ Change", mo_aged: "7+", mo_kid: "<7",
     to_top: "Back to top",
     th_auto: "🌓 Auto", th_light: "☀️ Day", th_dark: "🌙 Night", th_hint: "Colours: tap to switch (Auto follows the phone)",
     q_listen: "🎧 What to hear", q_l_ar: "Arabic recitation only", q_l_both: "Arabic + translation", q_l_tr: "Translation only", q_seq: "▶ Verse by verse", q_pause: "⏸ Pause", q_resume: "▶ Resume", q_stop: "⏹ Stop", q_now: "Verse {n} of {t}", q_v_en: "Translation voice: Ibrahim Walk (Saheeh International — the same as the text).", q_v_ur: "Urdu voice: Shamshad Ali Khan (his own translation — the text shown is Jalandhry's).", q_v_tts: "The translation is read aloud by the phone's own voice.", q_v_none: "This phone has no voice for this language, so the translation cannot be read aloud. You can add one in the phone's text-to-speech settings.",
@@ -1029,6 +1078,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    ml_title: "🍽 マスジドでの食事", ml_lead: "表示の時刻までに申し込んでください。人数に合わせて準備します。お名前と電話番号は担当者だけが見ます。", ml_today: "今日", ml_tomorrow: "明日", ml_dl: "締切：{d}", ml_closed: "受付終了", ml_people: "{n}人", ml_mine: "✓ 申込済み：7歳以上 {a}人{k} — {m}", ml_kids: "、7歳未満 {k}人", ml_reg: "✍️ 申し込む", ml_edit: "✏️ 変更", ml_cancel: "✕ 取り消し", ml_cancel_q: "この日の申し込みを取り消しますか？", ml_name: "お名前", ml_phone: "電話番号", ml_phone_h: "日本の電話番号（担当者だけが見ます）", ml_a: "7歳以上（ご本人を含む）", ml_k: "7歳未満の子ども", ml_meals: "食事", ml_all: "ほかの受付中の日も同じ内容で（{n}日）", ml_save: "保存", ml_saved: "✓ 保存しました。ありがとうございます。", ml_err_name: "お名前を入力してください。", ml_err_phone: "電話番号を確認してください（例：090-1234-5678）。", ml_err_count: "人数を確認し、食事を1つ以上選んでください。", ml_err_closed: "この日の受付は終了しました。", ml_err: "問題が発生しました。接続を確認してもう一度お試しください。", m_sehri: "サフール", m_lunch: "昼食", m_iftar: "イフタール", m_dinner: "夕食", ml_test: "テスト", ad_meal: "🍽 食事", mo_new: "➕ 新しい日", mo_ram: "🌙 ラマダンの全日程を作成", mo_ram_q: "ラマダン {y}：{a}〜{b}（{n}日）。毎日サフール・イフタール・夕食、締切は当日 {t}。作成済みの日は飛ばします。作成しますか？", mo_ram_none: "この端末ではラマダンの日付を計算できませんでした。", mo_date: "日付", mo_meals: "食事", mo_custom: "その他（名前）", mo_dl: "締切", mo_same: "当日", mo_before: "前日", mo_note: "メモ（任意）", mo_test: "テストのみ — テスト用リンクを持つ人だけに表示", mo_notice: "お知らせも出す（通知あり）", mo_save: "保存", mo_list: "👥 名簿", mo_print: "🖨 印刷", mo_del: "🗑 削除", mo_del_q: "この日と名簿を削除しますか？", mo_link: "🔗 テスト用リンクをコピー", mo_copied: "✓ コピーしました", mo_none: "まだありません。➕ から作成してください。", mo_regs: "{n}件", mo_sent: "✓ 担当者に送信済み", mo_made: "✓ 作成：{n}日", mo_dup: "⚠ 同じ電話番号が2回", mo_edit: "✏️ 変更", mo_aged: "7歳以上", mo_kid: "7歳未満",
     to_top: "ページの先頭へ",
     th_auto: "🌓 自動", th_light: "☀️ ライト", th_dark: "🌙 ダーク", th_hint: "表示の明るさ：タップで切り替え（自動は端末の設定どおり）",
     q_listen: "🎧 聞く内容", q_l_ar: "アラビア語の朗誦のみ", q_l_both: "アラビア語＋日本語訳", q_l_tr: "日本語訳のみ", q_seq: "▶ 1節ずつ再生", q_pause: "⏸ 一時停止", q_resume: "▶ 再開", q_stop: "⏹ 停止", q_now: "{t}節中 第{n}節", q_v_en: "", q_v_ur: "", q_v_tts: "日本語訳は端末の音声で読み上げます。", q_v_none: "この端末には日本語の音声がないため、訳を読み上げられません。端末の読み上げ設定で追加できます。",
@@ -1069,6 +1119,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    ml_title: "🍽 মসজিদে খাবার", ml_lead: "দেখানো সময়ের আগে নাম দিন, যাতে মসজিদ ঠিক পরিমাণ রান্না করতে পারে। নাম আর ফোন নম্বর শুধু আয়োজকরা দেখেন।", ml_today: "আজ", ml_tomorrow: "আগামীকাল", ml_dl: "নাম দেওয়ার শেষ সময়: {d}", ml_closed: "নাম দেওয়া বন্ধ", ml_people: "{n} জন", ml_mine: "✓ আপনার নাম আছে: ৭ বছর বা বেশি {a} জন{k} — {m}", ml_kids: ", ৭-এর কম {k} জন", ml_reg: "✍️ নাম দিন", ml_edit: "✏️ বদলান", ml_cancel: "✕ বাতিল", ml_cancel_q: "এই দিনের নাম বাতিল করবেন?", ml_name: "নাম", ml_phone: "ফোন নম্বর", ml_phone_h: "জাপানের ফোন নম্বর — শুধু আয়োজকরা দেখবেন", ml_a: "৭ বছর বা তার বেশি (আপনিসহ)", ml_k: "৭ বছরের কম বাচ্চা", ml_meals: "কোন বেলা", ml_all: "অন্য খোলা দিনগুলোতেও একই ({n} দিন)", ml_save: "জমা দিন", ml_saved: "✓ জমা হয়েছে। জাযাকাল্লাহু খাইরান!", ml_err_name: "নাম লিখুন।", ml_err_phone: "ফোন নম্বর দেখুন (যেমন 090-1234-5678)।", ml_err_count: "কতজন দেখুন, আর অন্তত একটা বেলা বাছুন।", ml_err_closed: "এই দিনের নাম দেওয়া বন্ধ হয়ে গেছে।", ml_err: "কিছু একটা সমস্যা হয়েছে। ইন্টারনেট দেখে আবার চেষ্টা করুন।", m_sehri: "সেহরি", m_lunch: "দুপুরের খাবার", m_iftar: "ইফতার", m_dinner: "রাতের খাবার", ml_test: "পরীক্ষা", ad_meal: "🍽 আয়োজন", mo_new: "➕ নতুন দিন", mo_ram: "🌙 রমজানের সব দিন বানাও", mo_ram_q: "রমজান {y}: {a} – {b} ({n} দিন)। প্রতিদিন সেহরি, ইফতার, ডিনার; নাম দেওয়া যাবে সেদিন {t} পর্যন্ত। আগে থেকে থাকা দিন বাদ যাবে। বানাবো?", mo_ram_none: "এই ফোনে রমজানের তারিখ বের করা গেল না।", mo_date: "তারিখ", mo_meals: "কোন বেলা", mo_custom: "অন্য (নাম লিখুন)", mo_dl: "নাম দেওয়ার শেষ সময়", mo_same: "সেদিন", mo_before: "আগের দিন", mo_note: "ছোট লেখা (ইচ্ছা হলে)", mo_test: "শুধু পরীক্ষা — পরীক্ষার লিংক ছাড়া কেউ দেখবে না", mo_notice: "সাথে নোটিশও দাও (নোটিফিকেশনসহ)", mo_save: "জমা দিন", mo_list: "👥 নামের তালিকা", mo_print: "🖨 প্রিন্ট", mo_del: "🗑 মুছুন", mo_del_q: "এই দিন আর এর নামগুলো মুছে ফেলবেন?", mo_link: "🔗 পরীক্ষার লিংক কপি", mo_copied: "✓ কপি হয়েছে", mo_none: "এখনো কোনো দিন নেই। ➕ দিয়ে বানান।", mo_regs: "{n}টি নাম", mo_sent: "✓ আয়োজকদের কাছে পাঠানো হয়েছে", mo_made: "✓ বানানো হলো: {n} দিন", mo_dup: "⚠ একই ফোন দুবার", mo_edit: "✏️ বদলান", mo_aged: "৭+", mo_kid: "<৭",
     to_top: "একদম উপরে যান",
     th_auto: "🌓 অটো", th_light: "☀️ দিন", th_dark: "🌙 রাত", th_hint: "রং: চাপ দিয়ে বদলান (অটো = ফোনের সেটিং)",
     q_listen: "🎧 কী শুনবেন", q_l_ar: "শুধু আরবি তিলাওয়াত", q_l_both: "আরবি + বাংলা অর্থ", q_l_tr: "শুধু বাংলা অর্থ", q_seq: "▶ আয়াত ধরে ধরে", q_pause: "⏸ থামান", q_resume: "▶ আবার চালান", q_stop: "⏹ বন্ধ", q_now: "আয়াত {n} / {t}", q_v_en: "", q_v_ur: "", q_v_tts: "বাংলা অর্থ ফোনের নিজের কণ্ঠে পড়া হয়।", q_v_none: "এই ফোনে বাংলা কণ্ঠ নেই, তাই অর্থ পড়ে শোনানো যাচ্ছে না। ফোনের Text-to-speech সেটিংসে বাংলা কণ্ঠ যোগ করা যায়।",
@@ -1109,6 +1160,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    ml_title: "🍽 مسجد میں کھانا", ml_lead: "دیے گئے وقت سے پہلے نام لکھوائیں تاکہ مسجد صحیح مقدار میں کھانا بنا سکے۔ نام اور فون نمبر صرف منتظمین دیکھتے ہیں۔", ml_today: "آج", ml_tomorrow: "کل", ml_dl: "آخری وقت: {d}", ml_closed: "اندراج بند", ml_people: "{n} افراد", ml_mine: "✓ آپ کا نام درج ہے: 7 سال یا زیادہ {a}{k} — {m}", ml_kids: "، 7 سے کم {k}", ml_reg: "✍️ نام لکھوائیں", ml_edit: "✏️ تبدیل", ml_cancel: "✕ منسوخ", ml_cancel_q: "اس دن کا اندراج منسوخ کریں؟", ml_name: "نام", ml_phone: "فون نمبر", ml_phone_h: "جاپان کا فون نمبر — صرف منتظمین دیکھیں گے", ml_a: "7 سال یا زیادہ (آپ سمیت)", ml_k: "7 سال سے کم بچے", ml_meals: "کون سا کھانا", ml_all: "باقی کھلے دنوں کے لیے بھی یہی ({n})", ml_save: "جمع کریں", ml_saved: "✓ جمع ہو گیا۔ جزاک اللہ خیراً!", ml_err_name: "نام لکھیں۔", ml_err_phone: "فون نمبر دیکھیں (مثلاً 090-1234-5678)۔", ml_err_count: "افراد کی تعداد دیکھیں اور کم از کم ایک کھانا چنیں۔", ml_err_closed: "اس دن کا اندراج بند ہو گیا۔", ml_err: "کچھ مسئلہ ہوا۔ انٹرنیٹ دیکھ کر دوبارہ کوشش کریں۔", m_sehri: "سحری", m_lunch: "دوپہر کا کھانا", m_iftar: "افطار", m_dinner: "رات کا کھانا", ml_test: "ٹیسٹ",
     to_top: "اوپر جائیں",
     th_auto: "🌓 خودکار", th_light: "☀️ دن", th_dark: "🌙 رات", th_hint: "رنگ: بدلنے کے لیے ٹیپ کریں (خودکار = فون کی سیٹنگ)",
     q_listen: "🎧 کیا سنیں", q_l_ar: "صرف عربی تلاوت", q_l_both: "عربی + اردو ترجمہ", q_l_tr: "صرف اردو ترجمہ", q_seq: "▶ آیت بہ آیت", q_pause: "⏸ روکیں", q_resume: "▶ جاری رکھیں", q_stop: "⏹ بند", q_now: "آیت {n} / {t}", q_v_en: "", q_v_ur: "اردو آواز: شمشاد علی خان (ان کا اپنا ترجمہ — لکھا ہوا ترجمہ جالندھری کا ہے)۔", q_v_tts: "ترجمہ فون کی اپنی آواز میں پڑھا جاتا ہے۔", q_v_none: "اس فون میں اس زبان کی آواز نہیں، اس لیے ترجمہ سنایا نہیں جا سکتا۔ فون کی Text-to-speech سیٹنگ میں شامل کی جا سکتی ہے۔",
@@ -1149,6 +1201,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    ml_title: "🍽 मस्जिद में खाना", ml_lead: "दिए गए समय से पहले नाम लिखवाएँ ताकि मस्जिद सही मात्रा में खाना बना सके। नाम और फ़ोन नंबर सिर्फ़ आयोजक देखते हैं।", ml_today: "आज", ml_tomorrow: "कल", ml_dl: "आख़िरी समय: {d}", ml_closed: "नाम लिखवाना बंद", ml_people: "{n} लोग", ml_mine: "✓ आपका नाम है: 7 साल या ज़्यादा {a}{k} — {m}", ml_kids: ", 7 से कम {k}", ml_reg: "✍️ नाम लिखवाएँ", ml_edit: "✏️ बदलें", ml_cancel: "✕ रद्द", ml_cancel_q: "इस दिन का नाम रद्द करें?", ml_name: "नाम", ml_phone: "फ़ोन नंबर", ml_phone_h: "जापान का फ़ोन नंबर — सिर्फ़ आयोजक देखेंगे", ml_a: "7 साल या ज़्यादा (आप समेत)", ml_k: "7 साल से कम बच्चे", ml_meals: "कौन सा खाना", ml_all: "बाक़ी खुले दिनों के लिए भी यही ({n})", ml_save: "जमा करें", ml_saved: "✓ जमा हो गया। जज़ाकल्लाहु ख़ैरन!", ml_err_name: "नाम लिखें।", ml_err_phone: "फ़ोन नंबर देखें (जैसे 090-1234-5678)।", ml_err_count: "लोगों की संख्या देखें और कम से कम एक खाना चुनें।", ml_err_closed: "इस दिन का नाम लिखवाना बंद हो गया।", ml_err: "कुछ गड़बड़ हुई। इंटरनेट देखकर फिर कोशिश करें।", m_sehri: "सहरी", m_lunch: "दोपहर का खाना", m_iftar: "इफ़्तार", m_dinner: "रात का खाना", ml_test: "टेस्ट",
     to_top: "ऊपर जाएँ",
     th_auto: "🌓 ऑटो", th_light: "☀️ दिन", th_dark: "🌙 रात", th_hint: "रंग: बदलने के लिए टैप करें (ऑटो = फ़ोन की सेटिंग)",
     q_listen: "🎧 क्या सुनें", q_l_ar: "सिर्फ़ अरबी तिलावत", q_l_both: "अरबी + हिंदी अनुवाद", q_l_tr: "सिर्फ़ हिंदी अनुवाद", q_seq: "▶ आयत-दर-आयत", q_pause: "⏸ रोकें", q_resume: "▶ फिर चलाएँ", q_stop: "⏹ बंद", q_now: "आयत {n} / {t}", q_v_en: "", q_v_ur: "", q_v_tts: "हिंदी अनुवाद फ़ोन की अपनी आवाज़ में पढ़ा जाता है।", q_v_none: "इस फ़ोन में हिंदी आवाज़ नहीं है, इसलिए अनुवाद पढ़कर नहीं सुनाया जा सकता। फ़ोन की Text-to-speech सेटिंग में जोड़ी जा सकती है।",
@@ -1189,6 +1242,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    ml_title: "🍽 الطعام في المسجد", ml_lead: "يُرجى التسجيل قبل الموعد المذكور ليُعدّ المسجد الكمية المناسبة. لا يرى الاسم ورقم الهاتف إلا المنظمون.", ml_today: "اليوم", ml_tomorrow: "غدًا", ml_dl: "آخر موعد: {d}", ml_closed: "انتهى التسجيل", ml_people: "{n} أشخاص", ml_mine: "✓ أنت مسجّل: 7 سنوات فأكثر {a}{k} — {m}", ml_kids: "، أقل من 7: {k}", ml_reg: "✍️ سجّل", ml_edit: "✏️ تعديل", ml_cancel: "✕ إلغاء", ml_cancel_q: "إلغاء التسجيل لهذا اليوم؟", ml_name: "الاسم", ml_phone: "رقم الهاتف", ml_phone_h: "رقم هاتف ياباني — لا يراه إلا المنظمون", ml_a: "7 سنوات فأكثر (معك)", ml_k: "أطفال دون 7 سنوات", ml_meals: "الوجبات", ml_all: "نفس التسجيل للأيام المفتوحة الأخرى ({n})", ml_save: "حفظ", ml_saved: "✓ تم الحفظ. جزاكم الله خيرًا!", ml_err_name: "يُرجى كتابة الاسم.", ml_err_phone: "يُرجى التحقق من رقم الهاتف (مثل 090-1234-5678).", ml_err_count: "يُرجى التحقق من العدد واختيار وجبة واحدة على الأقل.", ml_err_closed: "انتهى التسجيل لهذا اليوم.", ml_err: "حدث خطأ. تحقّق من الاتصال وحاول مرة أخرى.", m_sehri: "السحور", m_lunch: "الغداء", m_iftar: "الإفطار", m_dinner: "العشاء", ml_test: "تجربة",
     to_top: "العودة إلى الأعلى",
     th_auto: "🌓 تلقائي", th_light: "☀️ نهاري", th_dark: "🌙 ليلي", th_hint: "الألوان: اضغط للتبديل (تلقائي = إعداد الهاتف)",
     q_listen: "🎧 الاستماع", q_l_ar: "التلاوة", q_l_both: "التلاوة", q_l_tr: "التلاوة", q_seq: "▶ آية آية", q_pause: "⏸ إيقاف مؤقت", q_resume: "▶ متابعة", q_stop: "⏹ إيقاف", q_now: "الآية {n} من {t}", q_v_en: "", q_v_ur: "", q_v_tts: "", q_v_none: "",
@@ -1692,7 +1746,7 @@ const mnAdmin = (() => {
   function close() { sheet.hidden = true; document.body.style.overflow = ""; }
   function me() {
     ep().then(e => mnPost("me", { tk: st.tk, ep: e })).then(d => {
-      if (d.ok) { st.me = d; st.step = "in"; if (d.r === "approver") st.tab = "list"; loadList(); }
+      if (d.ok) { st.me = d; st.step = "in"; st.tab = st.want || (d.r === "cook" ? "meal" : d.r === "approver" ? "list" : "new"); st.want = ""; if (d.r === "cook") st.tab = "meal"; loadList(); if (st.tab === "meal") mlLoad(); }
       else { st.tk = ""; store.set("mn_tk", ""); st.step = "email"; }
       draw();
     }).catch(() => { st.step = "email"; fail(""); });
@@ -1727,18 +1781,21 @@ const mnAdmin = (() => {
         ep().then(p => mnPost("verify", { email: st.email, code, dev: dev(), ep: p })).then(d => {
           st.busy = false;
           if (!d.ok) return fail(d.err);
-          st.tk = d.tk; store.set("mn_tk", d.tk); st.me = d; st.step = "in"; st.tab = d.r === "approver" ? "list" : "new"; say(""); loadList(); draw();
+          st.tk = d.tk; store.set("mn_tk", d.tk); st.me = d; st.step = "in"; st.tab = d.r === "cook" ? "meal" : d.r === "approver" ? "list" : "new"; say(""); loadList(); if (st.tab === "meal") mlLoad(); draw();
         }).catch(() => fail(""));
       };
       return;
     }
     // logged in
-    const m = st.me, ap = m.r === "approver";
-    let h = `<div class="mn-me"><span>${mnEsc(T("ad_hi").replace("{n}", m.n || m.e))}<br><small>${mnEsc(T(ap ? "ad_role_a" : "ad_role_w"))}</small></span>
+    const m = st.me, ap = m.r === "approver", cook = m.r === "cook" || ap;
+    let h = `<div class="mn-me"><span>${mnEsc(T("ad_hi").replace("{n}", m.n || m.e))}<br><small>${mnEsc(m.r === "cook" ? T("ad_meal") : T(ap ? "ad_role_a" : "ad_role_w"))}</small></span>
       <button type="button" class="chip" id="mnOut">${mnEsc(T("ad_out"))}</button></div>
-      <div class="mn-tabs"><button type="button" class="chip" data-t="new" aria-pressed="${st.tab === "new"}">${mnEsc(T("ad_new"))}</button>
-      <button type="button" class="chip" data-t="list" aria-pressed="${st.tab === "list"}">${mnEsc(T("ad_list"))}</button></div>${v}`;
-    if (st.tab === "new") {
+      <div class="mn-tabs">${m.r !== "cook" ? `<button type="button" class="chip" data-t="new" aria-pressed="${st.tab === "new"}">${mnEsc(T("ad_new"))}</button>
+      <button type="button" class="chip" data-t="list" aria-pressed="${st.tab === "list"}">${mnEsc(T("ad_list"))}</button>` : ""}
+      ${cook ? `<button type="button" class="chip" data-t="meal" aria-pressed="${st.tab === "meal"}">${mnEsc(T("ad_meal"))}</button>` : ""}</div>${v}`;
+    if (st.tab === "meal") {
+      h += mlAdminHtml();
+    } else if (st.tab === "new") {
       const t = tokyoYMD(), d0 = `${t.y}-${String(t.m).padStart(2, "0")}-${String(t.d).padStart(2, "0")}`;
       const n7 = addDays(t, 7), d7 = `${n7.y}-${String(n7.m).padStart(2, "0")}-${String(n7.d).padStart(2, "0")}`;
       h += `<form class="mn-f" id="mnF">
@@ -1761,7 +1818,8 @@ const mnAdmin = (() => {
     }
     body.innerHTML = h;
     body.querySelector("#mnOut").onclick = () => { mnPost("logout", { tk: st.tk }).catch(() => {}); st.tk = ""; st.me = null; store.set("mn_tk", ""); st.step = "email"; say(""); draw(); };
-    body.querySelectorAll(".mn-tabs .chip").forEach(b => b.onclick = () => { st.tab = b.dataset.t; say(""); if (st.tab === "list") loadList(); draw(); });
+    body.querySelectorAll(".mn-tabs .chip").forEach(b => b.onclick = () => { st.tab = b.dataset.t; say(""); if (st.tab === "list") loadList(); if (st.tab === "meal") mlLoad(); draw(); });
+    if (st.tab === "meal") mlBind();
     body.querySelectorAll("[data-a]").forEach(b => b.onclick = () => {
       if (b.dataset.a === "remove" && !confirm(T("ad_rm_q"))) return;
       b.disabled = true;
@@ -1781,11 +1839,121 @@ const mnAdmin = (() => {
         }).catch(() => fail(""));
     };
   }
+
+  /* ── organizers: meal days ── */
+  st.ml = null; st.mlForm = null; st.mlOpen = ""; st.mlDl = "11:00";
+  function mlLoad() {
+    mnPost("meal_admin", { tk: st.tk, m: MN.m }).then(d => { if (d.ok) { st.ml = d.ev; st.mlDl = d.dl || "11:00"; } else st.ml = []; draw(); }).catch(() => {});
+  }
+  const KEYS = ["sehri", "lunch", "iftar", "dinner"];
+  function mlFormHtml() {
+    const f = st.mlForm, t = tokyoYMD();
+    const date = f.date || mlYmd(addDays(t, 1));
+    const custom = (f.meals || []).filter(x => !KEYS.includes(x)).join("");
+    return `<form class="mn-f" id="moF">
+      <label>${mnEsc(T("mo_date"))}<input type="date" name="d" value="${mnEsc(date)}" required></label>
+      <div><label style="margin-bottom:6px">${mnEsc(T("mo_meals"))}</label><div class="ml-ck">${KEYS.map(k => `<label><input type="checkbox" name="ml" value="${k}"${(f.meals || ["iftar", "dinner"]).includes(k) ? " checked" : ""}> ${mnEsc(mlMeal(k))}</label>`).join("")}</div></div>
+      <label>${mnEsc(T("mo_custom"))}<input type="text" name="cu" maxlength="30" value="${mnEsc(custom)}"></label>
+      <div class="mn-row2"><label>${mnEsc(T("mo_dl"))}<select name="dlo"><option value="0">${mnEsc(T("mo_same"))}</option><option value="-1"${f.dlo === -1 ? " selected" : ""}>${mnEsc(T("mo_before"))}</option></select></label>
+      <label>&nbsp;<input type="time" name="dlt" value="${mnEsc(f.dlt || st.mlDl)}" required></label></div>
+      <label>${mnEsc(T("mo_note"))}<textarea name="note" maxlength="300" style="min-height:70px">${mnEsc(f.note || "")}</textarea></label>
+      <label class="ck"><input type="checkbox" name="test"${f.test ? " checked" : ""}> ${mnEsc(T("mo_test"))}</label>
+      ${f.id ? "" : `<label class="ck"><input type="checkbox" name="nt"> ${mnEsc(T("mo_notice"))}</label>`}
+      <div class="mn-acts"><button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("mo_save"))}</button>
+      <button type="button" class="chip" id="moX">✕</button></div></form>`;
+  }
+  function mlAdminHtml() {
+    let h = `<div class="mn-acts" style="margin:0 0 12px"><button type="button" class="chip ok" id="moNew">${mnEsc(T("mo_new"))}</button>`
+      + `<button type="button" class="chip" id="moRam">${mnEsc(T("mo_ram"))}</button></div>`;
+    if (st.mlForm) return h + mlFormHtml();
+    const l = st.ml, today = mlYmd(tokyoYMD());
+    if (l === null) return h + "<p>⏳</p>";
+    if (!l.length) return h + `<p>${mnEsc(T("mo_none"))}</p>`;
+    return h + l.map(e => {
+      const tot = e.meals.map(m => { const t = e.tot[m] || { a: 0, k: 0 }; return `<span>${mnEsc(mlMeal(m))} ${localDigits(String(t.a))} <small>${mnEsc(T("mo_aged"))}${t.k ? " · " + localDigits(String(t.k)) + " " + mnEsc(T("mo_kid")) : ""}</small></span>`; }).join("");
+      const regs = st.mlOpen === e.id ? `<table class="mo-regs"><tr><th>${mnEsc(T("ml_name"))}</th><th>📞</th><th>${mnEsc(T("mo_aged"))}</th><th>${mnEsc(T("mo_kid"))}</th><th></th></tr>`
+        + e.regs.map(r => `<tr><td>${mnEsc(r.n)}${r.dup ? ` <span class="mo-dup">${mnEsc(T("mo_dup"))}</span>` : ""}</td><td><a href="tel:${mnEsc(r.ph)}">${mnEsc(r.ph)}</a></td><td>${localDigits(String(r.a))}</td><td>${localDigits(String(r.k))}</td><td>${r.meals.map(x => (ML_IC[x] || "🍴")).join("")}</td></tr>`).join("") + "</table>" : "";
+      return `<div class="mo-ev${e.date < today ? " past" : ""}"><b>${mnEsc(mlDay(e.date))}</b>${mlDay(e.date) !== mnDate(e.date) ? ` <small class="nt-d">${mnEsc(mnDate(e.date))}</small>` : ""}${e.test ? `<span class="ml-test">${mnEsc(T("ml_test"))}</span>` : ""}
+        <div class="nt-d">⏰ ${mnEsc(mlWhen(e.dl))}${e.closed ? " · 🔒" : ""} · ${mnEsc(T("mo_regs").replace("{n}", localDigits(String(e.regs.length))))}</div>
+        ${e.note ? `<p class="nt-b">${mnEsc(e.note)}</p>` : ""}<div class="mo-tot">${tot}</div>
+        <div class="mn-acts"><button type="button" class="chip" data-mo="list" data-id="${e.id}">${mnEsc(T("mo_list"))}</button>
+        <button type="button" class="chip" data-mo="print" data-id="${e.id}">${mnEsc(T("mo_print"))}</button>
+        <button type="button" class="chip" data-mo="edit" data-id="${e.id}">${mnEsc(T("mo_edit"))}</button>
+        ${e.test ? `<button type="button" class="chip" data-mo="link" data-id="${e.id}">${mnEsc(T("mo_link"))}</button>` : ""}
+        <button type="button" class="chip no" data-mo="del" data-id="${e.id}">${mnEsc(T("mo_del"))}</button></div>${regs}</div>`;
+    }).join("");
+  }
+  function mlPrint(e) {
+    const w = window.open("", "_blank"); if (!w) return;
+    const rows = e.regs.map((r, i) => `<tr><td>${i + 1}</td><td>${mnEsc(r.n)}</td><td>${mnEsc(r.ph)}</td><td>${r.a}</td><td>${r.k}</td><td>${r.meals.map(x => mnEsc(mlMeal(x))).join(", ")}</td></tr>`).join("");
+    const tot = e.meals.map(m => { const t = e.tot[m] || { a: 0, k: 0 }; return `<b>${mnEsc(mlMeal(m))}: ${t.a}</b> (${mnEsc(T("mo_kid"))} ${t.k})`; }).join(" &nbsp;·&nbsp; ");
+    w.document.write(`<!doctype html><meta charset="utf-8"><title>${mnEsc(e.date)}</title><style>body{font-family:sans-serif;margin:24px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #999;padding:6px;text-align:left}h1{font-size:20px}</style>`
+      + `<h1>${mnEsc(T("title"))} — ${mnEsc(mnDate(e.date))} ${mnEsc(e.date)}</h1><p>${tot}</p>${e.note ? `<p>${mnEsc(e.note)}</p>` : ""}`
+      + `<table><tr><th>#</th><th>${mnEsc(T("ml_name"))}</th><th>📞</th><th>${mnEsc(T("mo_aged"))}</th><th>${mnEsc(T("mo_kid"))}</th><th>${mnEsc(T("mo_meals"))}</th></tr>${rows}</table><script>print()<\/script>`);
+    w.document.close();
+  }
+  function mlBind() {
+    const nb = body.querySelector("#moNew"), rb = body.querySelector("#moRam");
+    if (nb) nb.onclick = () => { st.mlForm = {}; say(""); draw(); };
+    if (rb) rb.onclick = () => {
+      let r = null; try { r = HIJ ? findRamadan(tokyoYMD()) : null; } catch {}
+      if (!r) { say("mo_ram_none", true); return draw(); }
+      const dates = []; for (let i = 0; i < r.len; i++) dates.push(mlYmd(addDays(r.day, i)));
+      const q = T("mo_ram_q").replace("{y}", localDigits(String(r.y))).replace("{a}", mnDate(dates[0])).replace("{b}", mnDate(dates[dates.length - 1]))
+        .replace("{n}", localDigits(String(dates.length))).replace("{t}", localDigits(st.mlDl));
+      if (!confirm(q)) return;
+      st.busy = true; draw();
+      mnPost("meal_save", { tk: st.tk, m: MN.m, dates, meals: ["sehri", "iftar", "dinner"], dlt: st.mlDl, dlo: 0 }).then(d => {
+        st.busy = false;
+        if (d.ok) { st.msg = T("mo_made").replace("{n}", localDigits(String(d.made))); st.err = false; } else say("ad_err", true);
+        mlLoad(); meals.load(); draw();
+      }).catch(() => fail(""));
+    };
+    body.querySelectorAll("[data-mo]").forEach(b => b.onclick = () => {
+      const e = (st.ml || []).find(x => x.id === b.dataset.id); if (!e) return;
+      const a = b.dataset.mo;
+      if (a === "list") { st.mlOpen = st.mlOpen === e.id ? "" : e.id; return draw(); }
+      if (a === "print") return mlPrint(e);
+      if (a === "edit") { st.mlForm = { id: e.id, date: e.date, meals: e.meals, note: e.note, test: e.test, dlt: e.dl.slice(11, 16), dlo: e.dl.slice(0, 10) < e.date ? -1 : 0 }; say(""); return draw(); }
+      if (a === "link") {
+        const u = location.origin + location.pathname + "?meal=test#meal";
+        const ok = () => { b.textContent = T("mo_copied"); };
+        (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(ok, () => window.prompt("", u));
+        return;
+      }
+      if (a === "del") {
+        if (!confirm(T("mo_del_q"))) return;
+        b.disabled = true;
+        mnPost("meal_del", { tk: st.tk, id: e.id }).then(() => { mlLoad(); meals.load(); }).catch(() => fail(""));
+      }
+    });
+    const f = body.querySelector("#moF");
+    if (!f) return;
+    body.querySelector("#moX").onclick = () => { st.mlForm = null; draw(); };
+    f.onsubmit = ev => {
+      ev.preventDefault();
+      const ml = [...f.querySelectorAll('input[name="ml"]:checked')].map(x => x.value);
+      if (f.cu.value.trim()) ml.push(f.cu.value.trim());
+      if (!ml.length) { say("ml_err_count", true); return draw(); }
+      const id = st.mlForm.id || "";
+      const body2 = { tk: st.tk, m: MN.m, id, dates: [f.d.value], meals: ml, dlt: f.dlt.value, dlo: +f.dlo.value, note: f.note.value,
+        test: f.test.checked ? 1 : 0, notice: f.nt && f.nt.checked ? 1 : 0 };
+      st.busy = true; say(""); draw();
+      mnPost("meal_save", body2).then(d => {
+        st.busy = false;
+        if (!d.ok) return fail(d.err);
+        st.mlForm = null; st.msg = T("mo_made").replace("{n}", localDigits(String(d.made))); st.err = false;
+        mlLoad(); meals.load(); notices.load(); draw();
+      }).catch(() => fail(""));
+    };
+  }
+
   document.getElementById("mnOpen").addEventListener("click", open);
   document.getElementById("mnX").addEventListener("click", close);
   sheet.addEventListener("click", e => { if (e.target === sheet) close(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hidden) close(); });
   if (/[?&]mn=admin\b/.test(location.search)) window.addEventListener("load", () => setTimeout(open, 200));
+  if (/[?&]mn=meal\b/.test(location.search)) { st.want = "meal"; window.addEventListener("load", () => setTimeout(open, 200)); }
   return { draw: () => { if (!sheet.hidden) draw(); } };
 })();
 
@@ -1835,6 +2003,119 @@ const theme = (() => {
   check();
 })();
 
+/* ===================== Meals: registration (Sehri / Iftar / Dinner / Lunch) ===================== */
+// Organizers make the days (Masjid Notice plugin). People give name, phone, how many; no login —
+// this phone keeps a random key, so the same phone can change or cancel its own entry until the closing time.
+const ML_IC = { sehri: "🌙", lunch: "🍛", iftar: "🌅", dinner: "🍽" };
+const mlMeal = k => (ML_IC[k] || "🍴") + " " + (["sehri", "lunch", "iftar", "dinner"].includes(k) ? T("m_" + k) : k);
+const mlYmd = t => `${t.y}-${String(t.m).padStart(2, "0")}-${String(t.d).padStart(2, "0")}`;
+function mlDay(ymd) {
+  const t = tokyoYMD();
+  if (ymd === mlYmd(t)) return T("ml_today");
+  if (ymd === mlYmd(addDays(t, 1))) return T("ml_tomorrow");
+  return mnDate(ymd);
+}
+function mlWhen(dl) {          // "2027-02-08 11:00" → "Today 11:00"
+  return mlDay(dl.slice(0, 10)) + " " + localDigits(dl.slice(11, 16));
+}
+const meals = (() => {
+  const sec = document.getElementById("meal"), list = document.getElementById("mlList");
+  let dk = store.get("dk");
+  if (!dk || dk.length < 20) { const a = new Uint8Array(16); (crypto.getRandomValues ? crypto.getRandomValues(a) : a.forEach((_, i) => a[i] = Math.random() * 256)); dk = Array.from(a, x => x.toString(16).padStart(2, "0")).join(""); store.set("dk", dk); }
+  const test = /[?&]meal=test\b/.test(location.search);
+  let data = null, max = 15, open = "", msg = {}, busy = false, draft = null;
+  let me = { n: "", ph: "", a: 1, k: 0 };
+  try { Object.assign(me, JSON.parse(store.get("ml_me") || "{}")); } catch {}
+  try { const c = JSON.parse(store.get("ml") || "null"); if (c && Array.isArray(c.ev)) data = c.ev; } catch {}
+
+  function load() {
+    mnPost("meals", { m: MN.m, dk, test: test ? 1 : 0 }).then(d => {
+      data = d.ev || []; max = d.max || 15; store.set("ml", JSON.stringify({ ev: data })); render();
+    }).catch(() => {});
+  }
+  function counts(e) {
+    return e.meals.map(m => { const t = (e.tot || {})[m] || { a: 0 }; return `<span class="ml-m">${mnEsc(mlMeal(m))} <small>${mnEsc(T("ml_people").replace("{n}", localDigits(String(t.a))))}</small></span>`; }).join("");
+  }
+  function form(e) {
+    // what is typed stays when the form is drawn again (a mistake message, a language change)
+    const mine = Object.assign({}, e.mine || {}, draft && draft.id === e.id ? draft : {}), others = data.filter(x => x.id !== e.id && !x.closed && !x.mine);
+    const pick = mine.meals || e.meals;
+    return `<form class="ml-f" data-id="${mnEsc(e.id)}">
+      ${msg[e.id] && msg[e.id].err ? `<p class="ml-err">${mnEsc(msg[e.id].t)}</p>` : ""}
+      <label>${mnEsc(T("ml_name"))}<input type="text" name="n" maxlength="40" autocomplete="name" value="${mnEsc(mine.n || me.n)}" required></label>
+      <label>${mnEsc(T("ml_phone"))} <small>${mnEsc(T("ml_phone_h"))}</small><input type="tel" name="ph" inputmode="tel" autocomplete="tel" maxlength="16" value="${mnEsc(mine.ph || me.ph)}" placeholder="090-1234-5678" required></label>
+      <div class="ml-step" data-k="a"><span>${mnEsc(T("ml_a"))}</span><div><button type="button" data-d="-1" aria-label="−">−</button><b data-v="${mine.a || me.a || 1}">${localDigits(String(mine.a || me.a || 1))}</b><button type="button" data-d="1" aria-label="+">+</button></div></div>
+      <div class="ml-step" data-k="k"><span>${mnEsc(T("ml_k"))}</span><div><button type="button" data-d="-1" aria-label="−">−</button><b data-v="${mine.k != null ? mine.k : me.k || 0}">${localDigits(String(mine.k != null ? mine.k : me.k || 0))}</b><button type="button" data-d="1" aria-label="+">+</button></div></div>
+      <div><label style="margin-bottom:6px">${mnEsc(T("ml_meals"))}</label><div class="ml-ck">${e.meals.map(m => `<label><input type="checkbox" name="ml" value="${mnEsc(m)}"${pick.includes(m) ? " checked" : ""}> ${mnEsc(mlMeal(m))}</label>`).join("")}</div></div>
+      ${others.length ? `<label class="ml-all"><input type="checkbox" name="all"> ${mnEsc(T("ml_all").replace("{n}", localDigits(String(others.length))))}</label>` : ""}
+      <div class="ml-acts"><button class="btn"${busy ? " disabled" : ""}>${busy ? "⏳" : mnEsc(T("ml_save"))}</button></div>
+    </form>`;
+  }
+  function render() {
+    const ev = data || [];
+    sec.hidden = !ev.length;
+    if (!ev.length) { list.innerHTML = ""; return; }
+    list.innerHTML = ev.map(e => {
+      const m = e.mine;
+      let h = `<div class="ml-ev${m ? " mine" : ""}"><div class="ml-top"><span class="ml-date">${mnEsc(mlDay(e.date))}${e.date !== mlYmd(tokyoYMD()) && e.date !== mlYmd(addDays(tokyoYMD(), 1)) ? "" : ` <small class="ml-dl">${mnEsc(mnDate(e.date))}</small>`}${e.test ? `<span class="ml-test">${mnEsc(T("ml_test"))}</span>` : ""}</span>`
+        + `<span class="ml-dl${e.closed ? " shut" : ""}">${e.closed ? "🔒 " + mnEsc(T("ml_closed")) : "⏰ " + mnEsc(T("ml_dl").replace("{d}", mlWhen(e.dl)))}</span></div>`
+        + (e.note ? `<p class="ml-note">${mnEsc(e.note)}</p>` : "")
+        + `<div class="ml-meals">${counts(e)}</div>`;
+      if (m) h += `<p class="ml-me">${mnEsc(T("ml_mine").replace("{a}", localDigits(String(m.a))).replace("{k}", m.k ? T("ml_kids").replace("{k}", localDigits(String(m.k))) : "").replace("{m}", m.meals.map(mlMeal).join(", ")))}</p>`;
+      if (msg[e.id] && !msg[e.id].err && open !== e.id) h += `<p class="ml-me">${mnEsc(msg[e.id].t)}</p>`;
+      if (!e.closed) {
+        if (open === e.id) h += form(e);
+        else h += `<div class="ml-acts">${m ? `<button type="button" class="chip" data-a="edit" data-id="${mnEsc(e.id)}">${mnEsc(T("ml_edit"))}</button><button type="button" class="chip no" data-a="cancel" data-id="${mnEsc(e.id)}">${mnEsc(T("ml_cancel"))}</button>`
+          : `<button type="button" class="btn" data-a="edit" data-id="${mnEsc(e.id)}">${mnEsc(T("ml_reg"))}</button>`}</div>`;
+      }
+      return h + "</div>";
+    }).join("");
+    list.querySelectorAll("[data-a]").forEach(b => b.onclick = () => {
+      const id = b.dataset.id;
+      if (b.dataset.a === "edit") { open = id; msg[id] = null; draft = null; render(); const f = list.querySelector(".ml-f"); if (f) f.scrollIntoView({ block: "nearest", behavior: "smooth" }); return; }
+      if (!confirm(T("ml_cancel_q"))) return;
+      b.disabled = true;
+      mnPost("unreg", { id, dk }).then(d => { if (d.ok) { data = data.map(x => x.id === id ? d.ev : x); msg[id] = null; } else msg[id] = { err: 1, t: T(d.err === "closed" ? "ml_err_closed" : "ml_err") }; render(); }).catch(() => { msg[id] = { err: 1, t: T("ml_err") }; render(); });
+    });
+    const f = list.querySelector(".ml-f");
+    if (!f) return;
+    f.querySelectorAll(".ml-step button").forEach(b => b.onclick = () => {
+      const st = b.closest(".ml-step"), v = st.querySelector("b"), k = st.dataset.k;
+      const cur = parseInt(v.dataset.v, 10) || 0;
+      const nv = Math.min(max, Math.max(k === "a" ? 1 : 0, cur + +b.dataset.d));
+      v.dataset.v = nv; v.textContent = localDigits(String(nv));
+    });
+    f.onsubmit = ev => {
+      ev.preventDefault();
+      const id = f.dataset.id;
+      const num = k => parseInt(f.querySelector(`.ml-step[data-k="${k}"] b`).dataset.v, 10) || 0;
+      const body = { dk, n: f.n.value.trim(), ph: f.ph.value.trim(), a: Math.max(1, num("a")), k: num("k"), meals: [...f.querySelectorAll('input[name="ml"]:checked')].map(x => x.value) };
+      draft = { id, n: body.n, ph: body.ph, a: body.a, k: body.k, meals: body.meals };
+      if (!body.n) { msg[id] = { err: 1, t: T("ml_err_name") }; return render(); }
+      if (!/^(\+?81|0)\d{9,10}$/.test(body.ph.replace(/[\s\-()]/g, ""))) { msg[id] = { err: 1, t: T("ml_err_phone") }; return render(); }
+      if (!body.meals.length) { msg[id] = { err: 1, t: T("ml_err_count") }; return render(); }
+      me = { n: body.n, ph: body.ph, a: body.a, k: body.k }; store.set("ml_me", JSON.stringify(me));
+      const more = f.all && f.all.checked ? data.filter(x => x.id !== id && !x.closed && !x.mine).map(x => x.id) : [];
+      const ERRK = { name: "ml_err_name", phone: "ml_err_phone", count: "ml_err_count", closed: "ml_err_closed" };
+      const one = (i, ml) => mnPost("reg", Object.assign({}, body, { id: i, meals: ml })).then(d => { if (d.ok) data = data.map(x => x.id === i ? d.ev : x); return d; });
+      busy = true; render();
+      one(id, body.meals).then(d => {
+        if (!d.ok) throw d;
+        // the same for the other open days (only the meals that day has; if none match, all of that day's)
+        return more.reduce((p, i) => p.then(() => {
+          const ex = data.find(x => x.id === i), pick = ex.meals.filter(m => body.meals.includes(m));
+          return one(i, pick.length ? pick : ex.meals).catch(() => {});
+        }), Promise.resolve());
+      }).then(() => { busy = false; open = ""; draft = null; msg[id] = { t: T("ml_saved") }; render(); })
+        .catch(d => { busy = false; msg[id] = { err: 1, t: T((d && ERRK[d.err]) || "ml_err") }; render(); });
+    };
+  }
+  render();
+  window.addEventListener("load", () => setTimeout(load, 400));
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && !open) load(); });
+  return { render, load };
+})();
+
 function renderAll() {
   renderTexts();
   theme.apply();
@@ -1844,7 +2125,7 @@ function renderAll() {
   renderQibla();
   quranLang();
   if (window.tasDraw) window.tasDraw();
-  if (typeof notices !== "undefined") { notices.render(); mnAdmin.draw(); }
+  if (typeof notices !== "undefined") { notices.render(); meals.render(); mnAdmin.draw(); }
   if (typeof notif !== "undefined") notif.render();
 }
 

@@ -338,6 +338,12 @@
     border: 1px solid var(--line); background: var(--green); color: #fff; font-size: 1.3rem; line-height: 1; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.25);
     opacity: .92; transition: opacity .2s, transform .2s; }
   .to-top[hidden] { display: none; }
+  .pend-pill { position: fixed; bottom: calc(18px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 55; max-width: calc(100% - 140px);
+    padding: 10px 18px; border-radius: 999px; border: 2px solid #fff; background: #e9cf8f; color: #0b4330; font: inherit; font-size: .9rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.28); animation: pendIn .4s ease-out, pendPulse 2.4s ease-in-out .4s 3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pend-pill[hidden] { display: none; }
+  @keyframes pendIn { from { transform: translate(-50%, 30px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+  @keyframes pendPulse { 50% { box-shadow: 0 0 0 8px rgba(233, 207, 143, .35), 0 6px 18px rgba(0,0,0,.28); } }
   .to-top:active { transform: scale(.94); }
   .app-fab { position: fixed; bottom: calc(16px + env(safe-area-inset-bottom)); inset-inline-end: 16px; z-index: 50; display: flex; align-items: center; gap: 4px; }
   .app-fab[hidden] { display: none; }
@@ -1142,6 +1148,7 @@
 </div>
 
 <button type="button" class="to-top" id="toTop" hidden></button>
+<button type="button" class="pend-pill" id="pendPill" hidden></button>
 
 <div class="app-fab" id="appFab" hidden>
   <button type="button" class="app-fab-btn"><img src="/icon-192.png" alt="" width="28" height="28"><span></span></button>
@@ -1184,6 +1191,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    pd_pill: "🔔 {n} waiting for your approval", pd_tab: "⏳ Waiting", pd_none: "✓ Nothing is waiting for approval.",
     rq_open: "✍️ Propose a notice or a meal", rq_title: "✍️ Proposals for the masjid", rq_login_h: "Check your email first", rq_login_p: "Anyone can propose a notice or a meal. Your proposal is shown to everyone only after a masjid admin approves it. A 6-digit code comes to your email.", rq_hi: "Email checked: {e}", rq_t_notice: "📢 Notice", rq_t_meal: "🍽 Meal", rq_t_mine: "📋 My proposals", rq_name: "Your name", rq_phone: "Your phone number", rq_who: "The masjid admins see your name, phone and email.", rq_make: "👁 Make a preview", rq_made: "✓ Preview made — only you see it. Check it, then press “📢 Send for publishing”.", rq_send: "📢 Send for publishing", rq_sent: "✓ Sent. It will be shown after an admin approves it. You get an email.", rq_del: "🗑 Delete", rq_del_q: "Delete this proposal?", rq_none: "No proposals yet.", gs_prev: "👁 Preview — only you see it", gs_wait: "⏳ Waiting for approval", gs_live: "✅ Approved — shown to everyone", gs_rej: "❌ Not approved", rq_list_ask: "📋 Ask for the full list", rq_list_wait: "⏳ List request sent to the admins", rq_list_no: "The full list stays with the admins.", rq_list: "👥 List", rq_err_day: "No more proposals today (3 a day).", rq_err_open: "Please wait until your 2 open proposals are answered.", rq_meal_p: "Propose a meal at the masjid (e.g. you will give the dinner). After approval, people can register on the site.", mo_g: "🙋 Proposed by a visitor: {w}", mo_ok: "✅ Approve", mo_no: "❌ Do not approve", mo_lr: "📋 {n} asks for the full list:", mo_ly: "✅ Allow", mo_ln: "❌ No", mo_wait: "⏳ Waiting for approval", mo_rej: "❌ Not approved", ad_by_g: "{n} · {p} (visitor)",
     to_bottom: "Go to the bottom",
     ad_pv: "👁 Preview first — only admins see it (show it to everyone later)", ad_sent_p: "✓ Saved as a preview. Only admins see it on the site (marked 👁). If it looks right, press “📢 Show to everyone” in Notices.", st_preview: "👁 Preview — only admins", ad_rel: "📢 Show to everyone", ad_pv_badge: "👁 Preview — only admins see this",
@@ -1234,6 +1242,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    pd_pill: "🔔 承認待ち {n}件", pd_tab: "⏳ 承認待ち", pd_none: "✓ 承認待ちはありません。",
     rq_open: "✍️ お知らせ・食事の提案", rq_title: "✍️ マスジドへの提案", rq_login_h: "まずメールアドレスの確認", rq_login_p: "どなたでもお知らせや食事の提案ができます。マスジドの管理者が承認すると全員に表示されます。メールに6桁のコードが届きます。", rq_hi: "確認済みメール：{e}", rq_t_notice: "📢 お知らせ", rq_t_meal: "🍽 食事", rq_t_mine: "📋 自分の提案", rq_name: "お名前", rq_phone: "電話番号", rq_who: "管理者があなたのお名前・電話番号・メールを見ます。", rq_make: "👁 プレビューを作る", rq_made: "✓ プレビューを作りました（あなただけに表示）。確認して「📢 公開を申請」を押してください。", rq_send: "📢 公開を申請", rq_sent: "✓ 申請しました。管理者が承認すると表示されます（メールでお知らせします）。", rq_del: "🗑 削除", rq_del_q: "この提案を削除しますか？", rq_none: "まだ提案はありません。", gs_prev: "👁 プレビュー（あなただけ）", gs_wait: "⏳ 承認待ち", gs_live: "✅ 承認済み — 全員に表示", gs_rej: "❌ 承認されませんでした", rq_list_ask: "📋 名簿を依頼", rq_list_wait: "⏳ 名簿の依頼を送りました", rq_list_no: "名簿は管理者が保管します。", rq_list: "👥 名簿", rq_err_day: "今日はもう提案できません（1日3件まで）。", rq_err_open: "未回答の提案が2件あります。回答をお待ちください。", rq_meal_p: "マスジドでの食事の提案（例：夕食を提供します）。承認後、みなさんがサイトで申し込めます。", mo_g: "🙋 訪問者の提案：{w}", mo_ok: "✅ 承認", mo_no: "❌ 承認しない", mo_lr: "📋 {n} さんが名簿を希望：", mo_ly: "✅ 許可", mo_ln: "❌ 不可", mo_wait: "⏳ 承認待ち", mo_rej: "❌ 承認されませんでした", ad_by_g: "{n} · {p}（訪問者）",
     to_bottom: "ページの最後へ",
     ad_pv: "👁 まずプレビュー — 管理者だけに表示（あとで全員に公開）", ad_sent_p: "✓ プレビューとして保存しました。サイトでは管理者だけに表示されます（👁）。問題なければ「お知らせ一覧」で「📢 全員に公開」を押してください。", st_preview: "👁 プレビュー（管理者のみ）", ad_rel: "📢 全員に公開", ad_pv_badge: "👁 プレビュー — 管理者だけに表示中",
@@ -1284,6 +1293,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    pd_pill: "🔔 {n}টি অনুমোদনের অপেক্ষায়", pd_tab: "⏳ অপেক্ষায়", pd_none: "✓ অনুমোদনের অপেক্ষায় কিছু নেই।",
     rq_open: "✍️ নোটিশ বা খাবারের আয়োজনের প্রস্তাব দিন", rq_title: "✍️ মসজিদের জন্য প্রস্তাব", rq_login_h: "আগে ইমেইল যাচাই", rq_login_p: "যে কেউ নোটিশ বা খাবারের আয়োজনের প্রস্তাব দিতে পারেন। মসজিদের অ্যাডমিন অনুমোদন দিলে তবেই সবার জন্য দেখাবে। ইমেইলে ৬ অঙ্কের কোড আসবে।", rq_hi: "যাচাই করা ইমেইল: {e}", rq_t_notice: "📢 নোটিশ", rq_t_meal: "🍽 খাবারের আয়োজন", rq_t_mine: "📋 আমার প্রস্তাব", rq_name: "আপনার নাম", rq_phone: "আপনার ফোন নম্বর", rq_who: "মসজিদের অ্যাডমিনরা আপনার নাম, ফোন আর ইমেইল দেখবেন।", rq_make: "👁 প্রিভিউ বানান", rq_made: "✓ প্রিভিউ তৈরি — শুধু আপনি দেখছেন। দেখে নিয়ে “📢 পাবলিশের জন্য পাঠান” চাপুন।", rq_send: "📢 পাবলিশের জন্য পাঠান", rq_sent: "✓ পাঠানো হয়েছে। অ্যাডমিন অনুমোদন দিলে দেখাবে — ইমেইলে জানানো হবে।", rq_del: "🗑 মুছুন", rq_del_q: "এই প্রস্তাব মুছে ফেলবেন?", rq_none: "এখনো কোনো প্রস্তাব নেই।", gs_prev: "👁 প্রিভিউ — শুধু আপনি দেখছেন", gs_wait: "⏳ অনুমোদনের অপেক্ষায়", gs_live: "✅ অনুমোদিত — সবাই দেখছে", gs_rej: "❌ অনুমোদন হয়নি", rq_list_ask: "📋 পুরো তালিকা চাই", rq_list_wait: "⏳ তালিকার অনুরোধ অ্যাডমিনদের কাছে গেছে", rq_list_no: "পুরো তালিকা অ্যাডমিনদের কাছেই থাকছে।", rq_list: "👥 তালিকা", rq_err_day: "আজ আর প্রস্তাব দেওয়া যাবে না (দিনে ৩টি)।", rq_err_open: "আগের ২টি প্রস্তাবের উত্তর আসা পর্যন্ত অপেক্ষা করুন।", rq_meal_p: "মসজিদে খাবারের আয়োজনের প্রস্তাব (যেমন আপনি ডিনার দেবেন)। অনুমোদনের পর সবাই সাইটে নাম দিতে পারবেন।", mo_g: "🙋 দর্শকের প্রস্তাব: {w}", mo_ok: "✅ অনুমোদন", mo_no: "❌ বাতিল", mo_lr: "📋 {n} পুরো তালিকা চান:", mo_ly: "✅ দিন", mo_ln: "❌ না", mo_wait: "⏳ অনুমোদনের অপেক্ষায়", mo_rej: "❌ অনুমোদন হয়নি", ad_by_g: "{n} · {p} (দর্শক)",
     to_bottom: "একদম নিচে যান",
     ad_pv: "👁 আগে প্রিভিউ — শুধু অ্যাডমিনরা দেখবে (পরে সবার জন্য)", ad_sent_p: "✓ প্রিভিউ হিসেবে রাখা হলো। সাইটে শুধু অ্যাডমিনরা দেখছেন (👁 চিহ্নসহ)। ঠিক থাকলে “নোটিশগুলো”-তে “📢 সবার জন্য দেখাও” চাপুন।", st_preview: "👁 প্রিভিউ — শুধু অ্যাডমিন", ad_rel: "📢 সবার জন্য দেখাও", ad_pv_badge: "👁 প্রিভিউ — শুধু অ্যাডমিনরা দেখছেন",
@@ -1941,7 +1951,7 @@ const mnAdmin = (() => {
 
   function open(entry) {
     st.entry = entry === "guest" ? "guest" : "admin";
-    sheet.hidden = false; document.body.style.overflow = "hidden";
+    sheet.hidden = false; document.body.style.overflow = "hidden"; pill.hidden = true;
     document.getElementById("mnH").textContent = T(st.entry === "guest" && !st.tk ? "rq_title" : "ad_title");
     if (st.tk && !st.me) { st.step = "load"; draw(); me(); }
     else if (!st.tk && st.gtk && !st.g) { st.step = "load"; draw(); gme(); }
@@ -1953,10 +1963,10 @@ const mnAdmin = (() => {
       draw();
     }).catch(() => { st.step = "email"; fail(""); });
   }
-  function close() { sheet.hidden = true; document.body.style.overflow = ""; }
+  function close() { sheet.hidden = true; document.body.style.overflow = ""; if (st.pend && st.pend.count && st.tk) pill.hidden = false; }
   function me() {
     ep().then(e => mnPost("me", { tk: st.tk, ep: e })).then(d => {
-      if (d.ok) { st.me = d; st.step = "in"; st.tab = st.want || (d.r === "cook" ? "meal" : d.r === "approver" ? "list" : "new"); st.want = ""; if (d.r === "cook") st.tab = "meal"; loadList(); if (st.tab === "meal") mlLoad(); }
+      if (d.ok) { st.me = d; st.step = "in"; st.tab = st.want || (d.r === "cook" ? "meal" : d.r === "approver" ? "list" : "new"); st.want = ""; if (d.r === "cook") st.tab = "meal"; loadList(); pendLoad(); if (st.tab === "meal") mlLoad(); }
       else { st.tk = ""; store.set("mn_tk", ""); st.step = "email"; }
       draw();
     }).catch(() => { st.step = "email"; fail(""); });
@@ -1964,6 +1974,22 @@ const mnAdmin = (() => {
   function loadList() {
     mnPost("list", { tk: st.tk, m: MN.m }).then(d => { st.list = d.ok ? d.n : []; notices.setPrev(st.list); draw(); }).catch(() => {});
   }
+  // what waits for an admin's approval — shown on the site itself (not everyone reads their email)
+  st.pend = null;
+  const pill = document.getElementById("pendPill");
+  function pendLoad() {
+    if (!st.tk) { pill.hidden = true; return; }
+    mnPost("pending", { tk: st.tk, m: MN.m }).then(d => {
+      if (!d.ok) { pill.hidden = true; return; }
+      st.pend = d;
+      pill.hidden = !d.count || !sheet.hidden;
+      pill.textContent = T("pd_pill").replace("{n}", localDigits(String(d.count)));
+      if (!sheet.hidden && st.step === "in") draw();
+    }).catch(() => {});
+  }
+  pill.addEventListener("click", () => { st.want = "wait"; st.tab = "wait"; open("admin"); });
+  if (st.tk) window.addEventListener("load", () => setTimeout(pendLoad, 1200));
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && st.tk) pendLoad(); });
   // logged in on this phone: show its previews in the notice box (quietly, once)
   if (st.tk) window.addEventListener("load", () => setTimeout(() => {
     mnPost("list", { tk: st.tk, m: MN.m }).then(d => { if (d.ok) notices.setPrev(d.n); }).catch(() => {});
@@ -1990,7 +2016,7 @@ const mnAdmin = (() => {
         <form class="mn-f" id="mnF"><label>${mnEsc(T("ad_code"))}<input class="mn-code" name="c" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required></label>
         <button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("ad_verify"))}</button>
         <button type="button" class="mn-link" id="mnBack">${mnEsc(T("ad_back"))}</button></form>`;
-      body.querySelector("#mnBack").onclick = () => { st.step = "email"; say(""); notices.setPrev([]); draw(); };
+      body.querySelector("#mnBack").onclick = () => { st.step = "email"; say(""); notices.setPrev([]); st.pend = null; pill.hidden = true; draw(); };
       body.querySelector("#mnF").onsubmit = e => {
         e.preventDefault(); st.busy = true; say(""); draw();
         const code = e.target.c.value;
@@ -2001,7 +2027,7 @@ const mnAdmin = (() => {
             st.gtk = d.gtk; store.set("mn_gtk", d.gtk); st.g = d; st.step = "guest"; st.gtab = "notice"; say(""); gLoad(); draw(); return;
           }
           document.getElementById("mnH").textContent = T("ad_title");
-          st.tk = d.tk; store.set("mn_tk", d.tk); st.me = d; st.step = "in"; st.tab = d.r === "cook" ? "meal" : d.r === "approver" ? "list" : "new"; say(""); loadList(); if (st.tab === "meal") mlLoad(); draw();
+          st.tk = d.tk; store.set("mn_tk", d.tk); st.me = d; st.step = "in"; st.tab = d.r === "cook" ? "meal" : d.r === "approver" ? "list" : "new"; say(""); loadList(); pendLoad(); if (st.tab === "meal") mlLoad(); draw();
         }).catch(() => fail(""));
       };
       return;
@@ -2010,10 +2036,24 @@ const mnAdmin = (() => {
     const m = st.me, ap = m.r === "approver", cook = m.r === "cook" || ap;
     let h = `<div class="mn-me"><span>${mnEsc(T("ad_hi").replace("{n}", m.n || m.e))}<br><small>${mnEsc(m.r === "cook" ? T("ad_meal") : T(ap ? "ad_role_a" : "ad_role_w"))}</small></span>
       <button type="button" class="chip" id="mnOut">${mnEsc(T("ad_out"))}</button></div>
-      <div class="mn-tabs">${m.r !== "cook" ? `<button type="button" class="chip" data-t="new" aria-pressed="${st.tab === "new"}">${mnEsc(T("ad_new"))}</button>
+      <div class="mn-tabs" style="flex-wrap:wrap"><button type="button" class="chip" data-t="wait" aria-pressed="${st.tab === "wait"}">${mnEsc(T("pd_tab"))}${st.pend && st.pend.count ? " (" + localDigits(String(st.pend.count)) + ")" : ""}</button>${m.r !== "cook" ? `<button type="button" class="chip" data-t="new" aria-pressed="${st.tab === "new"}">${mnEsc(T("ad_new"))}</button>
       <button type="button" class="chip" data-t="list" aria-pressed="${st.tab === "list"}">${mnEsc(T("ad_list"))}</button>` : ""}
       ${cook ? `<button type="button" class="chip" data-t="meal" aria-pressed="${st.tab === "meal"}">${mnEsc(T("ad_meal"))}</button>` : ""}</div>${v}`;
-    if (st.tab === "meal") {
+    if (st.tab === "wait") {
+      const P = st.pend;
+      if (!P) h += "<p>⏳</p>";
+      else if (!P.count) h += `<p>${mnEsc(T("pd_none"))}</p>`;
+      else {
+        h += (P.n || []).map(n => `<div class="mn-it">${mnCard(n, `<span class="mn-st">${mnEsc(T("st_wait"))}</span> <small class="nt-d">${mnEsc(n.g ? T("ad_by_g").replace("{n}", n.gn).replace("{p}", n.gph) + " · " + n.g : T("ad_by").replace("{e}", n.by))}</small>`
+          + `<div class="mn-acts"><button type="button" class="chip ok" data-a="approve" data-id="${n.id}">${mnEsc(T("ad_ok"))}</button><button type="button" class="chip no" data-a="reject" data-id="${n.id}">${mnEsc(T("ad_no"))}</button></div>`)}</div>`).join("");
+        h += (P.ev || []).map(e => `<div class="mo-ev"><div class="mo-g">${mnEsc(T("mo_g").replace("{w}", ""))}${mnEsc(e.gn)} · <a href="tel:${mnEsc(e.gph)}">${mnEsc(e.gph)}</a> · ${mnEsc(e.g)}</div>`
+          + `<b>🍽 ${mnEsc(mlDay(e.date))}</b> <small class="nt-d">${mnEsc(mnDate(e.date))}</small><div class="nt-d">${mnEsc(e.meals.map(mlMeal).join(" · "))} · ⏰ ${mnEsc(mlWhen(e.dl))}</div>`
+          + (e.note ? `<p class="nt-b">${mnEsc(e.note)}</p>` : "")
+          + (e.st === "wait" ? `<div class="mn-acts"><button type="button" class="chip ok" data-mok="approve" data-id="${e.id}">${mnEsc(T("mo_ok"))}</button><button type="button" class="chip no" data-mok="reject" data-id="${e.id}">${mnEsc(T("mo_no"))}</button></div>`
+            : `<p class="nt-d">${mnEsc(T("mo_lr").replace("{n}", e.gn))}</p><div class="mn-acts"><button type="button" class="chip ok" data-mok="list_yes" data-id="${e.id}">${mnEsc(T("mo_ly"))}</button><button type="button" class="chip no" data-mok="list_no" data-id="${e.id}">${mnEsc(T("mo_ln"))}</button></div>`)
+          + "</div>").join("");
+      }
+    } else if (st.tab === "meal") {
       h += mlAdminHtml();
     } else if (st.tab === "new") {
       const t = tokyoYMD(), d0 = `${t.y}-${String(t.m).padStart(2, "0")}-${String(t.d).padStart(2, "0")}`;
@@ -2039,13 +2079,13 @@ const mnAdmin = (() => {
       }).join("");
     }
     body.innerHTML = h;
-    body.querySelector("#mnOut").onclick = () => { mnPost("logout", { tk: st.tk }).catch(() => {}); st.tk = ""; st.me = null; store.set("mn_tk", ""); st.step = "email"; say(""); notices.setPrev([]); draw(); };
-    body.querySelectorAll(".mn-tabs .chip").forEach(b => b.onclick = () => { st.tab = b.dataset.t; say(""); if (st.tab === "list") loadList(); if (st.tab === "meal") mlLoad(); draw(); });
-    if (st.tab === "meal") mlBind();
+    body.querySelector("#mnOut").onclick = () => { mnPost("logout", { tk: st.tk }).catch(() => {}); st.tk = ""; st.me = null; store.set("mn_tk", ""); st.step = "email"; say(""); notices.setPrev([]); st.pend = null; pill.hidden = true; draw(); };
+    body.querySelectorAll(".mn-tabs .chip").forEach(b => b.onclick = () => { st.tab = b.dataset.t; say(""); if (st.tab === "list") loadList(); if (st.tab === "meal") mlLoad(); if (st.tab === "wait") pendLoad(); draw(); });
+    if (st.tab === "meal" || st.tab === "wait") mlBind();
     body.querySelectorAll("[data-a]").forEach(b => b.onclick = () => {
       if (b.dataset.a === "remove" && !confirm(T("ad_rm_q"))) return;
       b.disabled = true;
-      mnPost("act", { tk: st.tk, id: +b.dataset.id, a: b.dataset.a }).then(d => { say(d.ok ? "" : "ad_err", !d.ok); loadList(); notices.load(); }).catch(() => fail(""));
+      mnPost("act", { tk: st.tk, id: +b.dataset.id, a: b.dataset.a }).then(d => { say(d.ok ? "" : "ad_err", !d.ok); loadList(); notices.load(); pendLoad(); }).catch(() => fail(""));
     });
     const f = body.querySelector("#mnF");
     if (f) f.onsubmit = e => {
@@ -2138,7 +2178,7 @@ const mnAdmin = (() => {
     return h;
   }
   function gBind() {
-    body.querySelector("#gOut").onclick = () => { mnPost("glogout", { gtk: st.gtk }).catch(() => {}); st.gtk = ""; st.g = null; st.mine = null; store.set("mn_gtk", ""); st.step = "email"; say(""); notices.setPrev([]); draw(); };
+    body.querySelector("#gOut").onclick = () => { mnPost("glogout", { gtk: st.gtk }).catch(() => {}); st.gtk = ""; st.g = null; st.mine = null; store.set("mn_gtk", ""); st.step = "email"; say(""); notices.setPrev([]); st.pend = null; pill.hidden = true; draw(); };
     body.querySelectorAll("[data-gt]").forEach(b => b.onclick = () => { st.gtab = b.dataset.gt; say(""); if (st.gtab === "mine") gLoad(); draw(); });
     body.querySelectorAll("[data-g]").forEach(b => b.onclick = () => {
       if (b.dataset.g === "remove" && !confirm(T("rq_del_q"))) return;
@@ -2254,7 +2294,7 @@ const mnAdmin = (() => {
     };
     body.querySelectorAll("[data-mok]").forEach(b => b.onclick = () => {
       b.disabled = true;
-      mnPost("meal_ok", { tk: st.tk, id: b.dataset.id, a: b.dataset.mok }).then(d => { say(d.ok ? "" : "ad_err", !d.ok); mlLoad(); meals.load(); }).catch(() => fail(""));
+      mnPost("meal_ok", { tk: st.tk, id: b.dataset.id, a: b.dataset.mok }).then(d => { say(d.ok ? "" : "ad_err", !d.ok); mlLoad(); meals.load(); pendLoad(); }).catch(() => fail(""));
     });
     body.querySelectorAll("[data-mo]").forEach(b => b.onclick = () => {
       const e = (st.ml || []).find(x => x.id === b.dataset.id); if (!e) return;

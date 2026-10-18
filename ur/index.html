@@ -2747,10 +2747,40 @@ function placeFind() {
   navigator.geolocation.getCurrentPosition(pos => {
     const a = +pos.coords.latitude.toFixed(4), b = +pos.coords.longitude.toFixed(4);
     if (!inJapan(a, b)) { placeMsg("ts_out"); return; }
+    store.set("place_fix", "");                                 // the visitor wants their own area
     place = { mode: "me", lat: a, lng: b, n: "" }; placeSave(); placeApply(); placeMsg("");
     placeNameFetch();
   }, e => placeMsg(e && e.code === 1 ? "ts_denied" : "ts_err", true), { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
 }
+/* Times follow the phone (only when location is already allowed — never asks on opening):
+   within 10 km of the masjid → the masjid's own times (one timetable for everyone in Morioka);
+   farther (Hanamaki, Kitakami, Tokyo …) → times, Sehri/Iftar, month table, Qibla and notifications for that place.
+   Choosing "masjid's times" by hand keeps them, wherever the phone is. */
+const kmBetween = (a1, b1, a2, b2) => {
+  const p1 = rad(a1), p2 = rad(a2), h = Math.sin((p2 - p1) / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(rad(b2 - b1) / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+};
+function placeAuto(lat, lng) {
+  if (store.get("place_fix") === "masjid" || !inJapan(lat, lng)) return;
+  const a = +lat.toFixed(4), b = +lng.toFixed(4);
+  if (kmBetween(a, b, M_LAT, M_LNG) <= 10) {
+    if (place.mode === "me" && place.auto) { place = { mode: "masjid", lat: 0, lng: 0, n: "" }; placeSave(); placeApply(); }
+    return;
+  }
+  if (place.mode === "me" && kmBetween(a, b, place.lat, place.lng) < 1) return;   // same place: nothing to do
+  if (place.mode === "me" && !place.auto && kmBetween(a, b, place.lat, place.lng) < 10) return;
+  place = { mode: "me", lat: a, lng: b, n: "", auto: 1 }; placeSave(); placeApply();
+  placeNameFetch();
+}
+let placeAt = 0;
+function placeWatch() {
+  if (!navigator.geolocation || !window.isSecureContext || store.get("place_fix") === "masjid") return;
+  if (Date.now() - placeAt < 20 * 60000) return;                // at most every 20 minutes
+  const go = () => { placeAt = Date.now(); navigator.geolocation.getCurrentPosition(p => placeAuto(p.coords.latitude, p.coords.longitude), () => {}, { enableHighAccuracy: false, timeout: 20000, maximumAge: 600000 }); };
+  if (navigator.permissions && navigator.permissions.query) navigator.permissions.query({ name: "geolocation" }).then(r => { if (r.state === "granted") go(); }).catch(() => {});
+}
+window.addEventListener("load", () => setTimeout(placeWatch, 1500));
+document.addEventListener("visibilitychange", () => { if (!document.hidden) placeWatch(); });
 // the town's name in the visitor's language: Google (through iwate-bd.org), else OpenStreetMap
 let placeNameBusy = "";
 function placeNameFetch() {
@@ -2839,6 +2869,7 @@ const cmp = (() => {
     if (!navigator.geolocation || !window.isSecureContext) return;
     const get = () => navigator.geolocation.getCurrentPosition(p => {
       qHere = { lat: p.coords.latitude, lng: p.coords.longitude }; renderQibla();
+      if (typeof placeAuto === "function") placeAuto(qHere.lat, qHere.lng);
     }, () => {}, { enableHighAccuracy: true, timeout: 20000, maximumAge: 120000 });
     if (ask) return get();
     if (navigator.permissions && navigator.permissions.query) {
@@ -4052,7 +4083,7 @@ function setUrl() {
     p.hidden = !p.hidden; b.setAttribute("aria-expanded", String(!p.hidden)); placeUI();
   });
   document.querySelectorAll(".tset-loc [data-loc]").forEach(b => b.addEventListener("click", () => {
-    if (b.dataset.loc === "masjid") { place.mode = "masjid"; placeSave(); placeApply(); placeMsg(""); }
+    if (b.dataset.loc === "masjid") { store.set("place_fix", "masjid"); place.mode = "masjid"; placeSave(); placeApply(); placeMsg(""); }
     else placeFind();
   }));
 

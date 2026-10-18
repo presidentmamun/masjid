@@ -327,13 +327,17 @@
 
   /* Qibla */
   .qibla { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
-  .compass { width: 200px; max-width: 100%; aspect-ratio: 1; flex: none; }
+  .compass { width: 220px; max-width: 100%; aspect-ratio: 1; flex: none; filter: drop-shadow(0 6px 14px rgba(15, 90, 60, .18)); }
+  .compass .c-face { transition: fill .3s; }
+  .compass.aligned .c-face { fill: var(--gold-soft); }
+  .compass.aligned .c-ring { fill: var(--green); }
+  @media (max-width: 520px) { .qibla { justify-content: center; } .qibla-info { width: 100%; text-align: center; } }
   .qibla-info .deg { font-size: 2rem; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
   .qibla-info p { margin: 4px 0; }
   #dial { transform-origin: 100px 100px; transition: transform .25s linear; }
   .compass.live #dial { transition: transform .12s linear; }
-  .compass.aligned circle:first-child { fill: #d8f0e2; stroke: var(--green); stroke-width: 4; }
-  .cmp-btn { margin-top: 10px; padding: 8px 16px; border-radius: 999px; border: 1.5px solid var(--green); background: transparent; color: var(--green); font: inherit; font-weight: 600; cursor: pointer; }
+  .cmp-btn { margin-top: 12px; padding: 10px 20px; border-radius: 999px; border: 0; background: var(--green); color: #fff; font: inherit; font-weight: 600; cursor: pointer; box-shadow: 0 3px 10px rgba(15, 90, 60, .25); }
+  .cmp-btn:active { transform: scale(.97); }
   .cmp-st { font-weight: 600; min-height: 1.4em; }
   .cmp-st.ok { color: var(--green); }
 
@@ -500,20 +504,32 @@
     <h2 data-i18n="qibla_title">क़िबला की दिशा</h2>
     <div class="qibla">
       <svg class="compass" viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <radialGradient id="cFace" cx="50%" cy="42%" r="62%"><stop offset="0" stop-color="var(--surface)"/><stop offset="1" stop-color="var(--surface-2)"/></radialGradient>
+          <linearGradient id="cRing" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--gold)"/><stop offset="1" stop-color="var(--green)"/></linearGradient>
+        </defs>
+        <circle class="c-ring" cx="100" cy="100" r="97" fill="url(#cRing)"/>
         <g id="dial">
-        <circle cx="100" cy="100" r="92" fill="var(--surface-2)" stroke="var(--line)" stroke-width="2"/>
-        <circle cx="100" cy="100" r="76" fill="none" stroke="var(--line)" stroke-dasharray="2 6"/>
-        <text x="100" y="26" text-anchor="middle" font-size="16" font-weight="700" fill="var(--green)">N</text>
-        <text x="180" y="105" text-anchor="middle" font-size="13" fill="var(--muted)">E</text>
-        <text x="100" y="186" text-anchor="middle" font-size="13" fill="var(--muted)">S</text>
-        <text x="20" y="105" text-anchor="middle" font-size="13" fill="var(--muted)">W</text>
+        <circle class="c-face" cx="100" cy="100" r="91" fill="url(#cFace)"/>
+        <g id="cTicks" stroke="var(--muted)" stroke-linecap="round"></g>
+        <text x="100" y="35" text-anchor="middle" font-size="15" font-weight="800" fill="#c0392b">N</text>
+        <text x="167" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="var(--muted)">E</text>
+        <text x="100" y="174" text-anchor="middle" font-size="12" font-weight="700" fill="var(--muted)">S</text>
+        <text x="33" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="var(--muted)">W</text>
         <g id="qiblaArrow">
-          <line x1="100" y1="100" x2="100" y2="38" stroke="var(--gold)" stroke-width="5" stroke-linecap="round"/>
-          <rect x="91" y="26" width="18" height="18" rx="2" fill="#1f2a24" stroke="var(--gold)" stroke-width="2"/>
-          <rect x="91" y="31" width="18" height="3" fill="var(--gold)"/>
+          <path d="M100 100 L95.5 54 L100 46 L104.5 54 Z" fill="var(--gold)"/>
+          <path d="M100 100 L100 46 L104.5 54 Z" fill="#000" fill-opacity=".14"/>
+          <g transform="translate(100 34)">
+            <circle r="15" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="1.5"/>
+            <rect x="-8" y="-8" width="16" height="16" rx="1.5" fill="#1f2a24"/>
+            <rect x="-8" y="-4.5" width="16" height="2.6" fill="var(--gold)"/>
+            <rect x="2" y="1.5" width="3.5" height="6.5" fill="var(--gold)" fill-opacity=".85"/>
+          </g>
         </g>
         </g>
-        <circle cx="100" cy="100" r="6" fill="var(--green)"/>
+        <path class="c-mark" d="M100 1 L94 11 L106 11 Z" fill="var(--green)"/>
+        <circle cx="100" cy="100" r="8" fill="var(--surface)" stroke="var(--green)" stroke-width="3"/>
+        <circle cx="100" cy="100" r="2.5" fill="var(--green)"/>
       </svg>
       <div class="qibla-info">
         <div class="deg" id="qiblaDeg"></div>
@@ -1051,6 +1067,19 @@ function renderAll() {
   if (typeof notif !== "undefined") notif.render();
 }
 
+/* compass tick marks: small every 10°, long every 30° (not under the letters) */
+(() => {
+  const g = document.getElementById("cTicks"); if (!g) return;
+  let h = "";
+  for (let d = 0; d < 360; d += 10) {
+    if (d % 90 === 0) continue;
+    const big = d % 30 === 0, r1 = 86, r2 = big ? 76 : 81, a = d * Math.PI / 180;
+    const p = r => `${(100 + r * Math.sin(a)).toFixed(1)} ${(100 - r * Math.cos(a)).toFixed(1)}`;
+    h += `<line x1="${p(r1).split(" ")[0]}" y1="${p(r1).split(" ")[1]}" x2="${p(r2).split(" ")[0]}" y2="${p(r2).split(" ")[1]}" stroke-width="${big ? 2 : 1}" stroke-opacity="${big ? .7 : .4}"/>`;
+  }
+  g.innerHTML = h;
+})();
+
 /* ===================== Live compass (phones) ===================== */
 // The dial (N/E/S/W + Qibla arrow) turns with the phone, so the arrow points to the real Qibla.
 // Android: "deviceorientationabsolute"; iPhone: webkitCompassHeading after a tap (Apple's rule).
@@ -1089,10 +1118,19 @@ const cmp = (() => {
   }
   btn.addEventListener("click", () => {
     const D = window.DeviceOrientationEvent;
+    store.set("cmp", "1");                                    // remember: this visitor uses the compass
     if (D && typeof D.requestPermission === "function") {
       D.requestPermission().then(r => { if (r === "granted") start(); else say("compass_na"); }).catch(() => say("compass_na"));
     } else start();
   });
+  // Used it before: listen quietly (no prompt). If the phone still allows it (Android always; iPhone until
+  // the app is fully closed), the compass starts by itself. If not, nothing happens and the button stays.
+  if (store.get("cmp") === "1") {
+    const ev = "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
+    const probe = e => { if (heading(e) !== null) { window.removeEventListener(ev, probe); start(); } };
+    window.addEventListener(ev, probe);
+    setTimeout(() => window.removeEventListener(ev, probe), 4000);
+  }
   return { text() { if (state) say(state); } };
 })();
 

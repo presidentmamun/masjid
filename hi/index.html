@@ -516,6 +516,17 @@
   .chip.ok { background: var(--green); border-color: var(--green); color: #fff; }
   .chip.no { color: #a33; border-color: #e5b7b2; }
 
+  /* Visitor proposals */
+  .rq-bar { display: flex; justify-content: center; margin: -10px 0 26px; }
+  .rq-bar button { padding: 9px 18px; border-radius: 999px; border: 1.5px dashed var(--gold); background: var(--surface); color: var(--text); font: inherit; font-size: .9rem; font-weight: 700; cursor: pointer; }
+  .rq-bar button:hover { border-style: solid; }
+  .gq-it { margin-bottom: 12px; }
+  .gq-meta { margin: 6px 0 0; font-size: .82rem; color: var(--muted); }
+  .gq-tbl { width: 100%; border-collapse: collapse; font-size: .85rem; margin-top: 8px; }
+  .gq-tbl td, .gq-tbl th { padding: 5px 6px; border-top: 1px solid var(--line); text-align: start; }
+  .mo-g { margin: 6px 0; padding: 8px 10px; border-radius: 10px; background: var(--gold-soft); font-size: .86rem; }
+  .mo-g a { color: var(--green); font-weight: 700; }
+
   /* Meal registration */
   .ml-card { border-top: 4px solid var(--green); }
   .ml-lead { margin: -4px 0 14px; color: var(--muted); font-size: .92rem; }
@@ -812,6 +823,8 @@
     <p class="ml-lead" data-i18n="ml_lead">दिए गए समय से पहले नाम लिखवाएँ ताकि मस्जिद सही मात्रा में खाना बना सके। नाम और फ़ोन नंबर सिर्फ़ आयोजक देखते हैं।</p>
     <div class="ml-list" id="mlList"></div>
   </section>
+
+  <div class="rq-bar"><button type="button" id="rqOpen" data-i18n="rq_open">✍️ सूचना या खाने का प्रस्ताव दें</button></div>
 
   <section id="times" class="card">
     <h2 data-i18n="times_title">नमाज़ का समय</h2>
@@ -1171,6 +1184,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    rq_open: "✍️ Propose a notice or a meal", rq_title: "✍️ Proposals for the masjid", rq_login_h: "Check your email first", rq_login_p: "Anyone can propose a notice or a meal. Your proposal is shown to everyone only after a masjid admin approves it. A 6-digit code comes to your email.", rq_hi: "Email checked: {e}", rq_t_notice: "📢 Notice", rq_t_meal: "🍽 Meal", rq_t_mine: "📋 My proposals", rq_name: "Your name", rq_phone: "Your phone number", rq_who: "The masjid admins see your name, phone and email.", rq_make: "👁 Make a preview", rq_made: "✓ Preview made — only you see it. Check it, then press “📢 Send for publishing”.", rq_send: "📢 Send for publishing", rq_sent: "✓ Sent. It will be shown after an admin approves it. You get an email.", rq_del: "🗑 Delete", rq_del_q: "Delete this proposal?", rq_none: "No proposals yet.", gs_prev: "👁 Preview — only you see it", gs_wait: "⏳ Waiting for approval", gs_live: "✅ Approved — shown to everyone", gs_rej: "❌ Not approved", rq_list_ask: "📋 Ask for the full list", rq_list_wait: "⏳ List request sent to the admins", rq_list_no: "The full list stays with the admins.", rq_list: "👥 List", rq_err_day: "No more proposals today (3 a day).", rq_err_open: "Please wait until your 2 open proposals are answered.", rq_meal_p: "Propose a meal at the masjid (e.g. you will give the dinner). After approval, people can register on the site.", mo_g: "🙋 Proposed by a visitor: {w}", mo_ok: "✅ Approve", mo_no: "❌ Do not approve", mo_lr: "📋 {n} asks for the full list:", mo_ly: "✅ Allow", mo_ln: "❌ No", mo_wait: "⏳ Waiting for approval", mo_rej: "❌ Not approved", ad_by_g: "{n} · {p} (visitor)",
     to_bottom: "Go to the bottom",
     ad_pv: "👁 Preview first — only admins see it (show it to everyone later)", ad_sent_p: "✓ Saved as a preview. Only admins see it on the site (marked 👁). If it looks right, press “📢 Show to everyone” in Notices.", st_preview: "👁 Preview — only admins", ad_rel: "📢 Show to everyone", ad_pv_badge: "👁 Preview — only admins see this",
     q_m_listen: "🔊📖 Listen & read", q_m_read: "📖 Read only",
@@ -1220,6 +1234,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    rq_open: "✍️ お知らせ・食事の提案", rq_title: "✍️ マスジドへの提案", rq_login_h: "まずメールアドレスの確認", rq_login_p: "どなたでもお知らせや食事の提案ができます。マスジドの管理者が承認すると全員に表示されます。メールに6桁のコードが届きます。", rq_hi: "確認済みメール：{e}", rq_t_notice: "📢 お知らせ", rq_t_meal: "🍽 食事", rq_t_mine: "📋 自分の提案", rq_name: "お名前", rq_phone: "電話番号", rq_who: "管理者があなたのお名前・電話番号・メールを見ます。", rq_make: "👁 プレビューを作る", rq_made: "✓ プレビューを作りました（あなただけに表示）。確認して「📢 公開を申請」を押してください。", rq_send: "📢 公開を申請", rq_sent: "✓ 申請しました。管理者が承認すると表示されます（メールでお知らせします）。", rq_del: "🗑 削除", rq_del_q: "この提案を削除しますか？", rq_none: "まだ提案はありません。", gs_prev: "👁 プレビュー（あなただけ）", gs_wait: "⏳ 承認待ち", gs_live: "✅ 承認済み — 全員に表示", gs_rej: "❌ 承認されませんでした", rq_list_ask: "📋 名簿を依頼", rq_list_wait: "⏳ 名簿の依頼を送りました", rq_list_no: "名簿は管理者が保管します。", rq_list: "👥 名簿", rq_err_day: "今日はもう提案できません（1日3件まで）。", rq_err_open: "未回答の提案が2件あります。回答をお待ちください。", rq_meal_p: "マスジドでの食事の提案（例：夕食を提供します）。承認後、みなさんがサイトで申し込めます。", mo_g: "🙋 訪問者の提案：{w}", mo_ok: "✅ 承認", mo_no: "❌ 承認しない", mo_lr: "📋 {n} さんが名簿を希望：", mo_ly: "✅ 許可", mo_ln: "❌ 不可", mo_wait: "⏳ 承認待ち", mo_rej: "❌ 承認されませんでした", ad_by_g: "{n} · {p}（訪問者）",
     to_bottom: "ページの最後へ",
     ad_pv: "👁 まずプレビュー — 管理者だけに表示（あとで全員に公開）", ad_sent_p: "✓ プレビューとして保存しました。サイトでは管理者だけに表示されます（👁）。問題なければ「お知らせ一覧」で「📢 全員に公開」を押してください。", st_preview: "👁 プレビュー（管理者のみ）", ad_rel: "📢 全員に公開", ad_pv_badge: "👁 プレビュー — 管理者だけに表示中",
     q_m_listen: "🔊📖 聞きながら読む", q_m_read: "📖 読むだけ",
@@ -1269,6 +1284,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    rq_open: "✍️ নোটিশ বা খাবারের আয়োজনের প্রস্তাব দিন", rq_title: "✍️ মসজিদের জন্য প্রস্তাব", rq_login_h: "আগে ইমেইল যাচাই", rq_login_p: "যে কেউ নোটিশ বা খাবারের আয়োজনের প্রস্তাব দিতে পারেন। মসজিদের অ্যাডমিন অনুমোদন দিলে তবেই সবার জন্য দেখাবে। ইমেইলে ৬ অঙ্কের কোড আসবে।", rq_hi: "যাচাই করা ইমেইল: {e}", rq_t_notice: "📢 নোটিশ", rq_t_meal: "🍽 খাবারের আয়োজন", rq_t_mine: "📋 আমার প্রস্তাব", rq_name: "আপনার নাম", rq_phone: "আপনার ফোন নম্বর", rq_who: "মসজিদের অ্যাডমিনরা আপনার নাম, ফোন আর ইমেইল দেখবেন।", rq_make: "👁 প্রিভিউ বানান", rq_made: "✓ প্রিভিউ তৈরি — শুধু আপনি দেখছেন। দেখে নিয়ে “📢 পাবলিশের জন্য পাঠান” চাপুন।", rq_send: "📢 পাবলিশের জন্য পাঠান", rq_sent: "✓ পাঠানো হয়েছে। অ্যাডমিন অনুমোদন দিলে দেখাবে — ইমেইলে জানানো হবে।", rq_del: "🗑 মুছুন", rq_del_q: "এই প্রস্তাব মুছে ফেলবেন?", rq_none: "এখনো কোনো প্রস্তাব নেই।", gs_prev: "👁 প্রিভিউ — শুধু আপনি দেখছেন", gs_wait: "⏳ অনুমোদনের অপেক্ষায়", gs_live: "✅ অনুমোদিত — সবাই দেখছে", gs_rej: "❌ অনুমোদন হয়নি", rq_list_ask: "📋 পুরো তালিকা চাই", rq_list_wait: "⏳ তালিকার অনুরোধ অ্যাডমিনদের কাছে গেছে", rq_list_no: "পুরো তালিকা অ্যাডমিনদের কাছেই থাকছে।", rq_list: "👥 তালিকা", rq_err_day: "আজ আর প্রস্তাব দেওয়া যাবে না (দিনে ৩টি)।", rq_err_open: "আগের ২টি প্রস্তাবের উত্তর আসা পর্যন্ত অপেক্ষা করুন।", rq_meal_p: "মসজিদে খাবারের আয়োজনের প্রস্তাব (যেমন আপনি ডিনার দেবেন)। অনুমোদনের পর সবাই সাইটে নাম দিতে পারবেন।", mo_g: "🙋 দর্শকের প্রস্তাব: {w}", mo_ok: "✅ অনুমোদন", mo_no: "❌ বাতিল", mo_lr: "📋 {n} পুরো তালিকা চান:", mo_ly: "✅ দিন", mo_ln: "❌ না", mo_wait: "⏳ অনুমোদনের অপেক্ষায়", mo_rej: "❌ অনুমোদন হয়নি", ad_by_g: "{n} · {p} (দর্শক)",
     to_bottom: "একদম নিচে যান",
     ad_pv: "👁 আগে প্রিভিউ — শুধু অ্যাডমিনরা দেখবে (পরে সবার জন্য)", ad_sent_p: "✓ প্রিভিউ হিসেবে রাখা হলো। সাইটে শুধু অ্যাডমিনরা দেখছেন (👁 চিহ্নসহ)। ঠিক থাকলে “নোটিশগুলো”-তে “📢 সবার জন্য দেখাও” চাপুন।", st_preview: "👁 প্রিভিউ — শুধু অ্যাডমিন", ad_rel: "📢 সবার জন্য দেখাও", ad_pv_badge: "👁 প্রিভিউ — শুধু অ্যাডমিনরা দেখছেন",
     q_m_listen: "🔊📖 শোনা ও পড়া", q_m_read: "📖 শুধু পড়া",
@@ -1318,6 +1334,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    rq_open: "✍️ اعلان یا کھانے کی تجویز دیں",
     to_bottom: "نیچے جائیں",
     q_m_listen: "🔊📖 سنیں اور پڑھیں", q_m_read: "📖 صرف پڑھیں",
     bk_juz: "پارہ {n}", bk_tl: "تلفظ", bk_tr: "ترجمہ",
@@ -1366,6 +1383,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    rq_open: "✍️ सूचना या खाने का प्रस्ताव दें",
     to_bottom: "नीचे जाएँ",
     q_m_listen: "🔊📖 सुनें और पढ़ें", q_m_read: "📖 सिर्फ़ पढ़ें",
     bk_juz: "पारा {n}", bk_tl: "उच्चारण", bk_tr: "अनुवाद",
@@ -1414,6 +1432,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    rq_open: "✍️ اقترح إعلانًا أو وجبة",
     to_bottom: "الانتقال إلى الأسفل",
     q_m_listen: "🔊📖 استماع وقراءة", q_m_read: "📖 قراءة فقط",
     bk_juz: "الجزء {n}", bk_tl: "النطق", bk_tr: "المعنى",
@@ -1911,18 +1930,28 @@ const notices = (() => {
 
 const mnAdmin = (() => {
   const sheet = document.getElementById("mnSheet"), body = document.getElementById("mnBody");
-  const st = { tk: store.get("mn_tk") || "", me: null, step: "email", email: "", msg: "", err: false, tab: "new", list: null, busy: false };
+  const st = { tk: store.get("mn_tk") || "", gtk: store.get("mn_gtk") || "", g: null, gtab: "notice", mine: null, me: null, step: "email", email: "", msg: "", err: false, tab: "new", list: null, busy: false, entry: "admin" };
   const dev = () => (/Android/i.test(navigator.userAgent) ? "Android" : /iPhone|iPad/i.test(navigator.userAgent) ? "iPhone" : /Windows/i.test(navigator.userAgent) ? "Windows" : /Mac/i.test(navigator.userAgent) ? "Mac" : "Phone")
     + ((window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone ? " · app" : "");
   const ep = () => ("serviceWorker" in navigator ? navigator.serviceWorker.getRegistration("/").then(r => r ? r.pushManager.getSubscription() : null) : Promise.resolve(null))
     .then(s => (s && s.endpoint) || "").catch(() => "");
-  const ERR = { wait: "ad_err_wait", mail: "ad_err_mail", code: "ad_err_code", tries: "ad_err_tries" };
+  const ERR = { wait: "ad_err_wait", mail: "ad_err_mail", code: "ad_err_code", tries: "ad_err_tries", name: "ml_err_name", phone: "ml_err_phone", lim_day: "rq_err_day", lim_open: "rq_err_open", bad: "ml_err_count" };
   const say = (k, err) => { st.msg = k ? T(k) : ""; st.err = !!err; };
   const fail = e => { say(ERR[e] || "ad_err", true); st.busy = false; draw(); };
 
-  function open() {
+  function open(entry) {
+    st.entry = entry === "guest" ? "guest" : "admin";
     sheet.hidden = false; document.body.style.overflow = "hidden";
-    if (st.tk && !st.me) { st.step = "load"; draw(); me(); } else draw();
+    document.getElementById("mnH").textContent = T(st.entry === "guest" && !st.tk ? "rq_title" : "ad_title");
+    if (st.tk && !st.me) { st.step = "load"; draw(); me(); }
+    else if (!st.tk && st.gtk && !st.g) { st.step = "load"; draw(); gme(); }
+    else draw();
+  }
+  function gme() {
+    mnPost("gme", { gtk: st.gtk }).then(d => {
+      if (d.ok) { st.g = d; st.step = "guest"; gLoad(); } else { st.gtk = ""; store.set("mn_gtk", ""); st.step = "email"; }
+      draw();
+    }).catch(() => { st.step = "email"; fail(""); });
   }
   function close() { sheet.hidden = true; document.body.style.overflow = ""; }
   function me() {
@@ -1944,13 +1973,15 @@ const mnAdmin = (() => {
   function draw() {
     const v = st.msg ? `<p class="mn-msg${st.err ? " err" : ""}" role="status">${mnEsc(st.msg)}</p>` : "";
     if (st.step === "load") { body.innerHTML = "<p>⏳</p>"; return; }
+    if (st.step === "guest") { body.innerHTML = gHtml(v); gBind(); return; }
     if (st.step === "email") {
-      body.innerHTML = `<p><b>${mnEsc(T("ad_login_h"))}</b></p><p>${mnEsc(T("ad_login_p"))}</p>${v}
+      const gu = st.entry === "guest";
+      body.innerHTML = `<p><b>${mnEsc(T(gu ? "rq_login_h" : "ad_login_h"))}</b></p><p>${mnEsc(T(gu ? "rq_login_p" : "ad_login_p"))}</p>${v}
         <form class="mn-f" id="mnF"><label>${mnEsc(T("ad_email"))}<input type="email" name="e" required autocomplete="email" value="${mnEsc(st.email)}"></label>
         <button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("ad_send"))}</button></form>`;
       body.querySelector("#mnF").onsubmit = e => {
         e.preventDefault(); st.email = e.target.e.value.trim().toLowerCase(); st.busy = true; say(""); draw();
-        mnPost("login", { email: st.email }).then(d => { st.busy = false; if (d.ok) { st.step = "code"; say(""); draw(); } else fail(d.err); }).catch(() => fail(""));
+        mnPost("glogin", { email: st.email }).then(d => { st.busy = false; if (d.ok) { st.step = "code"; say(""); draw(); } else fail(d.err); }).catch(() => fail(""));
       };
       return;
     }
@@ -1963,9 +1994,13 @@ const mnAdmin = (() => {
       body.querySelector("#mnF").onsubmit = e => {
         e.preventDefault(); st.busy = true; say(""); draw();
         const code = e.target.c.value;
-        ep().then(p => mnPost("verify", { email: st.email, code, dev: dev(), ep: p })).then(d => {
+        ep().then(p => mnPost("gverify", { email: st.email, code, dev: dev(), ep: p })).then(d => {
           st.busy = false;
           if (!d.ok) return fail(d.err);
+          if (d.gtk) {                                   // not on the admins' list → visitor (proposals only)
+            st.gtk = d.gtk; store.set("mn_gtk", d.gtk); st.g = d; st.step = "guest"; st.gtab = "notice"; say(""); gLoad(); draw(); return;
+          }
+          document.getElementById("mnH").textContent = T("ad_title");
           st.tk = d.tk; store.set("mn_tk", d.tk); st.me = d; st.step = "in"; st.tab = d.r === "cook" ? "meal" : d.r === "approver" ? "list" : "new"; say(""); loadList(); if (st.tab === "meal") mlLoad(); draw();
         }).catch(() => fail(""));
       };
@@ -2000,7 +2035,7 @@ const mnAdmin = (() => {
         if (ap && n.st === "wait") a = `<button type="button" class="chip ok" data-a="approve" data-id="${n.id}">${mnEsc(T("ad_ok"))}</button><button type="button" class="chip no" data-a="reject" data-id="${n.id}">${mnEsc(T("ad_no"))}</button>`;
         if (ap && n.st === "live") a = `<button type="button" class="chip no" data-a="remove" data-id="${n.id}">${mnEsc(T("ad_rm"))}</button>`;
         if (n.st === "preview" && (ap || n.by === m.e)) a = `<button type="button" class="chip ok" data-a="release" data-id="${n.id}">${mnEsc(T("ad_rel"))}</button><button type="button" class="chip no" data-a="remove" data-id="${n.id}">${mnEsc(T("ad_rm"))}</button>`;
-        return `<div class="mn-it">${mnCard(n, `<span class="mn-st">${mnEsc(fmtSt(n))}</span> <small class="nt-d">${mnEsc(T("ad_by").replace("{e}", n.by))}</small>${a ? `<div class="mn-acts">${a}</div>` : ""}`)}</div>`;
+        return `<div class="mn-it">${mnCard(n, `<span class="mn-st">${mnEsc(fmtSt(n))}</span> <small class="nt-d">${mnEsc(n.g ? T("ad_by_g").replace("{n}", n.gn).replace("{p}", n.gph) + " · " + n.g : T("ad_by").replace("{e}", n.by))}</small>${a ? `<div class="mn-acts">${a}</div>` : ""}`)}</div>`;
       }).join("");
     }
     body.innerHTML = h;
@@ -2024,6 +2059,122 @@ const mnAdmin = (() => {
           if (!d.ok) { if (d.err === "login") { st.tk = ""; st.me = null; store.set("mn_tk", ""); st.step = "email"; } return fail(d.err); }
           say(d.st === "live" ? "ad_sent_a" : d.st === "preview" ? "ad_sent_p" : "ad_sent_w"); st.tab = "list"; loadList(); notices.load(); draw();
         }).catch(() => fail(""));
+    };
+  }
+
+  /* ── visitors: proposals (notice / meal), preview, send for publishing ── */
+  function gLoad() {
+    mnPost("gmine", { gtk: st.gtk, m: MN.m }).then(d => {
+      if (!d.ok) return;
+      st.mine = d; notices.setPrev((d.n || []).filter(x => x.st === "preview"));
+      draw();
+    }).catch(() => {});
+  }
+  if (!st.tk && st.gtk) window.addEventListener("load", () => setTimeout(() => {
+    mnPost("gmine", { gtk: st.gtk, m: MN.m }).then(d => { if (d.ok) { st.mine = d; notices.setPrev((d.n || []).filter(x => x.st === "preview")); } }).catch(() => {});
+  }, 900));
+  const ymd = t => `${t.y}-${String(t.m).padStart(2, "0")}-${String(t.d).padStart(2, "0")}`;
+  function gWho() {
+    const g = st.g || {};
+    return `<label>${mnEsc(T("rq_name"))}<input type="text" name="gn" maxlength="40" autocomplete="name" value="${mnEsc(g.n || "")}" required></label>
+      <label>${mnEsc(T("rq_phone"))}<input type="tel" name="gph" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="090-1234-5678" value="${mnEsc(g.ph || "")}" required></label>
+      <p class="note" style="margin:-4px 0 0">${mnEsc(T("rq_who"))}</p>`;
+  }
+  function gHtml(v) {
+    const g = st.g || {};
+    let h = `<div class="mn-me"><span>${mnEsc(T("rq_hi").replace("{e}", g.e || ""))}</span><button type="button" class="chip" id="gOut">${mnEsc(T("ad_out"))}</button></div>
+      <div class="mn-tabs">${["notice", "meal", "mine"].map(k => `<button type="button" class="chip" data-gt="${k}" aria-pressed="${st.gtab === k}">${mnEsc(T("rq_t_" + k))}</button>`).join("")}</div>${v}`;
+    const t = tokyoYMD();
+    if (st.gtab === "notice") {
+      h += `<form class="mn-f" id="gF">${gWho()}
+        <label>${mnEsc(T("ad_kind"))}<select name="k">${Object.keys(MN_K).map(k => `<option value="${k}">${MN_K[k]} ${mnEsc(T("k_" + k))}</option>`).join("")}</select></label>
+        <label>${mnEsc(T("ad_t"))}<input type="text" name="t" maxlength="120" required></label>
+        <label>${mnEsc(T("ad_b"))}<textarea name="b" maxlength="1500"></textarea></label>
+        <div class="mn-row2"><label>${mnEsc(T("ad_from"))}<input type="date" name="f" value="${ymd(t)}" required></label>
+        <label>${mnEsc(T("ad_to"))}<input type="date" name="u" value="${ymd(addDays(t, 7))}" required></label></div>
+        <button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("rq_make"))}</button></form>`;
+    } else if (st.gtab === "meal") {
+      h += `<p>${mnEsc(T("rq_meal_p"))}</p><form class="mn-f" id="gF">${gWho()}
+        <label>${mnEsc(T("mo_date"))}<input type="date" name="d" value="${ymd(addDays(t, 1))}" min="${ymd(t)}" required></label>
+        <div><label style="margin-bottom:6px">${mnEsc(T("mo_meals"))}</label><div class="ml-ck">${["sehri", "lunch", "iftar", "dinner"].map(k => `<label><input type="checkbox" name="ml" value="${k}"${k === "dinner" ? " checked" : ""}> ${mnEsc(mlMeal(k))}</label>`).join("")}</div></div>
+        <label>${mnEsc(T("mo_custom"))}<input type="text" name="cu" maxlength="30"></label>
+        <div class="mn-row2"><label>${mnEsc(T("mo_dl"))}<select name="dlo"><option value="0">${mnEsc(T("mo_same"))}</option><option value="-1">${mnEsc(T("mo_before"))}</option></select></label>
+        <label>&nbsp;<input type="time" name="dlt" value="11:00" required></label></div>
+        <label>${mnEsc(T("mo_note"))}<textarea name="note" maxlength="300" style="min-height:70px"></textarea></label>
+        <button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("rq_make"))}</button></form>`;
+    } else {
+      const d = st.mine;
+      if (!d) return h + "<p>⏳</p>";
+      if (!(d.n || []).length && !(d.ev || []).length) return h + `<p>${mnEsc(T("rq_none"))}</p>`;
+      const stl = x => T("gs_" + ({ preview: "prev", wait: "wait", live: "live", prev: "prev", rej: "rej", rejected: "rej", draft: "rej" }[x] || "wait"));
+      h += (d.n || []).map(n => {
+        let a = "";
+        if (n.st === "preview") a = `<button type="button" class="chip ok" data-g="release" data-t="notice" data-id="${n.id}">${mnEsc(T("rq_send"))}</button>`;
+        if (n.st !== "live") a += `<button type="button" class="chip no" data-g="remove" data-t="notice" data-id="${n.id}">${mnEsc(T("rq_del"))}</button>`;
+        return `<div class="gq-it">${mnCard(n, `<span class="mn-st">${mnEsc(stl(n.st))}</span>${a ? `<div class="mn-acts">${a}</div>` : ""}`)}</div>`;
+      }).join("");
+      h += (d.ev || []).map(e => {
+        const tot = e.meals.map(m => { const x = (e.tot || {})[m] || { a: 0, k: 0 }; return `${mnEsc(mlMeal(m))} ${localDigits(String(x.a))}${x.k ? " (+" + localDigits(String(x.k)) + ")" : ""}`; }).join(" · ");
+        let a = "";
+        if (e.st === "prev") a = `<button type="button" class="chip ok" data-g="release" data-t="meal" data-id="${e.id}">${mnEsc(T("rq_send"))}</button>`;
+        if (e.st !== "live") a += `<button type="button" class="chip no" data-g="remove" data-t="meal" data-id="${e.id}">${mnEsc(T("rq_del"))}</button>`;
+        let lst = "";
+        if (e.st === "live") {
+          if (!e.lr) a += `<button type="button" class="chip" data-g="list" data-t="meal" data-id="${e.id}">${mnEsc(T("rq_list_ask"))}</button>`;
+          else if (e.lr === "ask") lst = `<p class="gq-meta">${mnEsc(T("rq_list_wait"))}</p>`;
+          else if (e.lr === "no") lst = `<p class="gq-meta">${mnEsc(T("rq_list_no"))}</p>`;
+          else if (e.lr === "yes" && e.regs) {
+            a += `<button type="button" class="chip" data-gp="${e.id}">${mnEsc(T("mo_print"))}</button>`;
+            lst = `<table class="gq-tbl"><tr><th>${mnEsc(T("ml_name"))}</th><th>📞</th><th>${mnEsc(T("mo_aged"))}</th><th>${mnEsc(T("mo_kid"))}</th></tr>`
+              + e.regs.map(r => `<tr><td>${mnEsc(r.n)}</td><td><a href="tel:${mnEsc(r.ph)}">${mnEsc(r.ph)}</a></td><td>${localDigits(String(r.a))}</td><td>${localDigits(String(r.k))}</td></tr>`).join("") + "</table>";
+          }
+        }
+        return `<div class="gq-it"><div class="nt"><div class="nt-h"><span class="nt-ic">🍽</span><div><span class="nt-k">${mnEsc(mlDay(e.date))} · ${mnEsc(mnDate(e.date))}</span>`
+          + `<b>${mnEsc(e.meals.map(mlMeal).join(" · "))}</b></div></div>${e.note ? `<p class="nt-b">${mnEsc(e.note)}</p>` : ""}`
+          + `<p class="nt-d">⏰ ${mnEsc(mlWhen(e.dl))}${e.st === "live" ? " · " + tot : ""}</p><span class="mn-st">${mnEsc(stl(e.st))}</span>${lst}`
+          + `${a ? `<div class="mn-acts">${a}</div>` : ""}</div></div>`;
+      }).join("");
+    }
+    return h;
+  }
+  function gBind() {
+    body.querySelector("#gOut").onclick = () => { mnPost("glogout", { gtk: st.gtk }).catch(() => {}); st.gtk = ""; st.g = null; st.mine = null; store.set("mn_gtk", ""); st.step = "email"; say(""); notices.setPrev([]); draw(); };
+    body.querySelectorAll("[data-gt]").forEach(b => b.onclick = () => { st.gtab = b.dataset.gt; say(""); if (st.gtab === "mine") gLoad(); draw(); });
+    body.querySelectorAll("[data-g]").forEach(b => b.onclick = () => {
+      if (b.dataset.g === "remove" && !confirm(T("rq_del_q"))) return;
+      b.disabled = true;
+      mnPost("gact", { gtk: st.gtk, t: b.dataset.t, id: b.dataset.t === "notice" ? +b.dataset.id : b.dataset.id, a: b.dataset.g })
+        .then(d => { if (d.ok) say(b.dataset.g === "release" ? "rq_sent" : ""); else say("ad_err", true); gLoad(); notices.load(); })
+        .catch(() => fail(""));
+    });
+    body.querySelectorAll("[data-gp]").forEach(b => b.onclick = () => {
+      const e = ((st.mine || {}).ev || []).find(x => x.id === b.dataset.gp); if (e) mlPrint(e);
+    });
+    const f = body.querySelector("#gF");
+    if (!f) return;
+    f.onsubmit = ev => {
+      ev.preventDefault();
+      const who = { gtk: st.gtk, m: MN.m, n: f.gn.value.trim(), ph: f.gph.value.trim() };
+      if (!who.n) { say("ml_err_name", true); return draw(); }
+      if (!/^(\+?81|0)\d{9,10}$/.test(who.ph.replace(/[\s\-()]/g, ""))) { say("ml_err_phone", true); return draw(); }
+      let path, data;
+      if (st.gtab === "notice") {
+        if (!f.t.value.trim()) { say("ad_need_t", true); return draw(); }
+        if (f.u.value < f.f.value) f.u.value = f.f.value;
+        path = "gsubmit"; data = Object.assign(who, { kind: f.k.value, title: f.t.value, body: f.b.value, from: f.f.value, to: f.u.value });
+      } else {
+        const ml = [...f.querySelectorAll('input[name="ml"]:checked')].map(x => x.value);
+        if (f.cu.value.trim()) ml.push(f.cu.value.trim());
+        if (!ml.length) { say("ml_err_count", true); return draw(); }
+        path = "gmeal"; data = Object.assign(who, { date: f.d.value, meals: ml, dlt: f.dlt.value, dlo: +f.dlo.value, note: f.note.value });
+      }
+      st.g = Object.assign({}, st.g, { n: who.n, ph: who.ph });
+      st.busy = true; say(""); draw();
+      mnPost(path, data).then(d => {
+        st.busy = false;
+        if (!d.ok) { if (d.err === "login") { st.gtk = ""; store.set("mn_gtk", ""); st.step = "email"; } return fail(d.err); }
+        say("rq_made"); st.gtab = "mine"; gLoad(); draw();
+      }).catch(() => fail(""));
     };
   }
 
@@ -2060,7 +2211,12 @@ const mnAdmin = (() => {
       const tot = e.meals.map(m => { const t = e.tot[m] || { a: 0, k: 0 }; return `<span>${mnEsc(mlMeal(m))} ${localDigits(String(t.a))} <small>${mnEsc(T("mo_aged"))}${t.k ? " · " + localDigits(String(t.k)) + " " + mnEsc(T("mo_kid")) : ""}</small></span>`; }).join("");
       const regs = st.mlOpen === e.id ? `<table class="mo-regs"><tr><th>${mnEsc(T("ml_name"))}</th><th>📞</th><th>${mnEsc(T("mo_aged"))}</th><th>${mnEsc(T("mo_kid"))}</th><th></th></tr>`
         + e.regs.map(r => `<tr><td>${mnEsc(r.n)}${r.dup ? ` <span class="mo-dup">${mnEsc(T("mo_dup"))}</span>` : ""}</td><td><a href="tel:${mnEsc(r.ph)}">${mnEsc(r.ph)}</a></td><td>${localDigits(String(r.a))}</td><td>${localDigits(String(r.k))}</td><td>${r.meals.map(x => (ML_IC[x] || "🍴")).join("")}</td></tr>`).join("") + "</table>" : "";
-      return `<div class="mo-ev${e.date < today ? " past" : ""}"><b>${mnEsc(mlDay(e.date))}</b>${mlDay(e.date) !== mnDate(e.date) ? ` <small class="nt-d">${mnEsc(mnDate(e.date))}</small>` : ""}${e.test ? `<span class="ml-test">${mnEsc(T("ml_test"))}</span>` : ""}
+      const gx = e.g ? `<div class="mo-g">${mnEsc(T("mo_g").replace("{w}", ""))}${mnEsc(e.gn)} · <a href="tel:${mnEsc(e.gph)}">${mnEsc(e.gph)}</a> · ${mnEsc(e.g)}`
+        + (e.st === "wait" ? `<br><b>${mnEsc(T("mo_wait"))}</b><div class="mn-acts"><button type="button" class="chip ok" data-mok="approve" data-id="${e.id}">${mnEsc(T("mo_ok"))}</button><button type="button" class="chip no" data-mok="reject" data-id="${e.id}">${mnEsc(T("mo_no"))}</button></div>` : "")
+        + (e.st === "rej" ? `<br><b>${mnEsc(T("mo_rej"))}</b>` : "")
+        + (e.lr === "ask" ? `<br>${mnEsc(T("mo_lr").replace("{n}", e.gn))}<div class="mn-acts"><button type="button" class="chip ok" data-mok="list_yes" data-id="${e.id}">${mnEsc(T("mo_ly"))}</button><button type="button" class="chip no" data-mok="list_no" data-id="${e.id}">${mnEsc(T("mo_ln"))}</button></div>` : "")
+        + "</div>" : "";
+      return `<div class="mo-ev${e.date < today ? " past" : ""}">${gx}<b>${mnEsc(mlDay(e.date))}</b>${mlDay(e.date) !== mnDate(e.date) ? ` <small class="nt-d">${mnEsc(mnDate(e.date))}</small>` : ""}${e.test ? `<span class="ml-test">${mnEsc(T("ml_test"))}</span>` : ""}
         <div class="nt-d">⏰ ${mnEsc(mlWhen(e.dl))}${e.closed ? " · 🔒" : ""} · ${mnEsc(T("mo_regs").replace("{n}", localDigits(String(e.regs.length))))}</div>
         ${e.note ? `<p class="nt-b">${mnEsc(e.note)}</p>` : ""}<div class="mo-tot">${tot}</div>
         <div class="mn-acts"><button type="button" class="chip" data-mo="list" data-id="${e.id}">${mnEsc(T("mo_list"))}</button>
@@ -2096,6 +2252,10 @@ const mnAdmin = (() => {
         mlLoad(); meals.load(); draw();
       }).catch(() => fail(""));
     };
+    body.querySelectorAll("[data-mok]").forEach(b => b.onclick = () => {
+      b.disabled = true;
+      mnPost("meal_ok", { tk: st.tk, id: b.dataset.id, a: b.dataset.mok }).then(d => { say(d.ok ? "" : "ad_err", !d.ok); mlLoad(); meals.load(); }).catch(() => fail(""));
+    });
     body.querySelectorAll("[data-mo]").forEach(b => b.onclick = () => {
       const e = (st.ml || []).find(x => x.id === b.dataset.id); if (!e) return;
       const a = b.dataset.mo;
@@ -2135,9 +2295,11 @@ const mnAdmin = (() => {
     };
   }
 
-  document.getElementById("mnOpen").addEventListener("click", open);
+  document.getElementById("mnOpen").addEventListener("click", () => open("admin"));
+  document.getElementById("rqOpen").addEventListener("click", () => open("guest"));
   document.getElementById("mnX").addEventListener("click", close);
   sheet.addEventListener("click", e => { if (e.target === sheet) close(); });
+  window.mnOpen = open;
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hidden) close(); });
   if (/[?&]mn=admin\b/.test(location.search)) window.addEventListener("load", () => setTimeout(open, 200));
   if (/[?&]mn=meal\b/.test(location.search)) { st.want = "meal"; window.addEventListener("load", () => setTimeout(open, 200)); }

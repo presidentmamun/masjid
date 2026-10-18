@@ -2197,7 +2197,7 @@ const theme = (() => {
       const end = () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
       end();
       // parts that load on the way (Quran, map) make the page longer: go on to the real end
-      setTimeout(() => { if (document.documentElement.scrollHeight - innerHeight - scrollY > 40) end(); }, 1300);
+      setTimeout(() => { if (document.documentElement.scrollHeight - innerHeight - scrollY > 40) window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }); }, 1300);
       return;
     }
     window.scrollTo({ top: 0, behavior: "smooth" });

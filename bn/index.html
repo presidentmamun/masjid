@@ -577,6 +577,7 @@
 
   /* Quran: book view — a printed Quran: paper, spine shade (right: Arabic books open from the right), stacked page edges, ornate frame */
   .q-player .q-size button.q-view { font-size: 1.05rem; border-inline-end: 1px solid rgba(255, 255, 255, .2); }
+  .q-list.q-busy { opacity: .55; cursor: progress; transition: opacity .08s; }
   .q-list.book { max-height: none; overflow: visible; border: 0; border-radius: 0; position: relative; perspective: 2200px; padding: 6px 4px 10px 12px; }
   .bk-page { --paper: #fdf8ec; --paper2: #f3e6c8; --ink: #1f2a24; --orn: #b8893b; --edge: #e4d5b2;
     position: relative; max-width: 560px; margin: 0 auto; padding: 12px 11px 10px; color: var(--ink); direction: ltr;
@@ -2490,7 +2491,12 @@ function quranLoad() {
 }
 // book view: pages of one size (fits the phone's screen); as many verses as fit on each page.
 // Arabic only: one flowing text like a printed Mushaf. With pronunciation / meaning: under each verse, small.
-const BK = { key: "", pages: [] };
+const BK = { key: "", pages: [], cache: new Map() };
+// heavy redraws: dim the list at once (the tap is seen), then do the work in the next frame
+function qBusy(fn) {
+  const L = $q("qList"); L.classList.add("q-busy");
+  requestAnimationFrame(() => setTimeout(() => { try { fn(); } finally { L.classList.remove("q-busy"); } }, 0));
+}
 function bkSize() {
   const list = $q("qList");
   const w = Math.min(560, Math.max(260, (list ? list.clientWidth : 360) - 18));
@@ -2526,6 +2532,8 @@ function qPages(s) {
   const ar = q.ar[s] || [], { tr, tl, mode } = bkParts(s), sz = bkSize();
   const key = [s, lang, mode, tl ? 1 : 0, getComputedStyle($q("qList")).getPropertyValue("--qz"), sz.w, sz.h, ar.length].join("|");
   if (BK.key === key) return BK.pages;
+  const hit = BK.cache.get(key);                      // laid out before (same surah, size, what is shown)
+  if (hit) { BK.key = key; BK.pages = hit; return hit; }
   const esc = t => String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   // measure in a hidden page of the real size
   const list = $q("qList"), m = document.createElement("div");
@@ -2534,17 +2542,25 @@ function qPages(s) {
   m.innerHTML = '<div class="bk-in"><div class="bk-top"><span>x</span></div><div class="bk-body"></div><div class="bk-pno"><span>1</span></div></div>';
   list.appendChild(m);
   const body = m.querySelector(".bk-body"), pages = [];
-  let cur = [], first = true;
-  const fill = (a, f) => { body.innerHTML = bkShell(s, f, a.map(n => bkVerse(n, mode, ar, tl, tr, esc)).join(""), mode); return body.scrollHeight <= body.clientHeight + 1; };
-  for (let n = 1; n <= ar.length; n++) {
+  // all verses go in once, the phone measures once, then they are shared out into pages by their heights
+  const H = body.clientHeight - 2;
+  body.style.position = "relative";
+  body.innerHTML = bkShell(s, true, ar.map((_, k) => bkVerse(k + 1, mode, ar, tl, tr, esc)).join(""), mode);
+  const br = body.getBoundingClientRect(), top0 = br.top - body.scrollTop;
+  const span = [...body.querySelectorAll("[data-a]")].map(el => {
+    const rs = el.getClientRects(); if (!rs.length) return [0, 0];
+    return [rs[0].top - top0, rs[rs.length - 1].bottom - top0];
+  });
+  let cur = [], y0 = 0;
+  span.forEach(([t, bt], k) => {
+    const n = k + 1;
+    if (cur.length && bt - y0 > H * (mode === "flow" ? .96 : 1)) { pages.push({ a: cur }); cur = []; y0 = t; }
     cur.push(n);
-    if (!fill(cur, first) && cur.length > 1) {        // did not fit: this verse starts the next page
-      cur.pop(); pages.push({ a: cur }); first = false; cur = [n];
-    }
-  }
+  });
   if (cur.length) pages.push({ a: cur });
   m.remove();
   BK.key = key; BK.pages = pages;
+  BK.cache.set(key, pages); if (BK.cache.size > 12) BK.cache.delete(BK.cache.keys().next().value);
   return pages;
 }
 function bookDraw() {
@@ -2612,7 +2628,11 @@ function quranDraw() {
   const s = q.surah, ar = q.ar[s];
   if (!ar) return;
   $q("qList").classList.toggle("book", q.view === "book");
+  const Lq = $q("qList");
+  const lkey = `${s}|${lang}|${Q_TR[lang] && q.tr[Q_TR[lang]] && q.tr[Q_TR[lang]][s] ? 1 : 0}|${q.tl[s] ? 1 : 0}`;
   if (q.view === "book") {
+    // keep the list as it is (going back to the list then needs no redrawing)
+    if (Lq.querySelector(".q-ay")) { q.lf = { key: lkey, frag: document.createDocumentFragment() }; while (Lq.firstChild) q.lf.frag.appendChild(Lq.firstChild); }
     qShow();
     bookDraw();
     if (q.after === "ayah") { const ed0 = Q_TR[lang]; if (!ed0 || (q.tr[ed0] && q.tr[ed0][s])) { q.after = ""; qPlayAyah(1); return; } }
@@ -2622,6 +2642,13 @@ function quranDraw() {
   const ed = Q_TR[lang], tr = ed && q.tr[ed] ? q.tr[ed][s] : null;
   const bism = (s !== 1 && s !== 9) ? `<div class="q-ay q-bism" style="cursor:default"><div class="q-ar" style="text-align:center">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div></div>` : "";
   const esc = t => String(t).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  if (q.lf && q.lf.key === lkey) {
+    Lq.innerHTML = ""; Lq.appendChild(q.lf.frag); q.lf = null;
+    qShow(); if (q.tlOn) qTlLoad(s);
+    if (q.after === "ayah" && (!ed || tr)) { q.after = ""; qPlayAyah(1); return; }
+    qMark(); return;
+  }
+  q.lf = null;
   $q("qList").innerHTML = bism + ar.map((a, i) => `<div class="q-ay" data-a="${i + 1}">
       <div class="q-ar" lang="ar">${esc(a)}<span class="q-no">﴿${qArDigits(i + 1)}﴾</span></div>
       ${q.tl[s] && q.tl[s][i] ? `<div class="q-tl">${esc(q.tl[s][i])}</div>` : ""}
@@ -2737,7 +2764,7 @@ function qPlayAyah(a, phase) {
   const ls = $q("qLsn");
   ls.value = ["ar", "both", "tr"].includes(store.get("q_lsn")) ? store.get("q_lsn") : "both";
   qShow();
-  ls.addEventListener("change", () => { store.set("q_lsn", ls.value); qVoiceNote(); qLabels(); qShow(); if (q.view === "book" && q.ar[q.surah]) { bookDraw(); qMark(); } });
+  ls.addEventListener("change", () => { store.set("q_lsn", ls.value); qVoiceNote(); qLabels(); qShow(); if (q.view === "book" && q.ar[q.surah]) qBusy(() => { bookDraw(); qMark(); }); });
   document.querySelectorAll(".q-seg [data-l]").forEach(b => b.addEventListener("click", () => {
     ls.value = b.dataset.l; ls.dispatchEvent(new Event("change"));
   }));
@@ -2763,7 +2790,7 @@ function qPlayAyah(a, phase) {
   $q("qStop").addEventListener("click", qStopAll);
   // text size
   let qz = Math.min(1.6, Math.max(0.85, +(store.get("q_z") || 1)));
-  const setZ = z => { qz = Math.round(Math.min(1.6, Math.max(0.85, z)) * 100) / 100; $q("qList").style.setProperty("--qz", qz); store.set("q_z", String(qz)); if (q.view === "book" && q.ar[q.surah]) { bookDraw(); qMark(); } };
+  const setZ = z => { qz = Math.round(Math.min(1.6, Math.max(0.85, z)) * 100) / 100; $q("qList").style.setProperty("--qz", qz); store.set("q_z", String(qz)); if (q.view === "book" && q.ar[q.surah]) qBusy(() => { bookDraw(); qMark(); }); };
   setZ(qz);
   $q("qSm").addEventListener("click", () => setZ(qz - 0.15));
   $q("qLg").addEventListener("click", () => setZ(qz + 0.15));
@@ -2775,7 +2802,7 @@ function qPlayAyah(a, phase) {
   vb.addEventListener("click", () => {
     q.view = q.view === "book" ? "list" : "book"; store.set("q_view", q.view);
     if (q.view === "book") { const pages = qPages(q.surah); const w = q.ayah ? pages.findIndex(p => p.a.includes(q.ayah)) : -1; q.bk = w > -1 ? w : 0; }
-    vDraw(); quranDraw(); qTip(vb.textContent + " " + T(q.view === "book" ? "q_v_book" : "q_v_list"));
+    vDraw(); qTip(vb.textContent + " " + T(q.view === "book" ? "q_v_book" : "q_v_list")); qBusy(quranDraw);
   });
   window.qViewDraw = vDraw;
   // swipe in the book: to the right = next page (like turning a printed Quran's page)
@@ -2788,7 +2815,7 @@ function qPlayAyah(a, phase) {
   }, { passive: true });
   const tlb = $q("qTl");
   q.tlOn = store.get("q_tl") === "1"; tlb.checked = q.tlOn;
-  tlb.addEventListener("change", () => { q.tlOn = tlb.checked; store.set("q_tl", q.tlOn ? "1" : ""); qShow(); if (q.tlOn) qTlLoad(q.surah); if (q.view === "book" && q.ar[q.surah]) { bookDraw(); qMark(); } });
+  tlb.addEventListener("change", () => { q.tlOn = tlb.checked; store.set("q_tl", q.tlOn ? "1" : ""); qShow(); if (q.tlOn) qTlLoad(q.surah); if (q.view === "book" && q.ar[q.surah]) qBusy(() => { bookDraw(); qMark(); }); });
   $q("qPlay").addEventListener("click", () => {
     if (tts) tts.cancel();
     q.mode = "surah"; q.ayah = 0; q.src = 0; q.paused = false; qMark();

@@ -292,6 +292,23 @@
   .fast-n { font-size: .9rem; opacity: .85; }
   .fast-v { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
   .fast-note { margin: 10px 0 0; font-size: .85rem; opacity: .8; }
+  .tset { margin-top: 14px; }
+  .tset-sum { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2);
+    color: var(--text); font: inherit; font-size: .86rem; text-align: start; cursor: pointer; }
+  .tset-sum span { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tset-sum b { color: var(--green); }
+  .tset-sum i { flex: none; font-style: normal; padding: 2px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: .8rem; font-weight: 700; }
+  .tset-panel { margin-top: 8px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); }
+  .tset-panel[hidden] { display: none; }
+  .tset-loc { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface-2); }
+  .tset-loc button { flex: 1 1 0; padding: 8px 6px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+  .tset-loc button[aria-pressed="true"] { background: var(--green); color: #fff; }
+  .tset-msg { margin: 8px 2px 0; font-size: .84rem; color: var(--muted); }
+  .tset-msg:empty { display: none; }
+  .tset-msg button { margin-inline-start: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--green); font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; }
+  .tset .settings { margin-top: 10px; }
+  .tset .settings label { min-width: 0; flex-basis: 100%; }
+  .tset .settings select { width: 100%; max-width: 100%; min-width: 0; }
   .settings {
     display: flex;
     flex-wrap: wrap;
@@ -900,6 +917,14 @@
       <span data-i18n="jumuah_time">প্রতি শুক্রবার ১২:০০–১৩:০০</span>
     </div>
 
+    <div class="tset">
+      <button type="button" class="tset-sum" id="tsetSum" aria-expanded="false" aria-controls="tsetPanel"></button>
+      <div class="tset-panel" id="tsetPanel" hidden>
+        <div class="tset-loc" role="group">
+          <button type="button" data-loc="masjid" data-i18n="ts_masjid">🕌 মসজিদের সময়</button>
+          <button type="button" data-loc="me" data-i18n="ts_me">📍 আমার এলাকার সময়</button>
+        </div>
+        <p class="tset-msg" id="tsetMsg" aria-live="polite"></p>
     <div class="settings">
       <label>
         <span data-i18n="method">হিসাবের পদ্ধতি</span>
@@ -919,7 +944,9 @@
         </select>
       </label>
     </div>
-    <p class="note" data-i18n="note">সময়গুলো মরিওকার অবস্থান অনুযায়ী হিসাব করা। জামাতের সময় ভিন্ন হতে পারে, মসজিদের ঘোষণা অনুসরণ করুন।</p>
+      </div>
+    </div>
+    <p class="note" id="timesNote" data-i18n="note">সময়গুলো মরিওকার অবস্থান অনুযায়ী হিসাব করা। জামাতের সময় ভিন্ন হতে পারে, মসজিদের ঘোষণা অনুসরণ করুন।</p>
 
     <div class="notif" id="notif" hidden></div>
 
@@ -1212,7 +1239,9 @@
 
 <script>
 /* ===================== Settings ===================== */
-const LAT = 39.7176617, LNG = 141.1266192, TZ = 9;   // Morioka Masjid, JST (UTC+9, no DST)
+const M_LAT = 39.7176617, M_LNG = 141.1266192, TZ = 9;   // Morioka Masjid, JST (UTC+9, no DST)
+// where the times are worked out for: the masjid (default) or the visitor's own area (in Japan; kept on this phone)
+let LAT = M_LAT, LNG = M_LNG;
 const KAABA = { lat: 21.4225, lng: 39.8262 };
 const DEFAULT_LANG = "ja";
 const DEFAULT_METHOD = "karachi";
@@ -1237,6 +1266,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    ts_masjid: "🕌 Masjid's times", ts_me: "📍 My area's times", ts_masjid_n: "Morioka Masjid", ts_my: "My area", ts_change: "⚙ Change", ts_wait: "Finding your location…", ts_denied: "Location permission was not given. Allow it in the phone's settings.", ts_out: "You seem to be outside Japan — this site's times are for Japan only.", ts_err: "Could not get your location. Please try again.", ts_again: "↻ Find again", note_me: "Times are calculated for {p}. Congregation (jamaat) times at the masjid may differ.",
     tas_p0: "SubhanAllah", tas_p1: "Alhamdulillah", tas_p2: "Allahu Akbar",
     zk_title: "📿 Dhikr", nav_zikr: "Dhikr",
     month_link: "📅 Whole month's timetable (with Sehri & Iftar) →",
@@ -1292,6 +1322,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    ts_masjid: "🕌 マスジドの時刻", ts_me: "📍 現在地の時刻", ts_masjid_n: "盛岡マスジド", ts_my: "現在地", ts_change: "⚙ 変更", ts_wait: "現在地を確認しています…", ts_denied: "位置情報が許可されていません。端末の設定で許可してください。", ts_out: "日本国外にいるようです。このサイトの時刻は日本国内用です。", ts_err: "現在地を取得できませんでした。もう一度お試しください。", ts_again: "↻ もう一度", note_me: "時刻は{p}の位置に基づく計算値です。マスジドの集団礼拝の時刻とは異なる場合があります。",
     tas_p0: "スブハーナッラー", tas_p1: "アルハムドゥリッラー", tas_p2: "アッラーフ・アクバル",
     zk_title: "📿 ズィクル", nav_zikr: "ズィクル",
     month_link: "📅 1か月の礼拝時間表（サフール・イフタール付き）→",
@@ -1347,6 +1378,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    ts_masjid: "🕌 মসজিদের সময়", ts_me: "📍 আমার এলাকার সময়", ts_masjid_n: "মরিওকা মসজিদ", ts_my: "আমার এলাকা", ts_change: "⚙ বদলান", ts_wait: "অবস্থান খোঁজা হচ্ছে…", ts_denied: "অবস্থানের অনুমতি পাওয়া যায়নি — ফোনের সেটিংসে অনুমতি দিন।", ts_out: "মনে হচ্ছে আপনি জাপানের বাইরে — এই সাইটের সময় শুধু জাপানের জন্য।", ts_err: "অবস্থান পাওয়া যায়নি। আবার চেষ্টা করুন।", ts_again: "↻ আবার খুঁজুন", note_me: "সময়গুলো {p}-এর অবস্থান অনুযায়ী হিসাব করা। মসজিদের জামাতের সময় আলাদা হতে পারে।",
     tas_p0: "সুবহানাল্লাহ", tas_p1: "আলহামদুলিল্লাহ", tas_p2: "আল্লাহু আকবার",
     zk_title: "📿 জিকির", nav_zikr: "জিকির",
     month_link: "📅 পুরো মাসের সময়সূচি (সেহরি ও ইফতারসহ) →",
@@ -1402,6 +1434,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    ts_masjid: "🕌 مسجد کے اوقات", ts_me: "📍 میرے علاقے کے اوقات", ts_masjid_n: "موریوکا مسجد", ts_my: "میرا علاقہ", ts_change: "⚙ تبدیل", ts_wait: "مقام تلاش کیا جا رہا ہے…", ts_denied: "مقام کی اجازت نہیں ملی — فون کی سیٹنگ میں اجازت دیں۔", ts_out: "لگتا ہے آپ جاپان سے باہر ہیں — اس سائٹ کے اوقات صرف جاپان کے لیے ہیں۔", ts_err: "مقام نہیں مل سکا۔ دوبارہ کوشش کریں۔", ts_again: "↻ دوبارہ", note_me: "اوقات {p} کے مقام کے مطابق ہیں۔ مسجد کی جماعت کا وقت مختلف ہو سکتا ہے۔",
     tas_p0: "سبحان اللہ", tas_p1: "الحمد للہ", tas_p2: "اللہ اکبر",
     zk_title: "📿 ذکر", nav_zikr: "ذکر",
     month_link: "📅 پورے مہینے کے اوقات (سحری و افطار سمیت) ←",
@@ -1455,6 +1488,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    ts_masjid: "🕌 मस्जिद का समय", ts_me: "📍 मेरे इलाक़े का समय", ts_masjid_n: "मोरिओका मस्जिद", ts_my: "मेरा इलाक़ा", ts_change: "⚙ बदलें", ts_wait: "जगह खोजी जा रही है…", ts_denied: "जगह की अनुमति नहीं मिली — फ़ोन की सेटिंग में अनुमति दें।", ts_out: "लगता है आप जापान से बाहर हैं — इस साइट का समय सिर्फ़ जापान के लिए है।", ts_err: "जगह नहीं मिल सकी। फिर कोशिश करें।", ts_again: "↻ फिर से", note_me: "समय {p} की जगह के हिसाब से है। मस्जिद की जमात का समय अलग हो सकता है।",
     tas_p0: "सुब्हानअल्लाह", tas_p1: "अल्हम्दुलिल्लाह", tas_p2: "अल्लाहु अकबर",
     zk_title: "📿 ज़िक्र", nav_zikr: "ज़िक्र",
     month_link: "📅 पूरे महीने का टाइम टेबल (सहरी व इफ़्तार समेत) →",
@@ -1508,6 +1542,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    ts_masjid: "🕌 مواقيت المسجد", ts_me: "📍 مواقيت منطقتي", ts_masjid_n: "مسجد موريوكا", ts_my: "منطقتي", ts_change: "⚙ تغيير", ts_wait: "جارٍ تحديد موقعك…", ts_denied: "لم يُسمح بالموقع — اسمح به من إعدادات الهاتف.", ts_out: "يبدو أنك خارج اليابان — مواقيت هذا الموقع لليابان فقط.", ts_err: "تعذّر تحديد الموقع. حاول مرة أخرى.", ts_again: "↻ مرة أخرى", note_me: "المواقيت محسوبة لموقع {p}. قد يختلف وقت الجماعة في المسجد.",
     tas_p0: "", tas_p1: "", tas_p2: "",
     zk_title: "📿 الذكر", nav_zikr: "الذكر",
     month_link: "📅 جدول الشهر كاملًا (مع السحور والإفطار) ←",
@@ -2596,8 +2631,55 @@ const meals = (() => {
   return { render, load };
 })();
 
+/* ===================== Where the times are for ===================== */
+let place = { mode: "masjid", lat: 0, lng: 0, n: "" };
+try { const p = JSON.parse(store.get("place") || "null"); if (p && p.mode === "me" && isFinite(p.lat) && isFinite(p.lng)) place = p; } catch {}
+const placeSave = () => store.set("place", JSON.stringify(place));
+const inJapan = (a, b) => a > 20 && a < 46.5 && b > 122 && b < 154.5;
+function placeApply(first) {
+  if (place.mode === "me" && inJapan(place.lat, place.lng)) { LAT = place.lat; LNG = place.lng; }
+  else { LAT = M_LAT; LNG = M_LNG; }
+  if (first) return;
+  renderTimes(); renderQibla(); placeUI();
+  if (typeof notif !== "undefined") notif.render();
+}
+let placeMsgK = "";
+function placeMsg(k, again) {
+  placeMsgK = k;
+  const el = document.getElementById("tsetMsg"); if (!el) return;
+  el.textContent = k ? T(k) : "";
+  if (again) { const b = document.createElement("button"); b.type = "button"; b.textContent = T("ts_again"); b.onclick = placeFind; el.appendChild(b); }
+}
+function placeName() { return place.mode === "me" ? (place.n || T("ts_my")) : T("ts_masjid_n"); }
+function placeUI() {
+  const sum = document.getElementById("tsetSum"); if (!sum) return;
+  const mt = (document.querySelector(`#method option[value="${method}"]`) || {}).textContent || method;
+  sum.innerHTML = `<span>📍 <b>${escH(placeName())}</b> · ${escH(mt.split(" — ")[0])} · ${escH(T(asr === "hanafi" ? "hanafi" : "std"))}</span><i>${escH(T("ts_change"))}</i>`;
+  document.querySelectorAll(".tset-loc [data-loc]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.loc === place.mode)));
+  const note = document.getElementById("timesNote");
+  if (note) note.textContent = place.mode === "me" ? T("note_me").replace("{p}", placeName()) : T("note");
+}
+// the visitor's own area: asked only when they tap it; the town's name from OpenStreetMap
+function placeFind() {
+  if (!("geolocation" in navigator)) { placeMsg("ts_err"); return; }
+  placeMsg("ts_wait");
+  navigator.geolocation.getCurrentPosition(pos => {
+    const a = +pos.coords.latitude.toFixed(4), b = +pos.coords.longitude.toFixed(4);
+    if (!inJapan(a, b)) { placeMsg("ts_out"); return; }
+    place = { mode: "me", lat: a, lng: b, n: "" }; placeSave(); placeApply(); placeMsg("");
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=10&lat=${a}&lon=${b}&accept-language=${lang}`, { credentials: "omit" })
+      .then(r => r.json()).then(d => {
+        const ad = (d && d.address) || {};
+        const n = ad.city || ad.town || ad.village || ad.municipality || ad.county || ad.suburb || "";
+        if (n && place.mode === "me" && place.lat === a) { place.n = n; placeSave(); placeUI(); if (typeof notif !== "undefined") notif.render(); }
+      }).catch(() => {});
+  }, e => placeMsg(e && e.code === 1 ? "ts_denied" : "ts_err", true), { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 });
+}
+placeApply(true);
+
 function renderAll() {
   renderTexts();
+  if (typeof placeUI === "function") { placeUI(); if (placeMsgK) placeMsg(placeMsgK, placeMsgK !== "ts_wait"); }
   theme.apply();
   if (window.qToTopLabel) window.qToTopLabel();
   renderDates();
@@ -3410,7 +3492,7 @@ const notif = (function () {
   };
   const getSub = () => navigator.serviceWorker.getRegistration("/")
     .then(r => r ? r.pushManager.getSubscription() : null).catch(() => null);
-  const sig = () => [NL(), method, asr, TYPES.map(k => types[k] ? 1 : 0).join("")].join("|");
+  const sig = () => [NL(), method, asr, TYPES.map(k => types[k] ? 1 : 0).join(""), LAT.toFixed(3) + "," + LNG.toFixed(3)].join("|");
   const dev = () => {
     const os = /Android/i.test(ua) ? "Android" : ios ? "iPhone" : /Windows/i.test(ua) ? "Windows" : /Mac OS/i.test(ua) ? "Mac" : "";
     return (os ? os + " · " : "") + "Masjid " + (app ? "app" : "browser");
@@ -3419,7 +3501,8 @@ const notif = (function () {
     return fetch(PUSH.on, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
       endpoint: s.endpoint, lat: LAT, lng: LNG, tz: "Asia/Tokyo",
       method, asr: asr === "hanafi" ? "hanafi" : "standard",
-      name: (I18N[NL()] || {}).title || T("title"), mosque: (I18N[NL()] || {}).title || T("title"), jamaat: [], lang: NL(),
+      name: place.mode === "me" ? (place.n || (I18N[NL()] || {}).ts_my || "My area") : (I18N[NL()] || {}).title || T("title"),
+      mosque: (I18N[NL()] || {}).title || T("title"), jamaat: [], lang: NL(),
       types: { prayer: types.prayer ? 1 : 0, ramz: types.ramz ? 1 : 0, jumu: types.jumu ? 1 : 0, isl: types.isl ? 1 : 0, jpdz: types.jpdz ? 1 : 0, post: 0, live: 0, sunnah: 0 },
       dev: dev()
     }) }).then(r => { if (!r.ok) throw new Error("http " + r.status); store.set("n_sig", sig()); mnFollow(s.endpoint, types.notice); });
@@ -3628,8 +3711,16 @@ function setUrl() {
 
   const mSel = document.getElementById("method"), aSel = document.getElementById("asr");
   mSel.value = method; aSel.value = asr;
-  mSel.addEventListener("change", () => { method = mSel.value; store.set("method", method); renderTimes(); notif.render(); });
-  aSel.addEventListener("change", () => { asr = aSel.value; store.set("asr", asr); renderTimes(); notif.render(); });
+  mSel.addEventListener("change", () => { method = mSel.value; store.set("method", method); renderTimes(); notif.render(); placeUI(); });
+  aSel.addEventListener("change", () => { asr = aSel.value; store.set("asr", asr); renderTimes(); notif.render(); placeUI(); });
+  document.getElementById("tsetSum").addEventListener("click", () => {
+    const p = document.getElementById("tsetPanel"), b = document.getElementById("tsetSum");
+    p.hidden = !p.hidden; b.setAttribute("aria-expanded", String(!p.hidden)); placeUI();
+  });
+  document.querySelectorAll(".tset-loc [data-loc]").forEach(b => b.addEventListener("click", () => {
+    if (b.dataset.loc === "masjid") { place.mode = "masjid"; placeSave(); placeApply(); placeMsg(""); }
+    else placeFind();
+  }));
 
   document.querySelectorAll(".lang-btn").forEach(b => b.addEventListener("click", () => {
     lang = b.dataset.lang; store.set("lang", lang); setUrl(); renderAll();

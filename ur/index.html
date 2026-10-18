@@ -454,6 +454,36 @@
   .share p { margin: 4px 0 10px; font-size: .92rem; color: var(--muted); }
   .share-acts { display: flex; gap: 8px; flex-wrap: wrap; }
 
+
+  /* the A4 print sheet (timetable) */
+  #printSheet { display: none; }
+  @media print {
+    body.p-sheet > *:not(#printSheet) { display: none !important; }
+    body.p-sheet { background: #fff !important; margin: 0 !important; }
+    body.p-sheet #printSheet { display: block !important; color: #1b1b1b; font-family: "Noto Sans", "Noto Sans Bengali", "Noto Sans JP", "Noto Sans Devanagari", "Noto Naskh Arabic", sans-serif; }
+    #printSheet * { -webkit-print-color-adjust: exact; print-color-adjust: exact; box-sizing: border-box; }
+    .ps-head { text-align: center; padding: 3mm 4mm 2.6mm; border-radius: 3mm; color: #fff; background: #0f5a3c; background: linear-gradient(135deg, #1a7a52, #0b4330); }
+    .ps-ar { font-family: "Amiri", "Noto Naskh Arabic", serif; font-size: 13pt; line-height: 1.1; color: #e9cf8f; }
+    .ps-t { font-size: 14pt; font-weight: 700; line-height: 1.25; }
+    .ps-s { font-size: 8pt; line-height: 1.2; opacity: .9; }
+    .ps-month { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; margin: 2.4mm 1mm 1.6mm; padding-bottom: 1mm; border-bottom: .5mm solid #b8893b; }
+    .ps-month span { font-size: 12pt; font-weight: 700; color: #0f5a3c; }
+    .ps-month small { font-size: 8pt; color: #8a6420; }
+    .ps-tbl { width: 100%; border-collapse: collapse; font-size: var(--fs); line-height: 1.1; }
+    .ps-tbl th, .ps-tbl td { height: var(--row); padding: 0 1.4mm; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; border-bottom: .2mm solid #ddd3bd; }
+    .ps-tbl th { background: #0f5a3c; color: #fff; font-size: .9em; font-weight: 700; border: 0; }
+    .ps-tbl th small { display: inline; margin-inline-start: .8mm; color: #e9cf8f; font-size: .85em; }
+    .ps-tbl tbody tr:nth-child(even) td { background: #f7f2e6; }
+    .ps-tbl td:first-child, .ps-tbl th:first-child { text-align: start; }
+    .ps-tbl td.h { color: #6b6b6b; font-size: .92em; }
+    .ps-tbl td.sf, .ps-tbl td.if { font-weight: 700; color: #0f5a3c; }
+    .ps-tbl tr.friday td:first-child { color: #0f5a3c; font-weight: 700; }
+    .ps-tbl tr.today td { background: #fff1c9 !important; }
+    .ps-tbl tr { break-inside: avoid; page-break-inside: avoid; }
+    .ps-foot { display: flex; justify-content: space-between; gap: 4mm; margin-top: 2mm; padding-top: 1.4mm; border-top: .5mm solid #b8893b; font-size: 7.6pt; color: #333; }
+    .ps-note { margin-top: .8mm; font-size: 6.8pt; color: #777; text-align: center; }
+    body.p-sheet ~ * { display: none; }
+  }
   @media print {
     body.p-cal > *:not(main) { display: none !important; }
     body.p-cal main > *:not(#cal) { display: none !important; }
@@ -1832,55 +1862,28 @@ function renderCal() {
     if (mt.mode === "ram") { const t = tokyoYMD(); mt.mode = "month"; mt.y = t.y; mt.m = t.m; } else mt.mode = "ram";
     renderMonth();
   });
-  // print: its own A4 page (sizes in mm/pt, always white paper) — the phone's screen size and dark mode do not matter;
-  // iPhone Safari also adds its own margins, so the table is made to fit well inside one page
+  // print: an A4 sheet made inside this page (no new window — the Masjid app may block those);
+  // only the sheet is printed, in mm/pt, always on white paper. On screen nothing changes.
   document.getElementById("mtPrint").addEventListener("click", () => {
     const tbl = document.querySelector("table.mt");
     const rows = document.querySelectorAll("#mtBody tr").length || 31;
-    const rowMm = Math.min(7, Math.max(5, 205 / (rows + 1)));             // all rows + head within ~205 mm (iPhone adds big margins)
-    const fs = rowMm >= 6.6 ? 10 : rowMm >= 6 ? 9.5 : 8.5;
-    const fonts = document.querySelector('link[href*="fonts.googleapis.com/css2"]');
-    const html = `<!doctype html><html lang="${lang}" dir="${RTL.has(lang) ? "rtl" : "ltr"}"><head><meta charset="utf-8">
-<meta name="viewport" content="width=794"><title>${escH(T("title"))} — ${escH(document.getElementById("mtLabel").textContent)}</title>
-${fonts ? `<link rel="stylesheet" href="${fonts.href}">` : ""}
-<style>
-  @page { size: A4 portrait; margin: 9mm; }
-  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  html, body { margin: 0; background: #fff; color: #111; }
-  body { font-family: "Noto Sans", "Noto Sans Bengali", "Noto Sans JP", "Noto Sans Devanagari", "Noto Naskh Arabic", system-ui, sans-serif; }
-  .pg { width: 100%; max-width: 192mm; margin: 0 auto; }
-  h1 { margin: 0; text-align: center; font-size: 15pt; line-height: 1.25; color: #0f5a3c; }
-  .sub { margin: 1mm 0 3mm; text-align: center; font-size: 9pt; line-height: 1.3; color: #333; }
-  table { width: 100%; border-collapse: collapse; font-size: ${fs}pt; line-height: 1.15; }
-  tr { break-inside: avoid; page-break-inside: avoid; }
-  th, td { height: ${rowMm}mm; padding: 0 1.6mm; border: .25mm solid #b9b9b9; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  th { background: #eef3ef; color: #0f5a3c; font-size: .86em; }
-  th small { margin-inline-start: 1mm; color: #a0741f; font-size: .85em; }
-  td:first-child, th:first-child { text-align: start; }
-  td.h { color: #555; font-size: .9em; }
-  td.sf, td.if { font-weight: 700; }
-  tr.friday td:first-child { color: #0f5a3c; font-weight: 700; }
-  tr.today td { background: #fff4d6; }
-  .foot { margin-top: 2mm; text-align: center; font-size: 7.5pt; color: #666; }
-  .bar { display: flex; gap: 8px; justify-content: center; margin: 10px 0; }
-  .bar button { font: inherit; font-size: 15px; font-weight: 700; padding: 10px 20px; border-radius: 999px; border: 0; background: #0f5a3c; color: #fff; }
-  @media screen { body { background: #e9e4d8; min-width: 794px; } .pg { background: #fff; padding: 9mm; margin: 0 auto 16px; box-shadow: 0 4px 20px rgba(0,0,0,.15); width: 210mm; max-width: 210mm; } .bar button { font-size: 22px; padding: 14px 30px; } }
-  @media print { .bar { display: none; } }
-</style></head><body>
-<div class="bar"><button onclick="print()">🖨 ${escH(T("cal_print").replace(/^\S+\s/, ""))}</button></div>
-<div class="pg"><h1>${escH(T("title"))}</h1><div class="sub">${escH(document.getElementById("mtLabel").textContent)} · ${escH(T("sub"))}</div>
-<table>${tbl.innerHTML}</table><div class="foot">masjid.iwate-bd.org</div></div>
-<script>(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () { setTimeout(function () { print(); }, 300); });<\/script>
-</body></html>`;
-    const w = window.open("", "_blank");
-    if (!w) {                                   // pop-ups blocked: print this page as before
-      document.body.classList.add("p-cal");
-      const off = () => document.body.classList.remove("p-cal");
-      window.addEventListener("afterprint", off, { once: true });
-      window.print(); setTimeout(off, 1500);
-      return;
-    }
-    w.document.open(); w.document.write(html); w.document.close();
+    const rowMm = Math.min(5.6, Math.max(4.4, 160 / (rows + 1)));          // all rows + head within ~160 mm
+    const fs = rowMm >= 5.2 ? 8.6 : 8;
+    let sh = document.getElementById("printSheet");
+    if (!sh) { sh = document.createElement("div"); sh.id = "printSheet"; document.body.appendChild(sh); }
+    sh.style.setProperty("--row", rowMm + "mm"); sh.style.setProperty("--fs", fs + "pt");
+    sh.setAttribute("dir", RTL.has(lang) ? "rtl" : "ltr"); sh.setAttribute("lang", lang);
+    sh.innerHTML = `<div class="ps-head"><div class="ps-ar">مسجد التوحيد</div><div class="ps-t">${escH(T("title"))}</div>`
+      + `<div class="ps-s">${escH(T("sub"))}</div></div>`
+      + `<div class="ps-month"><span>${escH(document.getElementById("mtLabel").textContent)}</span><small>${escH(T("cal_month"))}</small></div>`
+      + `<table class="ps-tbl">${tbl.innerHTML}</table>`
+      + `<div class="ps-foot"><span>📍 ${escH(T("addr"))}</span><span>🌐 masjid.iwate-bd.org</span></div>`
+      + `<div class="ps-note">${escH(T("note"))}</div>`;
+    document.body.classList.add("p-sheet");
+    const off = () => document.body.classList.remove("p-sheet");
+    window.addEventListener("afterprint", off, { once: true });
+    window.print();
+    setTimeout(off, 2000);
   });
 })();
 

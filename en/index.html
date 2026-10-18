@@ -2925,16 +2925,16 @@ const Q_API = "https://api.alquran.cloud/v1/";
 // (mp3quran CDN, its old server, quranicaudio) and one verse by verse (everyayah) — if one fails, the next.
 const MQ = "https://cdn.mp3quran.net/audio/", QA = "https://download.quranicaudio.com/quran/";
 const Q_REC = {
-  afs:    { en: "Mishary Rashid Alafasy", bn: "মিশারি রাশিদ আল-আফাসি", ar: "مشاري راشد العفاسي", s: [MQ + "mishary-alafasy/r1/", "https://server8.mp3quran.net/afs/", QA + "mishaari_raashid_al_3afaasee/"], a: "Alafasy_128kbps" },
-  sds:    { en: "Abdul Rahman Al-Sudais", bn: "আব্দুর রহমান আস-সুদাইস", ar: "عبد الرحمن السديس", s: [QA + "abdurrahmaan_as-sudays/", MQ + "abdulrahman-sudais/r1/", "https://server11.mp3quran.net/sds/"], a: "Abdurrahmaan_As-Sudais_192kbps" },
-  shur:   { en: "Saud Al-Shuraim", bn: "সাউদ আশ-শুরাইম", ar: "سعود الشريم", s: [MQ + "saud-shuraim/r1/", QA + "sa3ood_al-shuraym/"], a: "Saood_ash-Shuraym_128kbps" },
-  maher:  { en: "Maher Al-Muaiqly", bn: "মাহের আল-মুয়াইকিলি", ar: "ماهر المعيقلي", s: [QA + "maher_256/", MQ + "maher-muaiqly/r1/"], a: "MaherAlMuaiqly128kbps" },
-  gmd:    { en: "Saad Al-Ghamdi", bn: "সাদ আল-গামদি", ar: "سعد الغامدي", s: [QA + "sa3d_al-ghaamidi/complete/", MQ + "saad-ghamdi/r1/"], a: "Ghamadi_40kbps" },
-  basit:  { en: "Abdul Basit Abdus Samad", bn: "আব্দুল বাসিত আব্দুস সামাদ", ar: "عبد الباسط عبد الصمد", s: [QA + "abdul_basit_murattal/", MQ + "abdulbasit-abdulsamad/r3/"], a: "Abdul_Basit_Murattal_192kbps" },
-  husr:   { en: "Mahmoud Khalil Al-Husary", bn: "মাহমুদ খলিল আল-হুসারি", ar: "محمود خليل الحصري", s: [MQ + "mahmoud-husary/r1/", QA + "mahmood_khaleel_al-husaree/"], a: "Husary_128kbps" },
-  minsh:  { en: "Muhammad Siddiq Al-Minshawi", bn: "মুহাম্মদ সিদ্দিক আল-মিনশাবি", ar: "محمد صديق المنشاوي", s: [MQ + "muhammad-minshawi/r1/", QA + "muhammad_siddeeq_al-minshaawee/"], a: "Minshawy_Murattal_128kbps" },
-  yasser: { en: "Yasser Al-Dosari", bn: "ইয়াসির আদ-দাওসারি", ar: "ياسر الدوسري", s: [MQ + "yasser-dosari/r1/", QA + "yasser_ad-dussary/"], a: "Yasser_Ad-Dussary_128kbps" },
-  ajm:    { en: "Ahmed Al-Ajmi", bn: "আহমদ আল-আজমি", ar: "أحمد العجمي", s: [MQ + "ahmad-ajmi/r1/", QA + "ahmed_ibn_3ali_al-3ajamy/"], a: "ahmed_ibn_ali_al_ajamy_128kbps" },
+  afs:    { qc: 7, en: "Mishary Rashid Alafasy", bn: "মিশারি রাশিদ আল-আফাসি", ar: "مشاري راشد العفاسي", s: [MQ + "mishary-alafasy/r1/", "https://server8.mp3quran.net/afs/", QA + "mishaari_raashid_al_3afaasee/"], a: "Alafasy_128kbps" },
+  sds:    { qc: 3, en: "Abdul Rahman Al-Sudais", bn: "আব্দুর রহমান আস-সুদাইস", ar: "عبد الرحمن السديس", s: [QA + "abdurrahmaan_as-sudays/", MQ + "abdulrahman-sudais/r1/", "https://server11.mp3quran.net/sds/"], a: "Abdurrahmaan_As-Sudais_192kbps" },
+  shur:   { qc: 10, en: "Saud Al-Shuraim", bn: "সাউদ আশ-শুরাইম", ar: "سعود الشريم", s: [MQ + "saud-shuraim/r1/", QA + "sa3ood_al-shuraym/"], a: "Saood_ash-Shuraym_128kbps" },
+  shatri: { qc: 4, en: "Abu Bakr Ash-Shatri", bn: "আবু বকর আশ-শাতরি", ar: "أبو بكر الشاطري", s: [QA + "abu_bakr_ash-shaatree/", MQ + "abubakr-shatri/r1/"], a: "Abu_Bakr_Ash-Shaatree_128kbps" },
+  gmd:    { qc: 13, en: "Saad Al-Ghamdi", bn: "সাদ আল-গামদি", ar: "سعد الغامدي", s: [QA + "sa3d_al-ghaamidi/complete/", MQ + "saad-ghamdi/r1/"], a: "Ghamadi_40kbps" },
+  basit:  { qc: 2, en: "Abdul Basit Abdus Samad", bn: "আব্দুল বাসিত আব্দুস সামাদ", ar: "عبد الباسط عبد الصمد", s: [QA + "abdul_basit_murattal/", MQ + "abdulbasit-abdulsamad/r3/"], a: "Abdul_Basit_Murattal_192kbps" },
+  husr:   { qc: 6, en: "Mahmoud Khalil Al-Husary", bn: "মাহমুদ খলিল আল-হুসারি", ar: "محمود خليل الحصري", s: [MQ + "mahmoud-husary/r1/", QA + "mahmood_khaleel_al-husaree/"], a: "Husary_128kbps" },
+  minsh:  { qc: 9, en: "Muhammad Siddiq Al-Minshawi", bn: "মুহাম্মদ সিদ্দিক আল-মিনশাবি", ar: "محمد صديق المنشاوي", s: [MQ + "muhammad-minshawi/r1/", QA + "muhammad_siddeeq_al-minshaawee/"], a: "Minshawy_Murattal_128kbps" },
+  yasser: { qc: 174, en: "Yasser Al-Dosari", bn: "ইয়াসির আদ-দাওসারি", ar: "ياسر الدوسري", s: [MQ + "yasser-dosari/r1/", QA + "yasser_ad-dussary/"], a: "Yasser_Ad-Dussary_128kbps" },
+  ajm:    { qc: 19, en: "Ahmed Al-Ajmi", bn: "আহমদ আল-আজমি", ar: "أحمد العجمي", s: [MQ + "ahmad-ajmi/r1/", QA + "ahmed_ibn_3ali_al-3ajamy/"], a: "ahmed_ibn_ali_al_ajamy_128kbps" },
 };
 let qRc = Q_REC[store.get("q_rc")] ? store.get("q_rc") : "afs";
 const qRecName = k => { const r = Q_REC[k] || Q_REC.afs; return lang === "bn" ? r.bn : (lang === "ar" || lang === "ur") ? r.ar : r.en; };
@@ -3147,7 +3147,7 @@ function quranLoad() {
         q.ar[s] = txt;
       } else (q.tr[e.edition.identifier] = q.tr[e.edition.identifier] || {})[s] = txt;
     });
-    if (s === q.surah) quranDraw();
+    if (s === q.surah) { quranDraw(); qTiming(s); }
   }).catch(() => { if (s === q.surah && !q.ar[s]) qStatus("quran_fail"); });
 }
 // book view: pages of one size (fits the phone's screen); as many verses as fit on each page.
@@ -3369,7 +3369,7 @@ function qMark() {
 }
 function qStopAll() {
   const au = $q("qAudio");
-  au.pause();
+  au.pause(); qAu2.pause();
   if (tts) tts.cancel();
   q.mode = ""; q.ayah = 0; q.phase = ""; q.paused = false;
   qMark();
@@ -3400,7 +3400,7 @@ const qFast = url => { const e = qPre.get(url); return e && e.u ? e.u : url; };
 function qAhead(a) {
   const n = q.ar[q.surah] ? q.ar[q.surah].length : 0, lsn = qLsn();
   for (let k = a; k <= Math.min(n, a + 1); k++) {
-    if (lsn !== "tr") qFetchAhead(Q_AYAH(q.surah, k));
+    if (lsn !== "tr" && !qTimNow()) qFetchAhead(Q_AYAH(q.surah, k));
     if (lsn !== "ar" && Q_TRA[lang]) qFetchAhead(Q_TRA[lang](q.surah, k));
   }
 }
@@ -3408,17 +3408,73 @@ function qNext() {
   if (q.phase === "ar" && qLsn() === "both") return qPlayAyah(q.ayah, "tr");
   qPlayAyah(q.ayah + 1);
 }
+/* Verse by verse from ONE continuous recording (Quran.com: the whole surah + the time of every verse).
+   The reciter's voice flows as in the whole-surah recording; the verse being read is marked by the time.
+   With the meaning: the recording stops at the verse's end, the meaning is said, then it goes on.
+   No timings (Quran.com down, or none for this reciter) → the verse files as before. */
+const qTimR = new Map();   // "reciter|surah" → { u, t: [[from, to] s…] } or null; missing = not asked yet
+const qTimP = new Map();
+function qTiming(s) {
+  const r = Q_REC[qRc], k = qRc + "|" + s;
+  if (!r.qc) { qTimR.set(k, null); return Promise.resolve(null); }
+  if (!qTimP.has(k)) qTimP.set(k, qcGet(`chapter_recitations/${r.qc}/${s}?segments=true`).then(j => {
+    const f = j.audio_file || {}, t = (f.timestamps || []).map(x => [x.timestamp_from / 1000, x.timestamp_to / 1000]);
+    const n = q.ar[s] ? q.ar[s].length : t.length;
+    const v = f.audio_url && t.length && t.length === n ? { u: f.audio_url, t } : null;
+    qTimR.set(k, v); return v;
+  }).catch(() => { qTimR.set(k, null); return null; }));
+  return qTimP.get(k);
+}
+const qTimNow = () => qTimR.get(qRc + "|" + q.surah);
+// the meaning can be heard (recorded voice, or the phone's voice with the text here)
+function qHasMeaning() {
+  if (qLsn() !== "both") return false;
+  if (Q_TRA[lang]) return true;
+  const ed = Q_TR[lang], tr = ed && q.tr[ed] ? q.tr[ed][q.surah] : null;
+  return !!(tr && tr[q.ayah - 1] && qVoice());
+}
+const qAu2 = new Audio();   // the meaning's recorded voice, so the recitation keeps its place
+qAu2.addEventListener("ended", () => { if (q.mode === "ayah" && q.phase === "tr" && !q.paused) qNext(); });
+qAu2.addEventListener("error", () => { if (q.mode === "ayah" && q.phase === "tr" && qAu2.getAttribute("src")) { if (qVoice()) qSpeak(q.ayah); else qNext(); } });
+// timed: at the verse's end → the meaning (if wanted) or simply the next verse marked
+function qTimedTick() {
+  const au = $q("qAudio"), tm = q.tm;
+  if (!tm || q.mode !== "ayah" || q.phase !== "ar" || q.paused || au.paused || q.trig === q.ayah) return;
+  const end = tm.t[q.ayah - 1] && tm.t[q.ayah - 1][1];
+  if (!end || au.currentTime < end - 0.06) return;
+  const n = tm.t.length;
+  if (qHasMeaning()) { q.trig = q.ayah; au.pause(); qPlayAyah(q.ayah, "tr"); return; }
+  if (q.ayah < n) { q.ayah++; q.trig = 0; qMark(); qAhead(q.ayah); }
+}
 // one verse: Arabic, translation, or both (one after the other), then the next verse
 function qPlayAyah(a, phase) {
   const au = $q("qAudio"), n = q.ar[q.surah] ? q.ar[q.surah].length : 0;
   if (!n) { qStopAll(); return; }
   if (a > n) { qSurahEnd("ayah"); return; }
   const lsn = qLsn();
-  q.mode = "ayah"; q.ayah = a; q.paused = false; au.hidden = true;
+  q.mode = "ayah"; q.ayah = a; q.paused = false; au.hidden = true; q.trig = 0;
   q.phase = phase || (lsn === "tr" ? "tr" : "ar");
   if (tts) tts.cancel();
-  if (q.phase === "ar") { au.src = qFast(Q_AYAH(q.surah, a)); au.play().catch(() => {}); }
-  else if (Q_TRA[lang]) { au.src = qFast(Q_TRA[lang](q.surah, a)); au.play().catch(() => {}); }
+  qAu2.pause();
+  if (q.phase === "ar") {
+    const k = qRc + "|" + q.surah;
+    if (!qTimR.has(k)) {   // timings not asked yet: ask, then start (a moment, once per surah)
+      const want = [q.surah, a, qRc];
+      au.pause(); qMark();
+      qTiming(q.surah).then(() => { if (q.mode === "ayah" && q.surah === want[0] && q.ayah === want[1] && qRc === want[2] && q.phase === "ar" && !q.paused) qPlayAyah(a, "ar"); });
+      return;
+    }
+    q.tm = qTimR.get(k);
+    if (q.tm) {
+      const st = a === 1 ? 0 : q.tm.t[a - 1][0];   // verse 1: from the very start (the Bismillah before it)
+      if (au.getAttribute("src") !== q.tm.u) {
+        au.src = q.tm.u;
+        au.addEventListener("loadedmetadata", () => { try { au.currentTime = st; } catch {} }, { once: true });
+      } else if (Math.abs(au.currentTime - st) > 0.35) { try { au.currentTime = st; } catch {} }
+      au.play().catch(() => { if (au.paused) { q.paused = true; qMark(); } });   // the phone wants a tap: ▶ shows
+    } else { au.src = qFast(Q_AYAH(q.surah, a)); au.play().catch(() => {}); }
+  }
+  else if (Q_TRA[lang]) { au.pause(); qAu2.src = qFast(Q_TRA[lang](q.surah, a)); qAu2.play().catch(() => {}); }
   else { au.pause(); qSpeak(a); }
   if (q.phase === "ar" && lsn === "both" && Q_TRA[lang]) qFetchAhead(Q_TRA[lang](q.surah, a));   // this verse's meaning next
   qAhead(a + 1);
@@ -3440,7 +3496,7 @@ function qPlayAyah(a, phase) {
   // reciter: kept; while playing, the same surah (verse) goes on with the new one
   $q("qRc").addEventListener("change", e => {
     if (!Q_REC[e.target.value]) return;
-    qRc = e.target.value; store.set("q_rc", qRc); qSrc();
+    qRc = e.target.value; store.set("q_rc", qRc); qSrc(); qTiming(q.surah);
     const on = !au.paused && !q.paused;
     if (q.mode === "surah" && on) { q.src = 0; au.src = qSurahUrl(0, q.surah); au.play().catch(() => {}); }
     else if (q.mode === "ayah" && on && q.phase === "ar") qPlayAyah(q.ayah, "ar");
@@ -3476,10 +3532,10 @@ function qPlayAyah(a, phase) {
   $q("qPause").addEventListener("click", () => {
     if (q.mode !== "ayah") return;
     if (!q.paused) {
-      q.paused = true; au.pause(); if (tts) tts.cancel();
+      q.paused = true; au.pause(); qAu2.pause(); if (tts) tts.cancel();
     } else {
       q.paused = false;
-      if (q.phase === "tr" && !Q_TRA[lang]) qSpeak(q.ayah); else au.play().catch(() => {});
+      if (q.phase === "tr" && !Q_TRA[lang]) qSpeak(q.ayah); else if (q.phase === "tr") qAu2.play().catch(() => {}); else au.play().catch(() => {});
     }
     qMark();
   });
@@ -3531,13 +3587,21 @@ function qPlayAyah(a, phase) {
   });
   au.addEventListener("error", () => {
     if (q.mode === "surah" && q.src + 1 < Q_SURAH.length) { q.src++; au.src = qSurahUrl(q.src, q.surah); au.play().catch(() => {}); }
+    // the continuous recording did not come → the verse files
+    else if (q.mode === "ayah" && q.tm && q.phase === "ar") { qTimR.set(qRc + "|" + q.surah, null); q.tm = null; qPlayAyah(q.ayah, "ar"); }
     // a recorded translation missing for this verse → the phone's voice, or go on
     else if (q.mode === "ayah" && q.phase === "tr" && au.getAttribute("src")) { if (qVoice()) qSpeak(q.ayah); else qNext(); }
   });
   au.addEventListener("ended", () => {
-    if (q.mode === "ayah" && !q.paused) qNext();
+    if (q.mode === "ayah" && !q.paused) {
+      if (!q.tm) { qNext(); return; }
+      if (q.phase !== "ar" || q.trig === q.ayah) return;   // the meaning is already on
+      if (qHasMeaning()) { q.trig = q.ayah; qPlayAyah(q.ayah, "tr"); return; }
+      qSurahEnd("ayah");
+    }
     else if (q.mode === "surah") qSurahEnd("surah");
   });
+  setInterval(qTimedTick, 80);   // the verse's end, checked often enough to stop right there
   qEndDraw();
   document.querySelectorAll("[data-qend]").forEach(b => b.addEventListener("click", () => {
     const order = ["stop", "repeat", "next"];

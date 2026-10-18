@@ -497,13 +497,24 @@
   .q-bar select { flex: 1 1 220px; min-width: 0; }
   .q-bar label { display: inline-flex; gap: 6px; align-items: center; font-size: 0.92rem; color: var(--muted); }
   .q-audio { width: 100%; margin: 4px 0 10px; }
-  .q-list { max-height: 70vh; overflow-y: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .q-list { --qz: 1; max-height: 70vh; overflow-y: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .q-ctl { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 4px; }
+  .q-ctl .btn { margin: 0; border: 0; cursor: pointer; font: inherit; font-weight: 700; }
+  .q-ctl .btn.outline { border: 1.5px solid var(--green); }
+  .q-lsn { display: grid; gap: 2px; flex: 1 1 100%; font-size: .85rem; font-weight: 600; color: var(--muted); }
+  .q-lsn select { padding: 9px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-weight: 600; }
+  .q-size { display: inline-flex; gap: 6px; margin-inline-start: auto; }
+  .q-vn:empty { display: none; }
+  .q-now { position: sticky; top: 56px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 8px; padding: 8px 10px; border-radius: 12px; background: var(--green); color: #fff; box-shadow: var(--shadow); }
+  .q-now-t { flex: 1 1 auto; font-weight: 700; font-size: .92rem; }
+  .q-now .chip { background: rgba(255, 255, 255, .14); border-color: transparent; color: #fff; }
+  .q-ay.on .q-tr.say { background: rgba(184, 137, 59, .18); border-radius: 6px; }
   .q-ay { padding: 12px 14px; border-bottom: 1px solid var(--line); cursor: pointer; }
   .q-ay:last-child { border-bottom: 0; }
   .q-ay.on { background: var(--gold-soft); }
-  .q-ar { direction: rtl; text-align: right; font-family: "Amiri Quran", "Amiri", "Noto Naskh Arabic", serif; font-size: 1.55rem; line-height: 2.2; }
+  .q-ar { direction: rtl; text-align: right; font-family: "Amiri Quran", "Amiri", "Noto Naskh Arabic", serif; font-size: calc(1.55rem * var(--qz)); line-height: 2.2; }
   .q-no { display: inline-block; min-width: 1.8em; margin-inline-start: 6px; color: var(--gold); font-size: 1.05rem; }
-  .q-tr { margin-top: 4px; color: var(--text); font-size: 0.97rem; }
+  .q-tr { margin-top: 4px; color: var(--text); font-size: calc(0.97rem * var(--qz)); }
   .q-list.no-tr .q-tr { display: none; }
   .q-st { color: var(--muted); padding: 16px; }
 
@@ -733,8 +744,28 @@
       <select id="qSel" aria-label="Surah"><option value="1">1. Al-Faatiha — الفاتحة</option></select>
       <label id="qTrWrap"><input type="checkbox" id="qTr" checked> <span data-i18n="quran_tr">हिंदी अनुवाद दिखाएँ</span></label>
     </div>
-    <button type="button" class="btn" id="qPlay" data-i18n="quran_listen">▶ पूरी सूरह सुनें</button>
+    <div class="q-ctl">
+      <label class="q-lsn"><span data-i18n="q_listen">🎧 क्या सुनें</span>
+        <select id="qLsn">
+          <option value="ar" data-i18n="q_l_ar">सिर्फ़ अरबी तिलावत</option>
+          <option value="both" data-i18n="q_l_both">अरबी + हिंदी अनुवाद</option>
+          <option value="tr" data-i18n="q_l_tr">सिर्फ़ हिंदी अनुवाद</option>
+        </select>
+      </label>
+      <button type="button" class="btn" id="qSeq" data-i18n="q_seq">▶ आयत-दर-आयत</button>
+      <button type="button" class="btn outline" id="qPlay" data-i18n="quran_listen">▶ पूरी सूरह सुनें</button>
+      <span class="q-size" role="group" aria-label="Text size">
+        <button type="button" class="chip" id="qSm" aria-label="A−">A−</button>
+        <button type="button" class="chip" id="qLg" aria-label="A+">A+</button>
+      </span>
+    </div>
+    <p class="note q-vn" id="qVn"></p>
     <audio class="q-audio" id="qAudio" controls preload="none" hidden></audio>
+    <div class="q-now" id="qNow" hidden>
+      <span class="q-now-t" id="qNowT"></span>
+      <button type="button" class="chip" id="qPause"></button>
+      <button type="button" class="chip" id="qStop" data-i18n="q_stop">⏹ बंद</button>
+    </div>
     <p class="note" style="margin:6px 0 10px" data-i18n="quran_tap">आयत पर टैप करें तो उसकी तिलावत सुनाई देगी।</p>
     <div class="q-list" id="qList"><p class="q-st" data-i18n="quran_loading">लोड हो रहा है…</p></div>
     <p class="note" data-i18n="quran_src">अरबी पाठ: Tanzil (alquran.cloud द्वारा) · अनुवाद: सुहेल फ़ारूक़ ख़ान व सैफ़ुर्रहमान नदवी · तिलावत: मिशारी अल-अफ़ासी</p>
@@ -928,6 +959,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    q_listen: "🎧 What to hear", q_l_ar: "Arabic recitation only", q_l_both: "Arabic + translation", q_l_tr: "Translation only", q_seq: "▶ Verse by verse", q_pause: "⏸ Pause", q_resume: "▶ Resume", q_stop: "⏹ Stop", q_now: "Verse {n} of {t}", q_v_en: "Translation voice: Ibrahim Walk (Saheeh International — the same as the text).", q_v_ur: "Urdu voice: Shamshad Ali Khan (his own translation — the text shown is Jalandhry's).", q_v_tts: "The translation is read aloud by the phone's own voice.", q_v_none: "This phone has no voice for this language, so the translation cannot be read aloud. You can add one in the phone's text-to-speech settings.",
     nt_title: "Notices", nt_until: "Until {d}", k_eid: "Eid", k_ramadan: "Ramadan / Iftar", k_event: "Event", k_closed: "Closed / change", k_other: "Notice", ad_link: "🔐 Notice board (admin)", n_notice: "Masjid notices (Eid, programs …)", ad_title: "🔐 Masjid notice board", ad_login_h: "Log in with your email", ad_login_p: "Only people added by the site admin can log in. A 6-digit code will come to your email — no password.", ad_email: "Email", ad_send: "Send the code", ad_code_p: "Enter the 6-digit code sent to {e}. If it does not come, check the spam folder.", ad_code: "Code", ad_verify: "Log in", ad_back: "← Use another email", ad_hi: "Logged in: {n}", ad_role_w: "✍️ Writer — your notice is shown after approval", ad_role_a: "✅ Approver — your notice is shown at once", ad_new: "✍️ New notice", ad_list: "📋 Notices", ad_kind: "Type", ad_t: "Title", ad_b: "Details", ad_from: "Show from", ad_to: "Show until", ad_pin: "Keep it at the top", ad_notify: "Send a notification when it is shown", ad_submit: "Submit", ad_sent_w: "✓ Sent. It will be shown after an approver approves it.", ad_sent_a: "✓ The notice is on the site now.", ad_none: "No notices yet.", st_wait: "⏳ Waiting for approval", st_live: "✅ On the site", st_rejected: "❌ Not approved", st_ended: "Ended", st_draft: "Not shown", ad_ok: "✅ Approve", ad_no: "❌ Do not approve", ad_rm: "🗑 Remove", ad_rm_q: "Remove this notice from the site?", ad_out: "Log out", ad_by: "By {e}", ad_err_wait: "Please wait a minute and try again.", ad_err_mail: "The email could not be sent. Please ask the site admin for a code.", ad_err_code: "The code is not right, or it has expired.", ad_err_tries: "Too many wrong codes. Please ask for a new code.", ad_err: "Something went wrong. Please check the connection and try again.", ad_need_t: "Please write a title.",
     nav_cal: "Calendar", nav_dua: "Duas", cal_title: "Islamic Calendar & Ramadan", cal_upcoming: "Coming up", ev_ramadan: "Ramadan begins", ev_fitr: "Eid al-Fitr", ev_arafah: "Day of Arafah", ev_adha: "Eid al-Adha", ev_newyear: "Islamic New Year", ev_ashura: "Ashura", cal_today: "Today", cal_tomorrow: "Tomorrow", cal_in: "in {n} days", cal_note: "Dates follow the Umm al-Qura calendar. The actual day can differ by one day depending on the moon sighting — please follow the masjid's announcement.", cal_month: "Monthly prayer timetable", cal_ram: "🌙 Ramadan {y}", cal_mon: "📅 This month", cal_print: "🖨 Print", sehri_s: "Sehri", cal_rday: "Ramadan", dua_title: "Duas & Tasbih", src: "Source", dua_iftar: "When breaking the fast", dua_iftar_m: "The thirst has gone, the veins are moistened, and the reward is certain, if Allah wills.", dua_enter: "Entering the masjid", dua_enter_m: "O Allah, open for me the doors of Your mercy.", dua_leave: "Leaving the masjid", dua_leave_m: "O Allah, I ask You of Your bounty.", dua_qadr: "Laylat al-Qadr", dua_qadr_m: "O Allah, You are the One who pardons, and You love to pardon, so pardon me.", tas_title: "Tasbih counter", tas_after: "After prayer (33 · 33 · 34)", tas_free: "Free count", tas_reset: "↺ Reset", tas_tap: "Tap the circle to count", tas_done: "Done — may Allah accept it", v6: "Everyone is welcome, including people of other faiths. Feel free to ask questions.", v7: "During prayer, please do not walk in front of people who are praying. You are welcome to watch quietly from the back.", v8: "Please ask before taking photos of people.", share_title: "Share this site", share_text: "Scan the QR code to open this site. Print the poster and put it up at the masjid or in shops.", share_poster: "🖨 Print poster", share_copy: "🔗 Copy link", share_copied: "✓ Link copied",
     reload: "Tap to refresh",
@@ -965,6 +997,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    q_listen: "🎧 聞く内容", q_l_ar: "アラビア語の朗誦のみ", q_l_both: "アラビア語＋日本語訳", q_l_tr: "日本語訳のみ", q_seq: "▶ 1節ずつ再生", q_pause: "⏸ 一時停止", q_resume: "▶ 再開", q_stop: "⏹ 停止", q_now: "{t}節中 第{n}節", q_v_en: "", q_v_ur: "", q_v_tts: "日本語訳は端末の音声で読み上げます。", q_v_none: "この端末には日本語の音声がないため、訳を読み上げられません。端末の読み上げ設定で追加できます。",
     nt_title: "お知らせ", nt_until: "{d}まで", k_eid: "イード", k_ramadan: "ラマダン・イフタール", k_event: "行事", k_closed: "休館・変更", k_other: "お知らせ", ad_link: "🔐 お知らせの管理", n_notice: "マスジドのお知らせ（イード、行事など）", ad_title: "🔐 マスジドのお知らせ管理", ad_login_h: "メールアドレスでログイン", ad_login_p: "サイト管理者が登録した人だけがログインできます。メールに6桁のコードが届きます（パスワードは不要）。", ad_email: "メールアドレス", ad_send: "コードを送る", ad_code_p: "{e} に届いた6桁のコードを入力してください。届かない場合は迷惑メールフォルダもご確認ください。", ad_code: "コード", ad_verify: "ログイン", ad_back: "← 別のメールアドレス", ad_hi: "ログイン中：{n}", ad_role_w: "✍️ 投稿者 — 承認後に表示されます", ad_role_a: "✅ 承認者 — すぐに表示されます", ad_new: "✍️ 新しいお知らせ", ad_list: "📋 お知らせ一覧", ad_kind: "種類", ad_t: "タイトル", ad_b: "内容", ad_from: "表示開始日", ad_to: "表示終了日", ad_pin: "いちばん上に表示", ad_notify: "表示が始まったら通知を送る", ad_submit: "送信", ad_sent_w: "✓ 送信しました。承認されると表示されます。", ad_sent_a: "✓ お知らせを表示しました。", ad_none: "お知らせはまだありません。", st_wait: "⏳ 承認待ち", st_live: "✅ 表示中", st_rejected: "❌ 承認されませんでした", st_ended: "終了", st_draft: "非表示", ad_ok: "✅ 承認", ad_no: "❌ 承認しない", ad_rm: "🗑 取り下げ", ad_rm_q: "このお知らせをサイトから取り下げますか？", ad_out: "ログアウト", ad_by: "投稿：{e}", ad_err_wait: "少し待ってからもう一度お試しください。", ad_err_mail: "メールを送れませんでした。サイト管理者にコードを依頼してください。", ad_err_code: "コードが正しくないか、期限切れです。", ad_err_tries: "間違いが多すぎます。新しいコードを依頼してください。", ad_err: "問題が発生しました。接続を確認してもう一度お試しください。", ad_need_t: "タイトルを入力してください。",
     nav_cal: "暦", nav_dua: "ドゥアー", cal_title: "イスラーム暦とラマダン", cal_upcoming: "これからの行事", ev_ramadan: "ラマダン開始", ev_fitr: "イード・アル＝フィトル", ev_arafah: "アラファの日", ev_adha: "イード・アル＝アドハー", ev_newyear: "イスラーム新年", ev_ashura: "アーシューラー", cal_today: "今日", cal_tomorrow: "明日", cal_in: "あと{n}日", cal_note: "日付はウンム・アル＝クラー暦によります。実際の日は月の観測により1日ずれることがあります。マスジドのお知らせに従ってください。", cal_month: "月間の礼拝時間表", cal_ram: "🌙 ラマダン {y}", cal_mon: "📅 今月", cal_print: "🖨 印刷", sehri_s: "サフール", cal_rday: "ラマダン", dua_title: "ドゥアーとタスビーフ", src: "出典", dua_iftar: "断食を解くとき", dua_iftar_m: "渇きは去り、血管は潤い、アッラーが望まれるなら報奨は確かなものとなった。", dua_enter: "マスジドに入るとき", dua_enter_m: "アッラーよ、私にあなたの慈悲の扉を開いてください。", dua_leave: "マスジドを出るとき", dua_leave_m: "アッラーよ、私はあなたの恵みを求めます。", dua_qadr: "ライラト・アル＝カドル（みいつの夜）", dua_qadr_m: "アッラーよ、あなたは赦す御方で、赦すことを好まれます。どうか私をお赦しください。", tas_title: "タスビーフ・カウンター", tas_after: "礼拝後（33・33・34）", tas_free: "自由に数える", tas_reset: "↺ リセット", tas_tap: "円をタップして数えます", tas_done: "完了 — アッラーが受け入れてくださいますように", v6: "ムスリム以外の方も歓迎します。気軽にご質問ください。", v7: "礼拝中は、礼拝している人の前を横切らないでください。後ろから静かに見学していただけます。", v8: "人を撮影する前に、ひと言お声がけください。", share_title: "このサイトを紹介する", share_text: "QRコードを読み取るとこのサイトが開きます。ポスターを印刷して、マスジドやお店に貼ってください。", share_poster: "🖨 ポスターを印刷", share_copy: "🔗 リンクをコピー", share_copied: "✓ コピーしました",
     reload: "タップして更新",
@@ -1002,6 +1035,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    q_listen: "🎧 কী শুনবেন", q_l_ar: "শুধু আরবি তিলাওয়াত", q_l_both: "আরবি + বাংলা অর্থ", q_l_tr: "শুধু বাংলা অর্থ", q_seq: "▶ আয়াত ধরে ধরে", q_pause: "⏸ থামান", q_resume: "▶ আবার চালান", q_stop: "⏹ বন্ধ", q_now: "আয়াত {n} / {t}", q_v_en: "", q_v_ur: "", q_v_tts: "বাংলা অর্থ ফোনের নিজের কণ্ঠে পড়া হয়।", q_v_none: "এই ফোনে বাংলা কণ্ঠ নেই, তাই অর্থ পড়ে শোনানো যাচ্ছে না। ফোনের Text-to-speech সেটিংসে বাংলা কণ্ঠ যোগ করা যায়।",
     nt_title: "নোটিশ", nt_until: "{d} পর্যন্ত", k_eid: "ঈদ", k_ramadan: "রমজান / ইফতার", k_event: "অনুষ্ঠান", k_closed: "বন্ধ / পরিবর্তন", k_other: "নোটিশ", ad_link: "🔐 নোটিশ বোর্ড (অ্যাডমিন)", n_notice: "মসজিদের নোটিশ (ঈদ, অনুষ্ঠান …)", ad_title: "🔐 মসজিদের নোটিশ বোর্ড", ad_login_h: "ইমেইল দিয়ে লগইন", ad_login_p: "সাইটের অ্যাডমিন যাদের যোগ করেছেন, শুধু তারাই লগইন করতে পারবেন। ইমেইলে ৬ অঙ্কের কোড আসবে — কোনো পাসওয়ার্ড নেই।", ad_email: "ইমেইল", ad_send: "কোড পাঠান", ad_code_p: "{e}-এ পাঠানো ৬ অঙ্কের কোড লিখুন। না এলে স্প্যাম ফোল্ডার দেখুন।", ad_code: "কোড", ad_verify: "লগইন", ad_back: "← অন্য ইমেইল", ad_hi: "লগইন: {n}", ad_role_w: "✍️ লেখক — অনুমোদনের পর নোটিশ দেখাবে", ad_role_a: "✅ অনুমোদনকারী — আপনার নোটিশ সাথে সাথে দেখাবে", ad_new: "✍️ নতুন নোটিশ", ad_list: "📋 নোটিশগুলো", ad_kind: "ধরন", ad_t: "শিরোনাম", ad_b: "বিস্তারিত", ad_from: "কবে থেকে", ad_to: "কবে পর্যন্ত", ad_pin: "সবার উপরে রাখুন", ad_notify: "দেখানো শুরু হলে নোটিফিকেশন পাঠান", ad_submit: "জমা দিন", ad_sent_w: "✓ পাঠানো হয়েছে। অনুমোদনকারী অনুমোদন দিলে দেখাবে।", ad_sent_a: "✓ নোটিশ এখন সাইটে দেখাচ্ছে।", ad_none: "এখনো কোনো নোটিশ নেই।", st_wait: "⏳ অনুমোদনের অপেক্ষায়", st_live: "✅ সাইটে আছে", st_rejected: "❌ অনুমোদন হয়নি", st_ended: "শেষ হয়েছে", st_draft: "দেখানো হচ্ছে না", ad_ok: "✅ অনুমোদন", ad_no: "❌ বাতিল", ad_rm: "🗑 সরিয়ে দিন", ad_rm_q: "এই নোটিশ সাইট থেকে সরাবেন?", ad_out: "লগআউট", ad_by: "লিখেছেন {e}", ad_err_wait: "এক মিনিট পর আবার চেষ্টা করুন।", ad_err_mail: "ইমেইল পাঠানো যায়নি। সাইটের অ্যাডমিনের কাছে কোড চান।", ad_err_code: "কোড ঠিক নয়, বা মেয়াদ শেষ।", ad_err_tries: "অনেকবার ভুল কোড। নতুন কোড চান।", ad_err: "কিছু একটা সমস্যা হয়েছে। ইন্টারনেট দেখে আবার চেষ্টা করুন।", ad_need_t: "শিরোনাম লিখুন।",
     nav_cal: "ক্যালেন্ডার", nav_dua: "দোয়া", cal_title: "ইসলামি ক্যালেন্ডার ও রমজান", cal_upcoming: "সামনের দিনগুলো", ev_ramadan: "রমজান শুরু", ev_fitr: "ঈদুল ফিতর", ev_arafah: "আরাফার দিন", ev_adha: "ঈদুল আজহা", ev_newyear: "ইসলামি নববর্ষ", ev_ashura: "আশুরা", cal_today: "আজ", cal_tomorrow: "আগামীকাল", cal_in: "আর {n} দিন", cal_note: "তারিখ উম্মুল কুরা ক্যালেন্ডার অনুযায়ী। চাঁদ দেখার ওপর নির্ভর করে আসল দিন এক দিন আগে-পরে হতে পারে — মসজিদের ঘোষণা অনুসরণ করুন।", cal_month: "মাসের নামাজের সময়সূচি", cal_ram: "🌙 রমজান {y}", cal_mon: "📅 এই মাস", cal_print: "🖨 প্রিন্ট", sehri_s: "সেহরি", cal_rday: "রমজান", dua_title: "দোয়া ও তাসবিহ", src: "সূত্র", dua_iftar: "ইফতারের সময়", dua_iftar_m: "পিপাসা দূর হলো, শিরাগুলো সিক্ত হলো, আর আল্লাহ চাইলে প্রতিদান নিশ্চিত হলো।", dua_enter: "মসজিদে ঢোকার সময়", dua_enter_m: "হে আল্লাহ, আমার জন্য আপনার রহমতের দরজাগুলো খুলে দিন।", dua_leave: "মসজিদ থেকে বের হওয়ার সময়", dua_leave_m: "হে আল্লাহ, আমি আপনার কাছে আপনার অনুগ্রহ চাই।", dua_qadr: "শবে কদর", dua_qadr_m: "হে আল্লাহ, আপনি ক্ষমাশীল, ক্ষমা করতে ভালোবাসেন, তাই আমাকে ক্ষমা করুন।", tas_title: "তাসবিহ গণনা", tas_after: "নামাজের পর (৩৩ · ৩৩ · ৩৪)", tas_free: "নিজের মতো গণনা", tas_reset: "↺ আবার শুরু", tas_tap: "গোল বোতামে চাপ দিয়ে গুনুন", tas_done: "শেষ — আল্লাহ কবুল করুন", v6: "অন্য ধর্মের মানুষসহ সবাইকে স্বাগত। নির্দ্বিধায় প্রশ্ন করুন।", v7: "নামাজ চলার সময় নামাজির সামনে দিয়ে হাঁটবেন না। পেছন থেকে চুপচাপ দেখতে পারেন।", v8: "কারো ছবি তোলার আগে অনুমতি নিন।", share_title: "সাইটটি অন্যদের জানান", share_text: "QR কোড স্ক্যান করলে এই সাইট খুলবে। পোস্টার প্রিন্ট করে মসজিদে বা দোকানে লাগাতে পারেন।", share_poster: "🖨 পোস্টার প্রিন্ট", share_copy: "🔗 লিংক কপি", share_copied: "✓ লিংক কপি হয়েছে",
     reload: "চাপ দিলে রিফ্রেশ হবে",
@@ -1039,6 +1073,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    q_listen: "🎧 کیا سنیں", q_l_ar: "صرف عربی تلاوت", q_l_both: "عربی + اردو ترجمہ", q_l_tr: "صرف اردو ترجمہ", q_seq: "▶ آیت بہ آیت", q_pause: "⏸ روکیں", q_resume: "▶ جاری رکھیں", q_stop: "⏹ بند", q_now: "آیت {n} / {t}", q_v_en: "", q_v_ur: "اردو آواز: شمشاد علی خان (ان کا اپنا ترجمہ — لکھا ہوا ترجمہ جالندھری کا ہے)۔", q_v_tts: "ترجمہ فون کی اپنی آواز میں پڑھا جاتا ہے۔", q_v_none: "اس فون میں اس زبان کی آواز نہیں، اس لیے ترجمہ سنایا نہیں جا سکتا۔ فون کی Text-to-speech سیٹنگ میں شامل کی جا سکتی ہے۔",
     nt_title: "اعلانات", nt_until: "{d} تک", k_eid: "عید", k_ramadan: "رمضان / افطار", k_event: "پروگرام", k_closed: "بند / تبدیلی", k_other: "اعلان", ad_link: "🔐 اعلانات (ایڈمن)", n_notice: "مسجد کے اعلانات (عید، پروگرام …)",
     nav_cal: "کیلنڈر", nav_dua: "دعائیں", cal_title: "اسلامی کیلنڈر اور رمضان", cal_upcoming: "آنے والے دن", ev_ramadan: "رمضان کا آغاز", ev_fitr: "عید الفطر", ev_arafah: "یومِ عرفہ", ev_adha: "عید الاضحیٰ", ev_newyear: "اسلامی نیا سال", ev_ashura: "عاشورہ", cal_today: "آج", cal_tomorrow: "کل", cal_in: "{n} دن باقی", cal_note: "تاریخیں ام القریٰ کیلنڈر کے مطابق ہیں۔ چاند دیکھنے کے لحاظ سے اصل دن ایک دن آگے پیچھے ہو سکتا ہے — مسجد کے اعلان پر عمل کریں۔", cal_month: "ماہانہ اوقاتِ نماز", cal_ram: "🌙 رمضان {y}", cal_mon: "📅 یہ مہینہ", cal_print: "🖨 پرنٹ", sehri_s: "سحری", cal_rday: "رمضان", dua_title: "دعائیں اور تسبیح", src: "حوالہ", dua_iftar: "افطار کے وقت", dua_iftar_m: "پیاس بجھ گئی، رگیں تر ہو گئیں، اور اگر اللہ نے چاہا تو اجر ثابت ہو گیا۔", dua_enter: "مسجد میں داخل ہوتے وقت", dua_enter_m: "اے اللہ، میرے لیے اپنی رحمت کے دروازے کھول دے۔", dua_leave: "مسجد سے نکلتے وقت", dua_leave_m: "اے اللہ، میں تجھ سے تیرا فضل مانگتا ہوں۔", dua_qadr: "شبِ قدر", dua_qadr_m: "اے اللہ، تو معاف کرنے والا ہے، معافی کو پسند کرتا ہے، پس مجھے معاف فرما۔", tas_title: "تسبیح شمار", tas_after: "نماز کے بعد (33 · 33 · 34)", tas_free: "آزاد گنتی", tas_reset: "↺ دوبارہ", tas_tap: "گنتی کے لیے دائرے پر ٹیپ کریں", tas_done: "مکمل — اللہ قبول فرمائے", v6: "دوسرے مذاہب کے لوگوں سمیت سب کو خوش آمدید۔ بلا جھجک سوال کریں۔", v7: "نماز کے دوران نمازیوں کے سامنے سے نہ گزریں۔ آپ پیچھے سے خاموشی سے دیکھ سکتے ہیں۔", v8: "کسی کی تصویر لینے سے پہلے اجازت لیں۔", share_title: "یہ سائٹ دوسروں تک پہنچائیں", share_text: "QR کوڈ اسکین کرنے سے یہ سائٹ کھلے گی۔ پوسٹر پرنٹ کر کے مسجد یا دکانوں میں لگائیں۔", share_poster: "🖨 پوسٹر پرنٹ کریں", share_copy: "🔗 لنک کاپی کریں", share_copied: "✓ لنک کاپی ہو گیا",
     reload: "ریفریش کرنے کے لیے ٹیپ کریں",
@@ -1076,6 +1111,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    q_listen: "🎧 क्या सुनें", q_l_ar: "सिर्फ़ अरबी तिलावत", q_l_both: "अरबी + हिंदी अनुवाद", q_l_tr: "सिर्फ़ हिंदी अनुवाद", q_seq: "▶ आयत-दर-आयत", q_pause: "⏸ रोकें", q_resume: "▶ फिर चलाएँ", q_stop: "⏹ बंद", q_now: "आयत {n} / {t}", q_v_en: "", q_v_ur: "", q_v_tts: "हिंदी अनुवाद फ़ोन की अपनी आवाज़ में पढ़ा जाता है।", q_v_none: "इस फ़ोन में हिंदी आवाज़ नहीं है, इसलिए अनुवाद पढ़कर नहीं सुनाया जा सकता। फ़ोन की Text-to-speech सेटिंग में जोड़ी जा सकती है।",
     nt_title: "सूचनाएँ", nt_until: "{d} तक", k_eid: "ईद", k_ramadan: "रमज़ान / इफ़्तार", k_event: "कार्यक्रम", k_closed: "बंद / बदलाव", k_other: "सूचना", ad_link: "🔐 सूचना बोर्ड (एडमिन)", n_notice: "मस्जिद की सूचनाएँ (ईद, कार्यक्रम …)",
     nav_cal: "कैलेंडर", nav_dua: "दुआएँ", cal_title: "इस्लामी कैलेंडर और रमज़ान", cal_upcoming: "आने वाले दिन", ev_ramadan: "रमज़ान की शुरुआत", ev_fitr: "ईद-उल-फ़ित्र", ev_arafah: "अरफ़ा का दिन", ev_adha: "ईद-उल-अज़हा", ev_newyear: "इस्लामी नया साल", ev_ashura: "आशूरा", cal_today: "आज", cal_tomorrow: "कल", cal_in: "{n} दिन बाकी", cal_note: "तारीख़ें उम्म-उल-क़ुरा कैलेंडर के अनुसार हैं। चाँद दिखने के अनुसार असली दिन एक दिन आगे-पीछे हो सकता है — मस्जिद की घोषणा का पालन करें।", cal_month: "महीने का नमाज़ टाइम टेबल", cal_ram: "🌙 रमज़ान {y}", cal_mon: "📅 यह महीना", cal_print: "🖨 प्रिंट", sehri_s: "सहरी", cal_rday: "रमज़ान", dua_title: "दुआएँ और तस्बीह", src: "स्रोत", dua_iftar: "इफ़्तार के समय", dua_iftar_m: "प्यास बुझ गई, रगें तर हो गईं, और अगर अल्लाह ने चाहा तो सवाब पक्का हो गया।", dua_enter: "मस्जिद में दाख़िल होते समय", dua_enter_m: "ऐ अल्लाह, मेरे लिए अपनी रहमत के दरवाज़े खोल दे।", dua_leave: "मस्जिद से निकलते समय", dua_leave_m: "ऐ अल्लाह, मैं तुझसे तेरा फ़ज़्ल माँगता हूँ।", dua_qadr: "शब-ए-क़द्र", dua_qadr_m: "ऐ अल्लाह, तू माफ़ करने वाला है, माफ़ी को पसंद करता है, तो मुझे माफ़ कर दे।", tas_title: "तस्बीह काउंटर", tas_after: "नमाज़ के बाद (33 · 33 · 34)", tas_free: "खुली गिनती", tas_reset: "↺ फिर से", tas_tap: "गिनने के लिए गोले पर टैप करें", tas_done: "पूरा हुआ — अल्लाह क़बूल करे", v6: "दूसरे धर्मों के लोगों समेत सबका स्वागत है। बेझिझक सवाल पूछें।", v7: "नमाज़ के दौरान नमाज़ियों के सामने से न गुज़रें। आप पीछे से चुपचाप देख सकते हैं।", v8: "किसी की फ़ोटो लेने से पहले इजाज़त लें।", share_title: "यह साइट दूसरों तक पहुँचाएँ", share_text: "QR कोड स्कैन करने पर यह साइट खुलेगी। पोस्टर प्रिंट करके मस्जिद या दुकानों में लगाएँ।", share_poster: "🖨 पोस्टर प्रिंट करें", share_copy: "🔗 लिंक कॉपी करें", share_copied: "✓ लिंक कॉपी हो गया",
     reload: "रीफ़्रेश करने के लिए टैप करें",
@@ -1113,6 +1149,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    q_listen: "🎧 الاستماع", q_l_ar: "التلاوة", q_l_both: "التلاوة", q_l_tr: "التلاوة", q_seq: "▶ آية آية", q_pause: "⏸ إيقاف مؤقت", q_resume: "▶ متابعة", q_stop: "⏹ إيقاف", q_now: "الآية {n} من {t}", q_v_en: "", q_v_ur: "", q_v_tts: "", q_v_none: "",
     nt_title: "الإعلانات", nt_until: "حتى {d}", k_eid: "العيد", k_ramadan: "رمضان / الإفطار", k_event: "فعالية", k_closed: "إغلاق / تغيير", k_other: "إعلان", ad_link: "🔐 لوحة الإعلانات (المشرف)", n_notice: "إعلانات المسجد (العيد، الفعاليات …)",
     nav_cal: "التقويم", nav_dua: "الأدعية", cal_title: "التقويم الهجري ورمضان", cal_upcoming: "المناسبات القادمة", ev_ramadan: "بداية رمضان", ev_fitr: "عيد الفطر", ev_arafah: "يوم عرفة", ev_adha: "عيد الأضحى", ev_newyear: "رأس السنة الهجرية", ev_ashura: "عاشوراء", cal_today: "اليوم", cal_tomorrow: "غدًا", cal_in: "بعد {n} يومًا", cal_note: "التواريخ وفق تقويم أم القرى، وقد يختلف اليوم الفعلي يومًا واحدًا بحسب رؤية الهلال — يُرجى اتباع إعلان المسجد.", cal_month: "جدول مواقيت الشهر", cal_ram: "🌙 رمضان {y}", cal_mon: "📅 هذا الشهر", cal_print: "🖨 طباعة", sehri_s: "السحور", cal_rday: "رمضان", dua_title: "الأدعية والتسبيح", src: "المصدر", dua_iftar: "عند الإفطار", dua_iftar_m: "", dua_enter: "عند دخول المسجد", dua_enter_m: "", dua_leave: "عند الخروج من المسجد", dua_leave_m: "", dua_qadr: "ليلة القدر", dua_qadr_m: "", tas_title: "عدّاد التسبيح", tas_after: "بعد الصلاة (33 · 33 · 34)", tas_free: "عدّ حر", tas_reset: "↺ إعادة", tas_tap: "اضغط على الدائرة للعدّ", tas_done: "تمّ — تقبّل الله", v6: "الجميع مرحَّب بهم، ومنهم أتباع الديانات الأخرى. لا تتردد في السؤال.", v7: "أثناء الصلاة، يُرجى عدم المرور أمام المصلين، ويمكنك المشاهدة بهدوء من الخلف.", v8: "يُرجى الاستئذان قبل تصوير الأشخاص.", share_title: "شارك هذا الموقع", share_text: "امسح رمز QR لفتح هذا الموقع. اطبع الملصق وضعه في المسجد أو المتاجر.", share_poster: "🖨 طباعة الملصق", share_copy: "🔗 نسخ الرابط", share_copied: "✓ تم نسخ الرابط",
     reload: "اضغط للتحديث",
@@ -1790,7 +1827,32 @@ const Q_API = "https://api.alquran.cloud/v1/";
 const Q_SURAH = [n => `https://server8.mp3quran.net/afs/${String(n).padStart(3, "0")}.mp3`,
                  n => `https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/${String(n).padStart(3, "0")}.mp3`];
 const Q_AYAH = (s, a) => `https://everyayah.com/data/Alafasy_128kbps/${String(s).padStart(3, "0")}${String(a).padStart(3, "0")}.mp3`;
-const q = { started: false, list: null, surah: 1, ar: {}, tr: {}, mode: "", ayah: 0, src: 0 };
+const q = { started: false, list: null, surah: 1, ar: {}, tr: {}, mode: "", ayah: 0, src: 0, phase: "", paused: false };
+// translation voice: a recorded voice where one exists (English: same translation as the text; Urdu: another
+// translation), otherwise the phone's own text-to-speech in that language (if the phone has one)
+const Q_TRA = {
+  en: (s, a) => `https://everyayah.com/data/English/Sahih_Intnl_Ibrahim_Walk_192kbps/${String(s).padStart(3, "0")}${String(a).padStart(3, "0")}.mp3`,
+  ur: (s, a) => `https://everyayah.com/data/translations/urdu_shamshad_ali_khan_46kbps/${String(s).padStart(3, "0")}${String(a).padStart(3, "0")}.mp3`
+};
+const Q_TTS = { bn: "bn", ja: "ja", hi: "hi" };
+const tts = window.speechSynthesis || null;
+function qVoice() {
+  const code = Q_TTS[lang];
+  if (!code || !tts) return null;
+  const vs = tts.getVoices() || [];
+  return vs.find(v => (v.lang || "").toLowerCase().replace("_", "-").startsWith(code)) || null;
+}
+function qCanTr() { return !!Q_TR[lang] && (!!Q_TRA[lang] || !!qVoice()); }
+function qLsn() { const v = $q("qLsn") ? $q("qLsn").value : "ar"; return v !== "ar" && qCanTr() ? v : "ar"; }
+function qVoiceNote() {
+  const el = $q("qVn"); if (!el) return;
+  const want = $q("qLsn").value !== "ar";
+  let k = "";
+  if (Q_TR[lang] && want) k = lang === "en" ? "q_v_en" : lang === "ur" ? "q_v_ur" : (qVoice() ? "q_v_tts" : "q_v_none");
+  el.textContent = k ? T(k) : "";
+  const wrap = $q("qLsn").closest(".q-lsn");
+  if (wrap) wrap.hidden = !Q_TR[lang];
+}
 const $q = id => document.getElementById(id);
 function qGet(path) { return fetch(Q_API + path, { credentials: "omit" }).then(r => { if (!r.ok) throw r.status; return r.json(); }).then(j => j.data); }
 function qStatus(k) { $q("qList").innerHTML = `<p class="q-st">${T(k)}</p>`; }
@@ -1840,20 +1902,65 @@ function quranDraw() {
 function quranLang() {
   const w = $q("qTrWrap");
   if (w) w.hidden = !Q_TR[lang];
+  if (q.mode === "ayah") qStopAll();
+  if ($q("qLsn")) qVoiceNote();
   cmp.text();
   if (q.started) quranLoad();
 }
 function qMark() {
   document.querySelectorAll(".q-ay.on").forEach(e => e.classList.remove("on"));
-  if (q.mode !== "ayah" || !q.ayah) return;
+  document.querySelectorAll(".q-tr.say").forEach(e => e.classList.remove("say"));
+  const bar = $q("qNow");
+  if (q.mode !== "ayah" || !q.ayah) { if (bar) bar.hidden = true; return; }
   const el = document.querySelector(`.q-ay[data-a="${q.ayah}"]`);
-  if (el) { el.classList.add("on"); el.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+  if (el) {
+    el.classList.add("on");
+    if (q.phase === "tr") { const t = el.querySelector(".q-tr"); if (t) t.classList.add("say"); }
+    // keep the verse being read in view inside the list
+    const list = $q("qList"), top = el.offsetTop - list.offsetTop;
+    if (top < list.scrollTop || top + el.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTo({ top: Math.max(0, top - 12), behavior: "smooth" });
+  }
+  if (bar) {
+    bar.hidden = false;
+    const n = q.ar[q.surah] ? q.ar[q.surah].length : 0;
+    $q("qNowT").textContent = T("q_now").replace("{n}", localDigits(String(q.ayah))).replace("{t}", localDigits(String(n)));
+    $q("qPause").textContent = T(q.paused ? "q_resume" : "q_pause");
+  }
 }
-function qPlayAyah(a) {
+function qStopAll() {
+  const au = $q("qAudio");
+  au.pause();
+  if (tts) tts.cancel();
+  q.mode = ""; q.ayah = 0; q.phase = ""; q.paused = false;
+  qMark();
+}
+function qSpeak(a) {
+  const ed = Q_TR[lang], tr = ed && q.tr[ed] ? q.tr[ed][q.surah] : null, v = qVoice();
+  if (!tr || !tr[a - 1] || !v) return qNext();
+  tts.cancel();
+  const u = new SpeechSynthesisUtterance(tr[a - 1]);
+  u.lang = v.lang; u.rate = 0.95;
+  try { u.voice = v; } catch {}
+  const me = q.ayah;
+  u.onend = () => { if (q.mode === "ayah" && q.phase === "tr" && q.ayah === me && !q.paused) qNext(); };
+  u.onerror = u.onend;
+  tts.speak(u);
+}
+function qNext() {
+  if (q.phase === "ar" && qLsn() === "both") return qPlayAyah(q.ayah, "tr");
+  qPlayAyah(q.ayah + 1);
+}
+// one verse: Arabic, translation, or both (one after the other), then the next verse
+function qPlayAyah(a, phase) {
   const au = $q("qAudio"), n = q.ar[q.surah] ? q.ar[q.surah].length : 0;
-  if (!n || a > n) { q.mode = ""; q.ayah = 0; qMark(); return; }
-  q.mode = "ayah"; q.ayah = a; au.hidden = false;
-  au.src = Q_AYAH(q.surah, a); au.play().catch(() => {});
+  if (!n || a > n) { qStopAll(); return; }
+  const lsn = qLsn();
+  q.mode = "ayah"; q.ayah = a; q.paused = false; au.hidden = true;
+  q.phase = phase || (lsn === "tr" ? "tr" : "ar");
+  if (tts) tts.cancel();
+  if (q.phase === "ar") { au.src = Q_AYAH(q.surah, a); au.play().catch(() => {}); }
+  else if (Q_TRA[lang]) { au.src = Q_TRA[lang](q.surah, a); au.play().catch(() => {}); }
+  else { au.pause(); qSpeak(a); }
   qMark();
 }
 (function quranInit() {
@@ -1871,18 +1978,51 @@ function qPlayAyah(a) {
   if (document.readyState === "complete") later(); else window.addEventListener("load", later, { once: true });
   $q("qSel").addEventListener("change", e => {
     q.surah = +e.target.value; store.set("q_surah", q.surah);
-    q.mode = ""; au.pause(); au.removeAttribute("src"); au.hidden = true;
+    qStopAll(); au.removeAttribute("src"); au.hidden = true;
     quranLoad();
   });
+  // what to hear (kept on this phone)
+  const ls = $q("qLsn");
+  ls.value = ["ar", "both", "tr"].includes(store.get("q_lsn")) ? store.get("q_lsn") : "both";
+  ls.addEventListener("change", () => { store.set("q_lsn", ls.value); qVoiceNote(); });
+  if (tts && "onvoiceschanged" in tts) tts.addEventListener("voiceschanged", qVoiceNote);
+  setTimeout(qVoiceNote, 800);
+  $q("qSeq").addEventListener("click", () => {
+    quranStart();
+    // iPhone lets the phone's voice speak only after a tap — say nothing once, now
+    if (tts && Q_TTS[lang]) { try { tts.speak(new SpeechSynthesisUtterance("")); } catch {} }
+    const from = q.mode === "ayah" && q.ayah ? q.ayah : 1;
+    qPlayAyah(from);
+  });
+  $q("qPause").addEventListener("click", () => {
+    if (q.mode !== "ayah") return;
+    if (!q.paused) {
+      q.paused = true; au.pause(); if (tts) tts.cancel();
+    } else {
+      q.paused = false;
+      if (q.phase === "tr" && !Q_TRA[lang]) qSpeak(q.ayah); else au.play().catch(() => {});
+    }
+    qMark();
+  });
+  $q("qStop").addEventListener("click", qStopAll);
+  // text size
+  let qz = Math.min(1.6, Math.max(0.85, +(store.get("q_z") || 1)));
+  const setZ = z => { qz = Math.round(Math.min(1.6, Math.max(0.85, z)) * 100) / 100; $q("qList").style.setProperty("--qz", qz); store.set("q_z", String(qz)); };
+  setZ(qz);
+  $q("qSm").addEventListener("click", () => setZ(qz - 0.15));
+  $q("qLg").addEventListener("click", () => setZ(qz + 0.15));
   $q("qTr").addEventListener("change", e => $q("qList").classList.toggle("no-tr", !e.target.checked));
   $q("qPlay").addEventListener("click", () => {
-    q.mode = "surah"; q.ayah = 0; q.src = 0; qMark();
+    if (tts) tts.cancel();
+    q.mode = "surah"; q.ayah = 0; q.src = 0; q.paused = false; qMark();
     au.hidden = false; au.src = Q_SURAH[0](q.surah); au.play().catch(() => {});
   });
   au.addEventListener("error", () => {
     if (q.mode === "surah" && q.src + 1 < Q_SURAH.length) { q.src++; au.src = Q_SURAH[q.src](q.surah); au.play().catch(() => {}); }
+    // a recorded translation missing for this verse → the phone's voice, or go on
+    else if (q.mode === "ayah" && q.phase === "tr" && au.getAttribute("src")) { if (qVoice()) qSpeak(q.ayah); else qNext(); }
   });
-  au.addEventListener("ended", () => { if (q.mode === "ayah") qPlayAyah(q.ayah + 1); });
+  au.addEventListener("ended", () => { if (q.mode === "ayah" && !q.paused) qNext(); });
   $q("qList").addEventListener("click", e => {
     const el = e.target.closest(".q-ay[data-a]");
     if (el) qPlayAyah(+el.dataset.a);

@@ -444,6 +444,24 @@
   table.mt tr.today td { background: var(--gold-soft); font-weight: 700; }
   table.mt tr.friday td:first-child { color: var(--green); font-weight: 700; }
   .print-head { display: none; }
+  /* monthly timetable: a small window that scrolls; header stays on top, date column on the side */
+  #cal .mt-wrap { max-height: min(400px, 62vh); overflow: auto; overscroll-behavior: contain; scroll-behavior: auto;
+    border-radius: 14px; box-shadow: inset 0 -12px 12px -12px rgba(0,0,0,.12); -webkit-overflow-scrolling: touch; }
+  table.mt { border-collapse: separate; border-spacing: 0; }
+  table.mt thead th { position: sticky; top: 0; z-index: 2; background: var(--surface-2); box-shadow: 0 1px 0 var(--line), 0 4px 8px -6px rgba(0,0,0,.25); }
+  table.mt thead th.fx { background: var(--gold-soft); }
+  table.mt td.dt, table.mt th:first-child { position: sticky; inset-inline-start: 0; z-index: 1; background: var(--surface); box-shadow: 1px 0 0 var(--line); }
+  table.mt thead th:first-child { z-index: 3; background: var(--surface-2); }
+  table.mt tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--surface-2) 45%, var(--surface)); }
+  table.mt tbody tr:nth-child(even) td.fx { background: color-mix(in srgb, var(--gold-soft) 70%, var(--surface)); }
+  table.mt tr.today td, table.mt tr.today td.dt { background: var(--gold-soft) !important; font-weight: 800; }
+  table.mt tr.today td.dt { box-shadow: inset 4px 0 0 var(--gold), 1px 0 0 var(--line); }
+  [dir="rtl"] table.mt tr.today td.dt { box-shadow: inset -4px 0 0 var(--gold), -1px 0 0 var(--line); }
+  .mt-dot { display: inline-block; width: 8px; height: 8px; margin-inline-end: 6px; border-radius: 50%; background: var(--gold); vertical-align: middle;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 30%, transparent); animation: mtDot 1.8s ease-in-out infinite; }
+  @keyframes mtDot { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--gold) 10%, transparent); } }
+  @media (prefers-reduced-motion: reduce) { .mt-dot { animation: none; } }
+
 
   /* Duas & tasbih */
   .dua-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
@@ -985,6 +1003,7 @@
         <button type="button" class="mt-arrow" id="mtNext" aria-label="›">›</button>
       </div>
       <div class="mt-acts">
+        <button type="button" class="chip" id="mtToday" data-i18n="mt_today">◉ اليوم</button>
         <button type="button" class="chip" id="mtRam"></button>
         <button type="button" class="chip" id="mtPrint" data-i18n="cal_print">🖨 طباعة</button>
       </div>
@@ -1266,6 +1285,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    mt_today: "◉ Today",
     ts_masjid: "🕌 Masjid's times", ts_me: "📍 My area's times", ts_masjid_n: "Morioka Masjid", ts_my: "My area", ts_change: "⚙ Change", ts_wait: "Finding your location…", ts_denied: "Location permission was not given. Allow it in the phone's settings.", ts_out: "You seem to be outside Japan — this site's times are for Japan only.", ts_err: "Could not get your location. Please try again.", ts_again: "↻ Find again", note_me: "Times are calculated for {p}. Congregation (jamaat) times at the masjid may differ.",
     tas_p0: "SubhanAllah", tas_p1: "Alhamdulillah", tas_p2: "Allahu Akbar",
     zk_title: "📿 Dhikr", nav_zikr: "Dhikr",
@@ -1322,6 +1342,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    mt_today: "◉ 今日",
     ts_masjid: "🕌 マスジドの時刻", ts_me: "📍 現在地の時刻", ts_masjid_n: "盛岡マスジド", ts_my: "現在地", ts_change: "⚙ 変更", ts_wait: "現在地を確認しています…", ts_denied: "位置情報が許可されていません。端末の設定で許可してください。", ts_out: "日本国外にいるようです。このサイトの時刻は日本国内用です。", ts_err: "現在地を取得できませんでした。もう一度お試しください。", ts_again: "↻ もう一度", note_me: "時刻は{p}の位置に基づく計算値です。マスジドの集団礼拝の時刻とは異なる場合があります。",
     tas_p0: "スブハーナッラー", tas_p1: "アルハムドゥリッラー", tas_p2: "アッラーフ・アクバル",
     zk_title: "📿 ズィクル", nav_zikr: "ズィクル",
@@ -1378,6 +1399,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    mt_today: "◉ আজ",
     ts_masjid: "🕌 মসজিদের সময়", ts_me: "📍 আমার এলাকার সময়", ts_masjid_n: "মরিওকা মসজিদ", ts_my: "আমার এলাকা", ts_change: "⚙ বদলান", ts_wait: "অবস্থান খোঁজা হচ্ছে…", ts_denied: "অবস্থানের অনুমতি পাওয়া যায়নি — ফোনের সেটিংসে অনুমতি দিন।", ts_out: "মনে হচ্ছে আপনি জাপানের বাইরে — এই সাইটের সময় শুধু জাপানের জন্য।", ts_err: "অবস্থান পাওয়া যায়নি। আবার চেষ্টা করুন।", ts_again: "↻ আবার খুঁজুন", note_me: "সময়গুলো {p}-এর অবস্থান অনুযায়ী হিসাব করা। মসজিদের জামাতের সময় আলাদা হতে পারে।",
     tas_p0: "সুবহানাল্লাহ", tas_p1: "আলহামদুলিল্লাহ", tas_p2: "আল্লাহু আকবার",
     zk_title: "📿 জিকির", nav_zikr: "জিকির",
@@ -1434,6 +1456,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    mt_today: "◉ آج",
     ts_masjid: "🕌 مسجد کے اوقات", ts_me: "📍 میرے علاقے کے اوقات", ts_masjid_n: "موریوکا مسجد", ts_my: "میرا علاقہ", ts_change: "⚙ تبدیل", ts_wait: "مقام تلاش کیا جا رہا ہے…", ts_denied: "مقام کی اجازت نہیں ملی — فون کی سیٹنگ میں اجازت دیں۔", ts_out: "لگتا ہے آپ جاپان سے باہر ہیں — اس سائٹ کے اوقات صرف جاپان کے لیے ہیں۔", ts_err: "مقام نہیں مل سکا۔ دوبارہ کوشش کریں۔", ts_again: "↻ دوبارہ", note_me: "اوقات {p} کے مقام کے مطابق ہیں۔ مسجد کی جماعت کا وقت مختلف ہو سکتا ہے۔",
     tas_p0: "سبحان اللہ", tas_p1: "الحمد للہ", tas_p2: "اللہ اکبر",
     zk_title: "📿 ذکر", nav_zikr: "ذکر",
@@ -1488,6 +1511,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    mt_today: "◉ आज",
     ts_masjid: "🕌 मस्जिद का समय", ts_me: "📍 मेरे इलाक़े का समय", ts_masjid_n: "मोरिओका मस्जिद", ts_my: "मेरा इलाक़ा", ts_change: "⚙ बदलें", ts_wait: "जगह खोजी जा रही है…", ts_denied: "जगह की अनुमति नहीं मिली — फ़ोन की सेटिंग में अनुमति दें।", ts_out: "लगता है आप जापान से बाहर हैं — इस साइट का समय सिर्फ़ जापान के लिए है।", ts_err: "जगह नहीं मिल सकी। फिर कोशिश करें।", ts_again: "↻ फिर से", note_me: "समय {p} की जगह के हिसाब से है। मस्जिद की जमात का समय अलग हो सकता है।",
     tas_p0: "सुब्हानअल्लाह", tas_p1: "अल्हम्दुलिल्लाह", tas_p2: "अल्लाहु अकबर",
     zk_title: "📿 ज़िक्र", nav_zikr: "ज़िक्र",
@@ -1542,6 +1566,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    mt_today: "◉ اليوم",
     ts_masjid: "🕌 مواقيت المسجد", ts_me: "📍 مواقيت منطقتي", ts_masjid_n: "مسجد موريوكا", ts_my: "منطقتي", ts_change: "⚙ تغيير", ts_wait: "جارٍ تحديد موقعك…", ts_denied: "لم يُسمح بالموقع — اسمح به من إعدادات الهاتف.", ts_out: "يبدو أنك خارج اليابان — مواقيت هذا الموقع لليابان فقط.", ts_err: "تعذّر تحديد الموقع. حاول مرة أخرى.", ts_again: "↻ مرة أخرى", note_me: "المواقيت محسوبة لموقع {p}. قد يختلف وقت الجماعة في المسجد.",
     tas_p0: "", tas_p1: "", tas_p2: "",
     zk_title: "📿 الذكر", nav_zikr: "الذكر",
@@ -1893,10 +1918,20 @@ function renderMonth() {
     const c1 = ram ? localDigits(String(i + 1)) : dayFmt.format(noonOf(day));
     const c2 = ram ? dayFmt.format(noonOf(day)) : (hdFmt ? hDay(day, i === 0) : "");
     const v = p => fmtTime(toDate(day, t[p]));
-    return `<tr class="${isToday ? "today" : ""}${isFri ? " friday" : ""}"><td>${c1}</td><td class="h">${c2}</td>`
+    return `<tr class="${isToday ? "today" : ""}${isFri ? " friday" : ""}"><td class="dt">${isToday ? '<i class="mt-dot" aria-hidden="true"></i>' : ""}${c1}</td><td class="h">${c2}</td>`
       + `<td class="fx">${v("fajr")}</td><td class="fx">${v("maghrib")}</td>`
       + `<td>${v("fajr")}</td><td>${v("sunrise")}</td><td>${v("dhuhr")}</td><td>${v("asr")}</td><td>${v("maghrib")}</td><td>${v("isha")}</td></tr>`;
   }).join("");
+  mtCenter(false);
+}
+// the small window: today's row in the middle (only inside the window — the page itself does not move)
+function mtCenter(smooth) {
+  const w = document.querySelector(".mt-wrap"), r = document.querySelector("#mtBody tr.today");
+  if (!w) return;
+  if (!r) { w.scrollTop = 0; return; }
+  const head = (document.querySelector("table.mt thead") || {}).offsetHeight || 0;
+  const top = r.offsetTop - head - (w.clientHeight - head) / 2 + r.offsetHeight / 2;
+  w.scrollTo({ top: Math.max(0, top), behavior: smooth ? "smooth" : "auto" });
 }
 
 function renderCal() {
@@ -1910,6 +1945,11 @@ function renderCal() {
 (() => {
   const step = d => { mt.mode = "month"; mt.m += d; if (mt.m < 1) { mt.m = 12; mt.y--; } if (mt.m > 12) { mt.m = 1; mt.y++; } renderMonth(); };
   document.getElementById("mtPrev").addEventListener("click", () => step(-1));
+  document.getElementById("mtToday").addEventListener("click", () => {
+    const t = tokyoYMD();
+    if (mt.mode !== "month" || mt.y !== t.y || mt.m !== t.m) { mt.mode = "month"; mt.y = t.y; mt.m = t.m; renderMonth(); }
+    mtCenter(true);
+  });
   document.getElementById("mtNext").addEventListener("click", () => step(1));
   document.getElementById("mtRam").addEventListener("click", () => {
     if (mt.mode === "ram") { const t = tokyoYMD(); mt.mode = "month"; mt.y = t.y; mt.m = t.m; } else mt.mode = "ram";

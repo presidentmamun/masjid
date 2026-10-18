@@ -416,8 +416,8 @@
   table.mt th small { display: block; font-size: .72rem; font-weight: 600; color: var(--gold); }
   table.mt td.h { color: var(--muted); font-size: .85rem; }
   @media (max-width: 600px) { table.mt th, table.mt td { padding: 7px 8px; font-size: .85rem; } }
-  table.mt td.sf, table.mt td.if { font-weight: 700; }
-  table.mt.ram td.sf, table.mt.ram td.if { color: var(--green); }
+  table.mt th.fx { background: var(--gold-soft); color: var(--text); }
+  table.mt td.fx { background: color-mix(in srgb, var(--gold-soft) 55%, transparent); font-weight: 700; color: var(--green); }
   table.mt tr.today td { background: var(--gold-soft); font-weight: 700; }
   table.mt tr.friday td:first-child { color: var(--green); font-weight: 700; }
   .print-head { display: none; }
@@ -476,7 +476,8 @@
     .ps-tbl tbody tr:nth-child(even) td { background: #f7f2e6; }
     .ps-tbl td:first-child, .ps-tbl th:first-child { text-align: start; }
     .ps-tbl td.h { color: #6b6b6b; font-size: .92em; }
-    .ps-tbl td.sf, .ps-tbl td.if { font-weight: 700; color: #0f5a3c; }
+    .ps-tbl th.fx { background: #b8893b; color: #fff; }
+    .ps-tbl td.fx { font-weight: 700; color: #0f5a3c; background: #fdf3d8 !important; }
     .ps-tbl tr.friday td:first-child { color: #0f5a3c; font-weight: 700; }
     .ps-tbl tr.today td { background: #fff1c9 !important; }
     .ps-tbl tr { break-inside: avoid; page-break-inside: avoid; }
@@ -1230,6 +1231,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    sehri_end: "Sehri ends",
     pd_pill: "🔔 {n} waiting for your approval", pd_tab: "⏳ Waiting", pd_none: "✓ Nothing is waiting for approval.",
     rq_open: "✍️ Propose a notice or a meal", rq_title: "✍️ Proposals for the masjid", rq_login_h: "Check your email first", rq_login_p: "Anyone can propose a notice or a meal. Your proposal is shown to everyone only after a masjid admin approves it. A 6-digit code comes to your email.", rq_hi: "Email checked: {e}", rq_t_notice: "📢 Notice", rq_t_meal: "🍽 Meal", rq_t_mine: "📋 My proposals", rq_name: "Your name", rq_phone: "Your phone number", rq_who: "The masjid admins see your name, phone and email.", rq_make: "👁 Make a preview", rq_made: "✓ Preview made — only you see it. Check it, then press “📢 Send for publishing”.", rq_send: "📢 Send for publishing", rq_sent: "✓ Sent. It will be shown after an admin approves it. You get an email.", rq_del: "🗑 Delete", rq_del_q: "Delete this proposal?", rq_none: "No proposals yet.", gs_prev: "👁 Preview — only you see it", gs_wait: "⏳ Waiting for approval", gs_live: "✅ Approved — shown to everyone", gs_rej: "❌ Not approved", rq_list_ask: "📋 Ask for the full list", rq_list_wait: "⏳ List request sent to the admins", rq_list_no: "The full list stays with the admins.", rq_list: "👥 List", rq_err_day: "No more proposals today (3 a day).", rq_err_open: "Please wait until your 2 open proposals are answered.", rq_meal_p: "Propose a meal at the masjid (e.g. you will give the dinner). After approval, people can register on the site.", mo_g: "🙋 Proposed by a visitor: {w}", mo_ok: "✅ Approve", mo_no: "❌ Do not approve", mo_lr: "📋 {n} asks for the full list:", mo_ly: "✅ Allow", mo_ln: "❌ No", mo_wait: "⏳ Waiting for approval", mo_rej: "❌ Not approved", ad_by_g: "{n} · {p} (visitor)",
     to_bottom: "Go to the bottom",
@@ -1281,6 +1283,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    sehri_end: "サフール終了",
     pd_pill: "🔔 承認待ち {n}件", pd_tab: "⏳ 承認待ち", pd_none: "✓ 承認待ちはありません。",
     rq_open: "✍️ お知らせ・食事の提案", rq_title: "✍️ マスジドへの提案", rq_login_h: "まずメールアドレスの確認", rq_login_p: "どなたでもお知らせや食事の提案ができます。マスジドの管理者が承認すると全員に表示されます。メールに6桁のコードが届きます。", rq_hi: "確認済みメール：{e}", rq_t_notice: "📢 お知らせ", rq_t_meal: "🍽 食事", rq_t_mine: "📋 自分の提案", rq_name: "お名前", rq_phone: "電話番号", rq_who: "管理者があなたのお名前・電話番号・メールを見ます。", rq_make: "👁 プレビューを作る", rq_made: "✓ プレビューを作りました（あなただけに表示）。確認して「📢 公開を申請」を押してください。", rq_send: "📢 公開を申請", rq_sent: "✓ 申請しました。管理者が承認すると表示されます（メールでお知らせします）。", rq_del: "🗑 削除", rq_del_q: "この提案を削除しますか？", rq_none: "まだ提案はありません。", gs_prev: "👁 プレビュー（あなただけ）", gs_wait: "⏳ 承認待ち", gs_live: "✅ 承認済み — 全員に表示", gs_rej: "❌ 承認されませんでした", rq_list_ask: "📋 名簿を依頼", rq_list_wait: "⏳ 名簿の依頼を送りました", rq_list_no: "名簿は管理者が保管します。", rq_list: "👥 名簿", rq_err_day: "今日はもう提案できません（1日3件まで）。", rq_err_open: "未回答の提案が2件あります。回答をお待ちください。", rq_meal_p: "マスジドでの食事の提案（例：夕食を提供します）。承認後、みなさんがサイトで申し込めます。", mo_g: "🙋 訪問者の提案：{w}", mo_ok: "✅ 承認", mo_no: "❌ 承認しない", mo_lr: "📋 {n} さんが名簿を希望：", mo_ly: "✅ 許可", mo_ln: "❌ 不可", mo_wait: "⏳ 承認待ち", mo_rej: "❌ 承認されませんでした", ad_by_g: "{n} · {p}（訪問者）",
     to_bottom: "ページの最後へ",
@@ -1332,6 +1335,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    sehri_end: "সেহরি শেষ",
     pd_pill: "🔔 {n}টি অনুমোদনের অপেক্ষায়", pd_tab: "⏳ অপেক্ষায়", pd_none: "✓ অনুমোদনের অপেক্ষায় কিছু নেই।",
     rq_open: "✍️ নোটিশ বা খাবারের আয়োজনের প্রস্তাব দিন", rq_title: "✍️ মসজিদের জন্য প্রস্তাব", rq_login_h: "আগে ইমেইল যাচাই", rq_login_p: "যে কেউ নোটিশ বা খাবারের আয়োজনের প্রস্তাব দিতে পারেন। মসজিদের অ্যাডমিন অনুমোদন দিলে তবেই সবার জন্য দেখাবে। ইমেইলে ৬ অঙ্কের কোড আসবে।", rq_hi: "যাচাই করা ইমেইল: {e}", rq_t_notice: "📢 নোটিশ", rq_t_meal: "🍽 খাবারের আয়োজন", rq_t_mine: "📋 আমার প্রস্তাব", rq_name: "আপনার নাম", rq_phone: "আপনার ফোন নম্বর", rq_who: "মসজিদের অ্যাডমিনরা আপনার নাম, ফোন আর ইমেইল দেখবেন।", rq_make: "👁 প্রিভিউ বানান", rq_made: "✓ প্রিভিউ তৈরি — শুধু আপনি দেখছেন। দেখে নিয়ে “📢 পাবলিশের জন্য পাঠান” চাপুন।", rq_send: "📢 পাবলিশের জন্য পাঠান", rq_sent: "✓ পাঠানো হয়েছে। অ্যাডমিন অনুমোদন দিলে দেখাবে — ইমেইলে জানানো হবে।", rq_del: "🗑 মুছুন", rq_del_q: "এই প্রস্তাব মুছে ফেলবেন?", rq_none: "এখনো কোনো প্রস্তাব নেই।", gs_prev: "👁 প্রিভিউ — শুধু আপনি দেখছেন", gs_wait: "⏳ অনুমোদনের অপেক্ষায়", gs_live: "✅ অনুমোদিত — সবাই দেখছে", gs_rej: "❌ অনুমোদন হয়নি", rq_list_ask: "📋 পুরো তালিকা চাই", rq_list_wait: "⏳ তালিকার অনুরোধ অ্যাডমিনদের কাছে গেছে", rq_list_no: "পুরো তালিকা অ্যাডমিনদের কাছেই থাকছে।", rq_list: "👥 তালিকা", rq_err_day: "আজ আর প্রস্তাব দেওয়া যাবে না (দিনে ৩টি)।", rq_err_open: "আগের ২টি প্রস্তাবের উত্তর আসা পর্যন্ত অপেক্ষা করুন।", rq_meal_p: "মসজিদে খাবারের আয়োজনের প্রস্তাব (যেমন আপনি ডিনার দেবেন)। অনুমোদনের পর সবাই সাইটে নাম দিতে পারবেন।", mo_g: "🙋 দর্শকের প্রস্তাব: {w}", mo_ok: "✅ অনুমোদন", mo_no: "❌ বাতিল", mo_lr: "📋 {n} পুরো তালিকা চান:", mo_ly: "✅ দিন", mo_ln: "❌ না", mo_wait: "⏳ অনুমোদনের অপেক্ষায়", mo_rej: "❌ অনুমোদন হয়নি", ad_by_g: "{n} · {p} (দর্শক)",
     to_bottom: "একদম নিচে যান",
@@ -1383,6 +1387,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    sehri_end: "سحری ختم",
     rq_open: "✍️ اعلان یا کھانے کی تجویز دیں",
     to_bottom: "نیچے جائیں",
     q_m_listen: "🔊📖 سنیں اور پڑھیں", q_m_read: "📖 صرف پڑھیں",
@@ -1432,6 +1437,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    sehri_end: "सहरी ख़त्म",
     rq_open: "✍️ सूचना या खाने का प्रस्ताव दें",
     to_bottom: "नीचे जाएँ",
     q_m_listen: "🔊📖 सुनें और पढ़ें", q_m_read: "📖 सिर्फ़ पढ़ें",
@@ -1481,6 +1487,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    sehri_end: "نهاية السحور",
     rq_open: "✍️ اقترح إعلانًا أو وجبة",
     to_bottom: "الانتقال إلى الأسفل",
     q_m_listen: "🔊📖 استماع وقراءة", q_m_read: "📖 قراءة فقط",
@@ -1828,9 +1835,10 @@ function renderMonth() {
 
   const tbl = document.querySelector("table.mt");
   tbl.classList.toggle("ram", !!ram);
+  // Sehri ends = Fajr begins, Iftar = Maghrib — their own columns, right after the date
   const head = [ram ? T("cal_rday") : T("date"), ram ? T("date") : T("hijri"),
-    `${T("fajr")}<small>${T("sehri_s")}</small>`, T("sunrise"), T("dhuhr"), T("asr"), `${T("maghrib")}<small>${T("iftar")}</small>`, T("isha")];
-  document.getElementById("mtHead").innerHTML = head.map(h => `<th>${h}</th>`).join("");
+    "🌙 " + T("sehri_end"), "🌅 " + T("iftar"), T("fajr"), T("sunrise"), T("dhuhr"), T("asr"), T("maghrib"), T("isha")];
+  document.getElementById("mtHead").innerHTML = head.map((h, i) => `<th${i === 2 || i === 3 ? ' class="fx"' : ""}>${h}</th>`).join("");
   const dayFmt = new Intl.DateTimeFormat(lang, { timeZone: "Asia/Tokyo", month: ram ? "short" : undefined, day: "numeric", weekday: "short" });
   const hdFmt = HIJ ? new Intl.DateTimeFormat(lang + "-u-ca-islamic-umalqura", { timeZone: "Asia/Tokyo", month: "short", day: "numeric" }) : null;
   const hDay = (day, first) => { const h = hParts(day); return (first || h.d === 1) ? noEra(hdFmt, noonOf(day)) : localDigits(String(h.d)); };
@@ -1842,7 +1850,8 @@ function renderMonth() {
     const c2 = ram ? dayFmt.format(noonOf(day)) : (hdFmt ? hDay(day, i === 0) : "");
     const v = p => fmtTime(toDate(day, t[p]));
     return `<tr class="${isToday ? "today" : ""}${isFri ? " friday" : ""}"><td>${c1}</td><td class="h">${c2}</td>`
-      + `<td class="sf">${v("fajr")}</td><td>${v("sunrise")}</td><td>${v("dhuhr")}</td><td>${v("asr")}</td><td class="if">${v("maghrib")}</td><td>${v("isha")}</td></tr>`;
+      + `<td class="fx">${v("fajr")}</td><td class="fx">${v("maghrib")}</td>`
+      + `<td>${v("fajr")}</td><td>${v("sunrise")}</td><td>${v("dhuhr")}</td><td>${v("asr")}</td><td>${v("maghrib")}</td><td>${v("isha")}</td></tr>`;
   }).join("");
 }
 

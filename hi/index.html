@@ -476,6 +476,11 @@
   .nt-k { font-size: .78rem; font-weight: 700; color: var(--gold); }
   .nt-b { margin: 6px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
   .nt-d { margin: 6px 0 0; font-size: .82rem; color: var(--muted); }
+  .nt.prev { border: 2px dashed var(--gold); background: repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--gold) 7%, transparent) 14px 28px), var(--surface-2); }
+  .nt-pv { margin: 8px 0 0; font-size: .8rem; font-weight: 700; color: var(--gold); }
+  .mn-row2 > label { min-width: 0; }
+  .mn-f input[type=date] { min-width: 0; max-width: 100%; -webkit-appearance: none; appearance: none; text-align: start; min-height: 44px; }
+  .mn-f input[type=date]::-webkit-date-and-time-value { text-align: start; }
   .nt-pin { position: absolute; top: 10px; inset-inline-end: 12px; }
   footer .adm { margin: 10px 0 0; }
   footer .adm button { background: none; border: 0; color: inherit; opacity: .45; font: inherit; font-size: .8rem; cursor: pointer; padding: 4px 8px; }
@@ -1166,6 +1171,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    ad_pv: "👁 Preview first — only admins see it (show it to everyone later)", ad_sent_p: "✓ Saved as a preview. Only admins see it on the site (marked 👁). If it looks right, press “📢 Show to everyone” in Notices.", st_preview: "👁 Preview — only admins", ad_rel: "📢 Show to everyone", ad_pv_badge: "👁 Preview — only admins see this",
     q_m_listen: "🔊📖 Listen & read", q_m_read: "📖 Read only",
     bk_juz: "Juz {n}", bk_tl: "PRONUNCIATION", bk_tr: "MEANING",
     q_v_book: "Book view (like a printed Quran)", q_v_list: "List view", bk_page: "Page {p}", bk_of: "{i} of {n} in this surah", bk_next: "Next page", bk_prev: "Previous page", bk_next_s: "Next surah",
@@ -1213,6 +1219,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    ad_pv: "👁 まずプレビュー — 管理者だけに表示（あとで全員に公開）", ad_sent_p: "✓ プレビューとして保存しました。サイトでは管理者だけに表示されます（👁）。問題なければ「お知らせ一覧」で「📢 全員に公開」を押してください。", st_preview: "👁 プレビュー（管理者のみ）", ad_rel: "📢 全員に公開", ad_pv_badge: "👁 プレビュー — 管理者だけに表示中",
     q_m_listen: "🔊📖 聞きながら読む", q_m_read: "📖 読むだけ",
     bk_juz: "第{n}ジュズ", bk_tl: "読み方", bk_tr: "意味",
     q_v_book: "本の形で表示（印刷版のように）", q_v_list: "一覧で表示", bk_page: "{p}ページ", bk_of: "このスーラの {i}/{n}", bk_next: "次のページ", bk_prev: "前のページ", bk_next_s: "次のスーラ",
@@ -1260,6 +1267,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    ad_pv: "👁 আগে প্রিভিউ — শুধু অ্যাডমিনরা দেখবে (পরে সবার জন্য)", ad_sent_p: "✓ প্রিভিউ হিসেবে রাখা হলো। সাইটে শুধু অ্যাডমিনরা দেখছেন (👁 চিহ্নসহ)। ঠিক থাকলে “নোটিশগুলো”-তে “📢 সবার জন্য দেখাও” চাপুন।", st_preview: "👁 প্রিভিউ — শুধু অ্যাডমিন", ad_rel: "📢 সবার জন্য দেখাও", ad_pv_badge: "👁 প্রিভিউ — শুধু অ্যাডমিনরা দেখছেন",
     q_m_listen: "🔊📖 শোনা ও পড়া", q_m_read: "📖 শুধু পড়া",
     bk_juz: "পারা {n}", bk_tl: "উচ্চারণ", bk_tr: "অর্থ",
     q_v_book: "বইয়ের মতো দেখান (ছাপা কুরআনের মতো)", q_v_list: "তালিকা আকারে দেখান", bk_page: "পৃষ্ঠা {p}", bk_of: "এই সূরার {i} / {n}", bk_next: "পরের পৃষ্ঠা", bk_prev: "আগের পৃষ্ঠা", bk_next_s: "পরের সূরা",
@@ -1873,14 +1881,15 @@ function mnCard(n, extra) {
 
 const notices = (() => {
   const sec = document.getElementById("notice"), list = document.getElementById("ntList");
-  let data = null;
+  let data = null, prev = [];
   try { const c = JSON.parse(store.get("nt") || "null"); if (c && Array.isArray(c.n)) data = c.n; } catch {}
   function today() { const t = tokyoYMD(); return `${t.y}-${String(t.m).padStart(2, "0")}-${String(t.d).padStart(2, "0")}`; }
   function render() {
     const td = today();
     const n = (data || []).filter(x => (!x.from || x.from <= td) && (!x.to || x.to >= td));
-    sec.hidden = !n.length;
-    list.innerHTML = n.map(x => mnCard(x)).join("");
+    const pv = prev.filter(x => !x.to || x.to >= td);
+    sec.hidden = !n.length && !pv.length;
+    list.innerHTML = pv.map(x => mnCard(x, `<p class="nt-pv">${mnEsc(T("ad_pv_badge"))}</p>`).replace('class="nt ', 'class="nt prev ')).join("") + n.map(x => mnCard(x)).join("");
   }
   function load() {
     fetch(MN.api + "notices?m=" + MN.m + "&t=" + Math.floor(Date.now() / 6e4), { credentials: "omit" })
@@ -1890,7 +1899,8 @@ const notices = (() => {
   render();
   window.addEventListener("load", () => setTimeout(load, 300));
   document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
-  return { render, load };
+  function setPrev(l) { prev = (l || []).filter(x => x.st === "preview"); render(); }
+  return { render, load, setPrev };
 })();
 
 const mnAdmin = (() => {
@@ -1917,8 +1927,12 @@ const mnAdmin = (() => {
     }).catch(() => { st.step = "email"; fail(""); });
   }
   function loadList() {
-    mnPost("list", { tk: st.tk, m: MN.m }).then(d => { st.list = d.ok ? d.n : []; draw(); }).catch(() => {});
+    mnPost("list", { tk: st.tk, m: MN.m }).then(d => { st.list = d.ok ? d.n : []; notices.setPrev(st.list); draw(); }).catch(() => {});
   }
+  // logged in on this phone: show its previews in the notice box (quietly, once)
+  if (st.tk) window.addEventListener("load", () => setTimeout(() => {
+    mnPost("list", { tk: st.tk, m: MN.m }).then(d => { if (d.ok) notices.setPrev(d.n); }).catch(() => {});
+  }, 900));
   const fmtSt = n => n.st === "live" && n.ended ? T("st_ended") : T("st_" + n.st);
 
   function draw() {
@@ -1939,7 +1953,7 @@ const mnAdmin = (() => {
         <form class="mn-f" id="mnF"><label>${mnEsc(T("ad_code"))}<input class="mn-code" name="c" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required></label>
         <button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("ad_verify"))}</button>
         <button type="button" class="mn-link" id="mnBack">${mnEsc(T("ad_back"))}</button></form>`;
-      body.querySelector("#mnBack").onclick = () => { st.step = "email"; say(""); draw(); };
+      body.querySelector("#mnBack").onclick = () => { st.step = "email"; say(""); notices.setPrev([]); draw(); };
       body.querySelector("#mnF").onsubmit = e => {
         e.preventDefault(); st.busy = true; say(""); draw();
         const code = e.target.c.value;
@@ -1970,6 +1984,7 @@ const mnAdmin = (() => {
         <div class="mn-row2"><label>${mnEsc(T("ad_from"))}<input type="date" name="f" value="${d0}" required></label>
         <label>${mnEsc(T("ad_to"))}<input type="date" name="u" value="${d7}" required></label></div>
         <label class="ck"><input type="checkbox" name="p"> ${mnEsc(T("ad_pin"))}</label>
+        <label class="ck"><input type="checkbox" name="pv"> ${mnEsc(T("ad_pv"))}</label>
         <label class="ck"><input type="checkbox" name="n" checked> ${mnEsc(T("ad_notify"))}</label>
         <button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("ad_submit"))}</button></form>`;
     } else {
@@ -1978,11 +1993,12 @@ const mnAdmin = (() => {
         let a = "";
         if (ap && n.st === "wait") a = `<button type="button" class="chip ok" data-a="approve" data-id="${n.id}">${mnEsc(T("ad_ok"))}</button><button type="button" class="chip no" data-a="reject" data-id="${n.id}">${mnEsc(T("ad_no"))}</button>`;
         if (ap && n.st === "live") a = `<button type="button" class="chip no" data-a="remove" data-id="${n.id}">${mnEsc(T("ad_rm"))}</button>`;
+        if (n.st === "preview" && (ap || n.by === m.e)) a = `<button type="button" class="chip ok" data-a="release" data-id="${n.id}">${mnEsc(T("ad_rel"))}</button><button type="button" class="chip no" data-a="remove" data-id="${n.id}">${mnEsc(T("ad_rm"))}</button>`;
         return `<div class="mn-it">${mnCard(n, `<span class="mn-st">${mnEsc(fmtSt(n))}</span> <small class="nt-d">${mnEsc(T("ad_by").replace("{e}", n.by))}</small>${a ? `<div class="mn-acts">${a}</div>` : ""}`)}</div>`;
       }).join("");
     }
     body.innerHTML = h;
-    body.querySelector("#mnOut").onclick = () => { mnPost("logout", { tk: st.tk }).catch(() => {}); st.tk = ""; st.me = null; store.set("mn_tk", ""); st.step = "email"; say(""); draw(); };
+    body.querySelector("#mnOut").onclick = () => { mnPost("logout", { tk: st.tk }).catch(() => {}); st.tk = ""; st.me = null; store.set("mn_tk", ""); st.step = "email"; say(""); notices.setPrev([]); draw(); };
     body.querySelectorAll(".mn-tabs .chip").forEach(b => b.onclick = () => { st.tab = b.dataset.t; say(""); if (st.tab === "list") loadList(); if (st.tab === "meal") mlLoad(); draw(); });
     if (st.tab === "meal") mlBind();
     body.querySelectorAll("[data-a]").forEach(b => b.onclick = () => {
@@ -1996,11 +2012,11 @@ const mnAdmin = (() => {
       if (!f.t.value.trim()) { say("ad_need_t", true); return draw(); }
       if (f.u.value < f.f.value) f.u.value = f.f.value;
       st.busy = true; say(""); draw();
-      mnPost("submit", { tk: st.tk, m: MN.m, kind: f.k.value, title: f.t.value, body: f.b.value, from: f.f.value, to: f.u.value, pin: f.p.checked ? 1 : 0, notify: f.n.checked ? 1 : 0 })
+      mnPost("submit", { tk: st.tk, m: MN.m, kind: f.k.value, title: f.t.value, body: f.b.value, from: f.f.value, to: f.u.value, pin: f.p.checked ? 1 : 0, notify: f.n.checked ? 1 : 0, preview: f.pv.checked ? 1 : 0 })
         .then(d => {
           st.busy = false;
           if (!d.ok) { if (d.err === "login") { st.tk = ""; st.me = null; store.set("mn_tk", ""); st.step = "email"; } return fail(d.err); }
-          say(d.st === "live" ? "ad_sent_a" : "ad_sent_w"); st.tab = "list"; loadList(); notices.load(); draw();
+          say(d.st === "live" ? "ad_sent_a" : d.st === "preview" ? "ad_sent_p" : "ad_sent_w"); st.tab = "list"; loadList(); notices.load(); draw();
         }).catch(() => fail(""));
     };
   }

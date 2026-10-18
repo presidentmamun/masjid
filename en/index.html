@@ -436,6 +436,54 @@
     @page { size: A4 portrait; margin: 12mm; }
   }
 
+  /* Notice board */
+  .nt-card { border-top: 4px solid var(--gold); }
+  .nt-list { display: grid; gap: 10px; }
+  .nt { position: relative; padding: 14px 16px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+  .nt.pin { background: var(--gold-soft); border-color: var(--gold); }
+  .nt.k-closed { border-inline-start: 4px solid #c0392b; }
+  .nt-h { display: flex; gap: 10px; align-items: flex-start; }
+  .nt-ic { font-size: 1.5rem; line-height: 1.2; }
+  .nt-h > div { flex: 1; min-width: 0; text-align: start; }
+  .nt-h b { display: block; font-size: 1.08rem; color: var(--green); line-height: 1.4; }
+  .nt-k { font-size: .78rem; font-weight: 700; color: var(--gold); }
+  .nt-b { margin: 6px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .nt-d { margin: 6px 0 0; font-size: .82rem; color: var(--muted); }
+  .nt-pin { position: absolute; top: 10px; inset-inline-end: 12px; }
+  footer .adm { margin: 10px 0 0; }
+  footer .adm button { background: none; border: 0; color: inherit; opacity: .45; font: inherit; font-size: .8rem; cursor: pointer; padding: 4px 8px; }
+  .mn-sheet { position: fixed; inset: 0; z-index: 60; background: rgba(0, 0, 0, .45); display: flex; align-items: flex-end; justify-content: center; }
+  .mn-sheet[hidden] { display: none; }
+  .mn-win { width: min(560px, 100%); max-height: 92vh; overflow: auto; background: var(--surface); color: var(--text); border-radius: 18px 18px 0 0; box-shadow: var(--shadow); }
+  @media (min-width: 640px) { .mn-sheet { align-items: center; } .mn-win { border-radius: 18px; } }
+  .mn-top { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 18px; background: var(--green); color: #fff; }
+  .mn-top h3 { margin: 0; font-size: 1.05rem; }
+  .mn-x { background: rgba(255, 255, 255, .15); border: 0; color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 1rem; cursor: pointer; }
+  .mn-body { padding: 16px 18px 22px; }
+  .mn-body p { margin: 0 0 10px; }
+  .mn-f { display: grid; gap: 12px; }
+  .mn-f label { display: grid; gap: 4px; font-size: .9rem; font-weight: 600; color: var(--muted); }
+  .mn-f label.ck { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--text); }
+  .mn-f input[type=text], .mn-f input[type=email], .mn-f input[type=date], .mn-f input[inputmode], .mn-f textarea, .mn-f select {
+    width: 100%; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--text); font: inherit; font-weight: 400; }
+  .mn-f textarea { min-height: 120px; resize: vertical; }
+  .mn-f input:focus, .mn-f textarea:focus, .mn-f select:focus { outline: 2px solid var(--gold); border-color: transparent; }
+  .mn-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mn-code { font-size: 1.6rem !important; letter-spacing: .4em; text-align: center; }
+  .mn-f .btn, .mn-body .btn { margin: 0; justify-self: start; border: 0; cursor: pointer; font: inherit; font-weight: 700; }
+  .mn-link { background: none; border: 0; color: var(--green); font: inherit; cursor: pointer; padding: 0; text-decoration: underline; }
+  .mn-msg { padding: 10px 12px; border-radius: 10px; background: var(--gold-soft); font-weight: 600; }
+  .mn-msg.err { background: #fbe3e1; color: #8c2a1f; }
+  .mn-me { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); font-size: .9rem; margin-bottom: 14px; }
+  .mn-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+  .mn-it { margin-bottom: 10px; }
+  .mn-it b { color: var(--green); }
+  .mn-it .nt-b { font-size: .92rem; }
+  .mn-st { display: inline-block; margin-top: 6px; padding: 2px 10px; border-radius: 999px; background: var(--surface-2); font-size: .8rem; font-weight: 700; }
+  .mn-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip.ok { background: var(--green); border-color: var(--green); color: #fff; }
+  .chip.no { color: #a33; border-color: #e5b7b2; }
+
   /* More services (open on the community site) */
   .more-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
   .more-item { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); text-decoration: none; }
@@ -555,6 +603,11 @@
 </nav>
 
 <main class="wrap">
+
+  <section id="notice" class="card nt-card" hidden>
+    <h2 data-i18n="nt_title">Notices</h2>
+    <div class="nt-list" id="ntList"></div>
+  </section>
 
   <section id="times" class="card">
     <h2 data-i18n="times_title">Prayer Times</h2>
@@ -827,6 +880,13 @@
 
 </main>
 
+<div class="mn-sheet" id="mnSheet" hidden>
+  <div class="mn-win" role="dialog" aria-modal="true" aria-labelledby="mnH">
+    <div class="mn-top"><h3 id="mnH" data-i18n="ad_title">🔐 Masjid notice board</h3><button type="button" class="mn-x" id="mnX" aria-label="✕">✕</button></div>
+    <div class="mn-body" id="mnBody"></div>
+  </div>
+</div>
+
 <div class="app-fab" id="appFab" hidden>
   <button type="button" class="app-fab-btn"><img src="/icon-192.png" alt="" width="28" height="28"><span></span></button>
   <button type="button" class="app-fab-x" aria-label="✕">✕</button>
@@ -837,6 +897,7 @@
     <span class="name">مسجد التوحيد</span>
     <span data-i18n="footer">Information may change. Please check our Facebook page for the latest news.</span>
     <p class="jp-comm"><span data-i18n="jp_by">Courtesy of</span> <a href="https://iwate-bd.org/">iwate-bd.org</a></p>
+    <p class="adm"><button type="button" id="mnOpen" data-i18n="ad_link">🔐 Notice board (admin)</button></p>
   </div>
 </footer>
 
@@ -867,6 +928,7 @@ const I18N = {
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
     today: "Today", hijri: "Hijri",
     times_title: "Prayer Times",
+    nt_title: "Notices", nt_until: "Until {d}", k_eid: "Eid", k_ramadan: "Ramadan / Iftar", k_event: "Event", k_closed: "Closed / change", k_other: "Notice", ad_link: "🔐 Notice board (admin)", n_notice: "Masjid notices (Eid, programs …)", ad_title: "🔐 Masjid notice board", ad_login_h: "Log in with your email", ad_login_p: "Only people added by the site admin can log in. A 6-digit code will come to your email — no password.", ad_email: "Email", ad_send: "Send the code", ad_code_p: "Enter the 6-digit code sent to {e}. If it does not come, check the spam folder.", ad_code: "Code", ad_verify: "Log in", ad_back: "← Use another email", ad_hi: "Logged in: {n}", ad_role_w: "✍️ Writer — your notice is shown after approval", ad_role_a: "✅ Approver — your notice is shown at once", ad_new: "✍️ New notice", ad_list: "📋 Notices", ad_kind: "Type", ad_t: "Title", ad_b: "Details", ad_from: "Show from", ad_to: "Show until", ad_pin: "Keep it at the top", ad_notify: "Send a notification when it is shown", ad_submit: "Submit", ad_sent_w: "✓ Sent. It will be shown after an approver approves it.", ad_sent_a: "✓ The notice is on the site now.", ad_none: "No notices yet.", st_wait: "⏳ Waiting for approval", st_live: "✅ On the site", st_rejected: "❌ Not approved", st_ended: "Ended", st_draft: "Not shown", ad_ok: "✅ Approve", ad_no: "❌ Do not approve", ad_rm: "🗑 Remove", ad_rm_q: "Remove this notice from the site?", ad_out: "Log out", ad_by: "By {e}", ad_err_wait: "Please wait a minute and try again.", ad_err_mail: "The email could not be sent. Please ask the site admin for a code.", ad_err_code: "The code is not right, or it has expired.", ad_err_tries: "Too many wrong codes. Please ask for a new code.", ad_err: "Something went wrong. Please check the connection and try again.", ad_need_t: "Please write a title.",
     nav_cal: "Calendar", nav_dua: "Duas", cal_title: "Islamic Calendar & Ramadan", cal_upcoming: "Coming up", ev_ramadan: "Ramadan begins", ev_fitr: "Eid al-Fitr", ev_arafah: "Day of Arafah", ev_adha: "Eid al-Adha", ev_newyear: "Islamic New Year", ev_ashura: "Ashura", cal_today: "Today", cal_tomorrow: "Tomorrow", cal_in: "in {n} days", cal_note: "Dates follow the Umm al-Qura calendar. The actual day can differ by one day depending on the moon sighting — please follow the masjid's announcement.", cal_month: "Monthly prayer timetable", cal_ram: "🌙 Ramadan {y}", cal_mon: "📅 This month", cal_print: "🖨 Print", sehri_s: "Sehri", cal_rday: "Ramadan", dua_title: "Duas & Tasbih", src: "Source", dua_iftar: "When breaking the fast", dua_iftar_m: "The thirst has gone, the veins are moistened, and the reward is certain, if Allah wills.", dua_enter: "Entering the masjid", dua_enter_m: "O Allah, open for me the doors of Your mercy.", dua_leave: "Leaving the masjid", dua_leave_m: "O Allah, I ask You of Your bounty.", dua_qadr: "Laylat al-Qadr", dua_qadr_m: "O Allah, You are the One who pardons, and You love to pardon, so pardon me.", tas_title: "Tasbih counter", tas_after: "After prayer (33 · 33 · 34)", tas_free: "Free count", tas_reset: "↺ Reset", tas_tap: "Tap the circle to count", tas_done: "Done — may Allah accept it", v6: "Everyone is welcome, including people of other faiths. Feel free to ask questions.", v7: "During prayer, please do not walk in front of people who are praying. You are welcome to watch quietly from the back.", v8: "Please ask before taking photos of people.", share_title: "Share this site", share_text: "Scan the QR code to open this site. Print the poster and put it up at the masjid or in shops.", share_poster: "🖨 Print poster", share_copy: "🔗 Copy link", share_copied: "✓ Link copied",
     reload: "Tap to refresh",
     sehri: "Sehri ends", iftar: "Iftar", fast_today: "Today's Sehri & Iftar", fast_tom: "Tomorrow's Sehri & Iftar", fast_note: "Sehri ends when Fajr begins. Iftar is at Maghrib.",
@@ -903,6 +965,7 @@ const I18N = {
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
     today: "今日", hijri: "ヒジュラ暦",
     times_title: "礼拝時間",
+    nt_title: "お知らせ", nt_until: "{d}まで", k_eid: "イード", k_ramadan: "ラマダン・イフタール", k_event: "行事", k_closed: "休館・変更", k_other: "お知らせ", ad_link: "🔐 お知らせの管理", n_notice: "マスジドのお知らせ（イード、行事など）", ad_title: "🔐 マスジドのお知らせ管理", ad_login_h: "メールアドレスでログイン", ad_login_p: "サイト管理者が登録した人だけがログインできます。メールに6桁のコードが届きます（パスワードは不要）。", ad_email: "メールアドレス", ad_send: "コードを送る", ad_code_p: "{e} に届いた6桁のコードを入力してください。届かない場合は迷惑メールフォルダもご確認ください。", ad_code: "コード", ad_verify: "ログイン", ad_back: "← 別のメールアドレス", ad_hi: "ログイン中：{n}", ad_role_w: "✍️ 投稿者 — 承認後に表示されます", ad_role_a: "✅ 承認者 — すぐに表示されます", ad_new: "✍️ 新しいお知らせ", ad_list: "📋 お知らせ一覧", ad_kind: "種類", ad_t: "タイトル", ad_b: "内容", ad_from: "表示開始日", ad_to: "表示終了日", ad_pin: "いちばん上に表示", ad_notify: "表示が始まったら通知を送る", ad_submit: "送信", ad_sent_w: "✓ 送信しました。承認されると表示されます。", ad_sent_a: "✓ お知らせを表示しました。", ad_none: "お知らせはまだありません。", st_wait: "⏳ 承認待ち", st_live: "✅ 表示中", st_rejected: "❌ 承認されませんでした", st_ended: "終了", st_draft: "非表示", ad_ok: "✅ 承認", ad_no: "❌ 承認しない", ad_rm: "🗑 取り下げ", ad_rm_q: "このお知らせをサイトから取り下げますか？", ad_out: "ログアウト", ad_by: "投稿：{e}", ad_err_wait: "少し待ってからもう一度お試しください。", ad_err_mail: "メールを送れませんでした。サイト管理者にコードを依頼してください。", ad_err_code: "コードが正しくないか、期限切れです。", ad_err_tries: "間違いが多すぎます。新しいコードを依頼してください。", ad_err: "問題が発生しました。接続を確認してもう一度お試しください。", ad_need_t: "タイトルを入力してください。",
     nav_cal: "暦", nav_dua: "ドゥアー", cal_title: "イスラーム暦とラマダン", cal_upcoming: "これからの行事", ev_ramadan: "ラマダン開始", ev_fitr: "イード・アル＝フィトル", ev_arafah: "アラファの日", ev_adha: "イード・アル＝アドハー", ev_newyear: "イスラーム新年", ev_ashura: "アーシューラー", cal_today: "今日", cal_tomorrow: "明日", cal_in: "あと{n}日", cal_note: "日付はウンム・アル＝クラー暦によります。実際の日は月の観測により1日ずれることがあります。マスジドのお知らせに従ってください。", cal_month: "月間の礼拝時間表", cal_ram: "🌙 ラマダン {y}", cal_mon: "📅 今月", cal_print: "🖨 印刷", sehri_s: "サフール", cal_rday: "ラマダン", dua_title: "ドゥアーとタスビーフ", src: "出典", dua_iftar: "断食を解くとき", dua_iftar_m: "渇きは去り、血管は潤い、アッラーが望まれるなら報奨は確かなものとなった。", dua_enter: "マスジドに入るとき", dua_enter_m: "アッラーよ、私にあなたの慈悲の扉を開いてください。", dua_leave: "マスジドを出るとき", dua_leave_m: "アッラーよ、私はあなたの恵みを求めます。", dua_qadr: "ライラト・アル＝カドル（みいつの夜）", dua_qadr_m: "アッラーよ、あなたは赦す御方で、赦すことを好まれます。どうか私をお赦しください。", tas_title: "タスビーフ・カウンター", tas_after: "礼拝後（33・33・34）", tas_free: "自由に数える", tas_reset: "↺ リセット", tas_tap: "円をタップして数えます", tas_done: "完了 — アッラーが受け入れてくださいますように", v6: "ムスリム以外の方も歓迎します。気軽にご質問ください。", v7: "礼拝中は、礼拝している人の前を横切らないでください。後ろから静かに見学していただけます。", v8: "人を撮影する前に、ひと言お声がけください。", share_title: "このサイトを紹介する", share_text: "QRコードを読み取るとこのサイトが開きます。ポスターを印刷して、マスジドやお店に貼ってください。", share_poster: "🖨 ポスターを印刷", share_copy: "🔗 リンクをコピー", share_copied: "✓ コピーしました",
     reload: "タップして更新",
     sehri: "サフール終了", iftar: "イフタール", fast_today: "今日のサフールとイフタール", fast_tom: "明日のサフールとイフタール", fast_note: "サフール（夜明け前の食事）はファジュルの開始までに終えます。イフタール（断食明け）はマグリブの時刻です。",
@@ -939,6 +1002,7 @@ const I18N = {
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
     today: "আজ", hijri: "হিজরি",
     times_title: "নামাজের সময়সূচি",
+    nt_title: "নোটিশ", nt_until: "{d} পর্যন্ত", k_eid: "ঈদ", k_ramadan: "রমজান / ইফতার", k_event: "অনুষ্ঠান", k_closed: "বন্ধ / পরিবর্তন", k_other: "নোটিশ", ad_link: "🔐 নোটিশ বোর্ড (অ্যাডমিন)", n_notice: "মসজিদের নোটিশ (ঈদ, অনুষ্ঠান …)", ad_title: "🔐 মসজিদের নোটিশ বোর্ড", ad_login_h: "ইমেইল দিয়ে লগইন", ad_login_p: "সাইটের অ্যাডমিন যাদের যোগ করেছেন, শুধু তারাই লগইন করতে পারবেন। ইমেইলে ৬ অঙ্কের কোড আসবে — কোনো পাসওয়ার্ড নেই।", ad_email: "ইমেইল", ad_send: "কোড পাঠান", ad_code_p: "{e}-এ পাঠানো ৬ অঙ্কের কোড লিখুন। না এলে স্প্যাম ফোল্ডার দেখুন।", ad_code: "কোড", ad_verify: "লগইন", ad_back: "← অন্য ইমেইল", ad_hi: "লগইন: {n}", ad_role_w: "✍️ লেখক — অনুমোদনের পর নোটিশ দেখাবে", ad_role_a: "✅ অনুমোদনকারী — আপনার নোটিশ সাথে সাথে দেখাবে", ad_new: "✍️ নতুন নোটিশ", ad_list: "📋 নোটিশগুলো", ad_kind: "ধরন", ad_t: "শিরোনাম", ad_b: "বিস্তারিত", ad_from: "কবে থেকে", ad_to: "কবে পর্যন্ত", ad_pin: "সবার উপরে রাখুন", ad_notify: "দেখানো শুরু হলে নোটিফিকেশন পাঠান", ad_submit: "জমা দিন", ad_sent_w: "✓ পাঠানো হয়েছে। অনুমোদনকারী অনুমোদন দিলে দেখাবে।", ad_sent_a: "✓ নোটিশ এখন সাইটে দেখাচ্ছে।", ad_none: "এখনো কোনো নোটিশ নেই।", st_wait: "⏳ অনুমোদনের অপেক্ষায়", st_live: "✅ সাইটে আছে", st_rejected: "❌ অনুমোদন হয়নি", st_ended: "শেষ হয়েছে", st_draft: "দেখানো হচ্ছে না", ad_ok: "✅ অনুমোদন", ad_no: "❌ বাতিল", ad_rm: "🗑 সরিয়ে দিন", ad_rm_q: "এই নোটিশ সাইট থেকে সরাবেন?", ad_out: "লগআউট", ad_by: "লিখেছেন {e}", ad_err_wait: "এক মিনিট পর আবার চেষ্টা করুন।", ad_err_mail: "ইমেইল পাঠানো যায়নি। সাইটের অ্যাডমিনের কাছে কোড চান।", ad_err_code: "কোড ঠিক নয়, বা মেয়াদ শেষ।", ad_err_tries: "অনেকবার ভুল কোড। নতুন কোড চান।", ad_err: "কিছু একটা সমস্যা হয়েছে। ইন্টারনেট দেখে আবার চেষ্টা করুন।", ad_need_t: "শিরোনাম লিখুন।",
     nav_cal: "ক্যালেন্ডার", nav_dua: "দোয়া", cal_title: "ইসলামি ক্যালেন্ডার ও রমজান", cal_upcoming: "সামনের দিনগুলো", ev_ramadan: "রমজান শুরু", ev_fitr: "ঈদুল ফিতর", ev_arafah: "আরাফার দিন", ev_adha: "ঈদুল আজহা", ev_newyear: "ইসলামি নববর্ষ", ev_ashura: "আশুরা", cal_today: "আজ", cal_tomorrow: "আগামীকাল", cal_in: "আর {n} দিন", cal_note: "তারিখ উম্মুল কুরা ক্যালেন্ডার অনুযায়ী। চাঁদ দেখার ওপর নির্ভর করে আসল দিন এক দিন আগে-পরে হতে পারে — মসজিদের ঘোষণা অনুসরণ করুন।", cal_month: "মাসের নামাজের সময়সূচি", cal_ram: "🌙 রমজান {y}", cal_mon: "📅 এই মাস", cal_print: "🖨 প্রিন্ট", sehri_s: "সেহরি", cal_rday: "রমজান", dua_title: "দোয়া ও তাসবিহ", src: "সূত্র", dua_iftar: "ইফতারের সময়", dua_iftar_m: "পিপাসা দূর হলো, শিরাগুলো সিক্ত হলো, আর আল্লাহ চাইলে প্রতিদান নিশ্চিত হলো।", dua_enter: "মসজিদে ঢোকার সময়", dua_enter_m: "হে আল্লাহ, আমার জন্য আপনার রহমতের দরজাগুলো খুলে দিন।", dua_leave: "মসজিদ থেকে বের হওয়ার সময়", dua_leave_m: "হে আল্লাহ, আমি আপনার কাছে আপনার অনুগ্রহ চাই।", dua_qadr: "শবে কদর", dua_qadr_m: "হে আল্লাহ, আপনি ক্ষমাশীল, ক্ষমা করতে ভালোবাসেন, তাই আমাকে ক্ষমা করুন।", tas_title: "তাসবিহ গণনা", tas_after: "নামাজের পর (৩৩ · ৩৩ · ৩৪)", tas_free: "নিজের মতো গণনা", tas_reset: "↺ আবার শুরু", tas_tap: "গোল বোতামে চাপ দিয়ে গুনুন", tas_done: "শেষ — আল্লাহ কবুল করুন", v6: "অন্য ধর্মের মানুষসহ সবাইকে স্বাগত। নির্দ্বিধায় প্রশ্ন করুন।", v7: "নামাজ চলার সময় নামাজির সামনে দিয়ে হাঁটবেন না। পেছন থেকে চুপচাপ দেখতে পারেন।", v8: "কারো ছবি তোলার আগে অনুমতি নিন।", share_title: "সাইটটি অন্যদের জানান", share_text: "QR কোড স্ক্যান করলে এই সাইট খুলবে। পোস্টার প্রিন্ট করে মসজিদে বা দোকানে লাগাতে পারেন।", share_poster: "🖨 পোস্টার প্রিন্ট", share_copy: "🔗 লিংক কপি", share_copied: "✓ লিংক কপি হয়েছে",
     reload: "চাপ দিলে রিফ্রেশ হবে",
     sehri: "সেহরির শেষ সময়", iftar: "ইফতার", fast_today: "আজকের সেহরি ও ইফতার", fast_tom: "আগামীকালের সেহরি ও ইফতার", fast_note: "ফজরের ওয়াক্ত শুরু হলে সেহরির সময় শেষ। মাগরিবের সময় ইফতার।",
@@ -975,6 +1039,7 @@ const I18N = {
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
     today: "آج", hijri: "ہجری",
     times_title: "اوقاتِ نماز",
+    nt_title: "اعلانات", nt_until: "{d} تک", k_eid: "عید", k_ramadan: "رمضان / افطار", k_event: "پروگرام", k_closed: "بند / تبدیلی", k_other: "اعلان", ad_link: "🔐 اعلانات (ایڈمن)", n_notice: "مسجد کے اعلانات (عید، پروگرام …)",
     nav_cal: "کیلنڈر", nav_dua: "دعائیں", cal_title: "اسلامی کیلنڈر اور رمضان", cal_upcoming: "آنے والے دن", ev_ramadan: "رمضان کا آغاز", ev_fitr: "عید الفطر", ev_arafah: "یومِ عرفہ", ev_adha: "عید الاضحیٰ", ev_newyear: "اسلامی نیا سال", ev_ashura: "عاشورہ", cal_today: "آج", cal_tomorrow: "کل", cal_in: "{n} دن باقی", cal_note: "تاریخیں ام القریٰ کیلنڈر کے مطابق ہیں۔ چاند دیکھنے کے لحاظ سے اصل دن ایک دن آگے پیچھے ہو سکتا ہے — مسجد کے اعلان پر عمل کریں۔", cal_month: "ماہانہ اوقاتِ نماز", cal_ram: "🌙 رمضان {y}", cal_mon: "📅 یہ مہینہ", cal_print: "🖨 پرنٹ", sehri_s: "سحری", cal_rday: "رمضان", dua_title: "دعائیں اور تسبیح", src: "حوالہ", dua_iftar: "افطار کے وقت", dua_iftar_m: "پیاس بجھ گئی، رگیں تر ہو گئیں، اور اگر اللہ نے چاہا تو اجر ثابت ہو گیا۔", dua_enter: "مسجد میں داخل ہوتے وقت", dua_enter_m: "اے اللہ، میرے لیے اپنی رحمت کے دروازے کھول دے۔", dua_leave: "مسجد سے نکلتے وقت", dua_leave_m: "اے اللہ، میں تجھ سے تیرا فضل مانگتا ہوں۔", dua_qadr: "شبِ قدر", dua_qadr_m: "اے اللہ، تو معاف کرنے والا ہے، معافی کو پسند کرتا ہے، پس مجھے معاف فرما۔", tas_title: "تسبیح شمار", tas_after: "نماز کے بعد (33 · 33 · 34)", tas_free: "آزاد گنتی", tas_reset: "↺ دوبارہ", tas_tap: "گنتی کے لیے دائرے پر ٹیپ کریں", tas_done: "مکمل — اللہ قبول فرمائے", v6: "دوسرے مذاہب کے لوگوں سمیت سب کو خوش آمدید۔ بلا جھجک سوال کریں۔", v7: "نماز کے دوران نمازیوں کے سامنے سے نہ گزریں۔ آپ پیچھے سے خاموشی سے دیکھ سکتے ہیں۔", v8: "کسی کی تصویر لینے سے پہلے اجازت لیں۔", share_title: "یہ سائٹ دوسروں تک پہنچائیں", share_text: "QR کوڈ اسکین کرنے سے یہ سائٹ کھلے گی۔ پوسٹر پرنٹ کر کے مسجد یا دکانوں میں لگائیں۔", share_poster: "🖨 پوسٹر پرنٹ کریں", share_copy: "🔗 لنک کاپی کریں", share_copied: "✓ لنک کاپی ہو گیا",
     reload: "ریفریش کرنے کے لیے ٹیپ کریں",
     sehri: "سحری کا آخری وقت", iftar: "افطار", fast_today: "آج کی سحری اور افطار", fast_tom: "کل کی سحری اور افطار", fast_note: "فجر کا وقت شروع ہوتے ہی سحری کا وقت ختم۔ افطار مغرب کے وقت۔",
@@ -1011,6 +1076,7 @@ const I18N = {
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
     today: "आज", hijri: "हिजरी",
     times_title: "नमाज़ का समय",
+    nt_title: "सूचनाएँ", nt_until: "{d} तक", k_eid: "ईद", k_ramadan: "रमज़ान / इफ़्तार", k_event: "कार्यक्रम", k_closed: "बंद / बदलाव", k_other: "सूचना", ad_link: "🔐 सूचना बोर्ड (एडमिन)", n_notice: "मस्जिद की सूचनाएँ (ईद, कार्यक्रम …)",
     nav_cal: "कैलेंडर", nav_dua: "दुआएँ", cal_title: "इस्लामी कैलेंडर और रमज़ान", cal_upcoming: "आने वाले दिन", ev_ramadan: "रमज़ान की शुरुआत", ev_fitr: "ईद-उल-फ़ित्र", ev_arafah: "अरफ़ा का दिन", ev_adha: "ईद-उल-अज़हा", ev_newyear: "इस्लामी नया साल", ev_ashura: "आशूरा", cal_today: "आज", cal_tomorrow: "कल", cal_in: "{n} दिन बाकी", cal_note: "तारीख़ें उम्म-उल-क़ुरा कैलेंडर के अनुसार हैं। चाँद दिखने के अनुसार असली दिन एक दिन आगे-पीछे हो सकता है — मस्जिद की घोषणा का पालन करें।", cal_month: "महीने का नमाज़ टाइम टेबल", cal_ram: "🌙 रमज़ान {y}", cal_mon: "📅 यह महीना", cal_print: "🖨 प्रिंट", sehri_s: "सहरी", cal_rday: "रमज़ान", dua_title: "दुआएँ और तस्बीह", src: "स्रोत", dua_iftar: "इफ़्तार के समय", dua_iftar_m: "प्यास बुझ गई, रगें तर हो गईं, और अगर अल्लाह ने चाहा तो सवाब पक्का हो गया।", dua_enter: "मस्जिद में दाख़िल होते समय", dua_enter_m: "ऐ अल्लाह, मेरे लिए अपनी रहमत के दरवाज़े खोल दे।", dua_leave: "मस्जिद से निकलते समय", dua_leave_m: "ऐ अल्लाह, मैं तुझसे तेरा फ़ज़्ल माँगता हूँ।", dua_qadr: "शब-ए-क़द्र", dua_qadr_m: "ऐ अल्लाह, तू माफ़ करने वाला है, माफ़ी को पसंद करता है, तो मुझे माफ़ कर दे।", tas_title: "तस्बीह काउंटर", tas_after: "नमाज़ के बाद (33 · 33 · 34)", tas_free: "खुली गिनती", tas_reset: "↺ फिर से", tas_tap: "गिनने के लिए गोले पर टैप करें", tas_done: "पूरा हुआ — अल्लाह क़बूल करे", v6: "दूसरे धर्मों के लोगों समेत सबका स्वागत है। बेझिझक सवाल पूछें।", v7: "नमाज़ के दौरान नमाज़ियों के सामने से न गुज़रें। आप पीछे से चुपचाप देख सकते हैं।", v8: "किसी की फ़ोटो लेने से पहले इजाज़त लें।", share_title: "यह साइट दूसरों तक पहुँचाएँ", share_text: "QR कोड स्कैन करने पर यह साइट खुलेगी। पोस्टर प्रिंट करके मस्जिद या दुकानों में लगाएँ।", share_poster: "🖨 पोस्टर प्रिंट करें", share_copy: "🔗 लिंक कॉपी करें", share_copied: "✓ लिंक कॉपी हो गया",
     reload: "रीफ़्रेश करने के लिए टैप करें",
     sehri: "सहरी का अंतिम समय", iftar: "इफ़्तार", fast_today: "आज की सहरी और इफ़्तार", fast_tom: "कल की सहरी और इफ़्तार", fast_note: "फ़ज्र का समय शुरू होते ही सहरी का समय ख़त्म। इफ़्तार मग़रिब के समय।",
@@ -1047,6 +1113,7 @@ const I18N = {
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
     today: "اليوم", hijri: "هجري",
     times_title: "مواقيت الصلاة",
+    nt_title: "الإعلانات", nt_until: "حتى {d}", k_eid: "العيد", k_ramadan: "رمضان / الإفطار", k_event: "فعالية", k_closed: "إغلاق / تغيير", k_other: "إعلان", ad_link: "🔐 لوحة الإعلانات (المشرف)", n_notice: "إعلانات المسجد (العيد، الفعاليات …)",
     nav_cal: "التقويم", nav_dua: "الأدعية", cal_title: "التقويم الهجري ورمضان", cal_upcoming: "المناسبات القادمة", ev_ramadan: "بداية رمضان", ev_fitr: "عيد الفطر", ev_arafah: "يوم عرفة", ev_adha: "عيد الأضحى", ev_newyear: "رأس السنة الهجرية", ev_ashura: "عاشوراء", cal_today: "اليوم", cal_tomorrow: "غدًا", cal_in: "بعد {n} يومًا", cal_note: "التواريخ وفق تقويم أم القرى، وقد يختلف اليوم الفعلي يومًا واحدًا بحسب رؤية الهلال — يُرجى اتباع إعلان المسجد.", cal_month: "جدول مواقيت الشهر", cal_ram: "🌙 رمضان {y}", cal_mon: "📅 هذا الشهر", cal_print: "🖨 طباعة", sehri_s: "السحور", cal_rday: "رمضان", dua_title: "الأدعية والتسبيح", src: "المصدر", dua_iftar: "عند الإفطار", dua_iftar_m: "", dua_enter: "عند دخول المسجد", dua_enter_m: "", dua_leave: "عند الخروج من المسجد", dua_leave_m: "", dua_qadr: "ليلة القدر", dua_qadr_m: "", tas_title: "عدّاد التسبيح", tas_after: "بعد الصلاة (33 · 33 · 34)", tas_free: "عدّ حر", tas_reset: "↺ إعادة", tas_tap: "اضغط على الدائرة للعدّ", tas_done: "تمّ — تقبّل الله", v6: "الجميع مرحَّب بهم، ومنهم أتباع الديانات الأخرى. لا تتردد في السؤال.", v7: "أثناء الصلاة، يُرجى عدم المرور أمام المصلين، ويمكنك المشاهدة بهدوء من الخلف.", v8: "يُرجى الاستئذان قبل تصوير الأشخاص.", share_title: "شارك هذا الموقع", share_text: "امسح رمز QR لفتح هذا الموقع. اطبع الملصق وضعه في المسجد أو المتاجر.", share_poster: "🖨 طباعة الملصق", share_copy: "🔗 نسخ الرابط", share_copied: "✓ تم نسخ الرابط",
     reload: "اضغط للتحديث",
     sehri: "نهاية السحور", iftar: "الإفطار", fast_today: "سحور وإفطار اليوم", fast_tom: "سحور وإفطار الغد", fast_note: "ينتهي السحور بدخول وقت الفجر، والإفطار عند المغرب.",
@@ -1476,6 +1543,168 @@ if ("serviceWorker" in navigator && window.isSecureContext) {
   }, 3000));
 }
 
+/* ===================== Notice board ===================== */
+// Notices come from iwate-bd.org (Masjid Notice plugin). People added by the site admin log in with a code sent
+// to their email; a writer's notice is shown after an approver approves it (by email or here).
+const MN = { api: "https://iwate-bd.org/wp-json/mn/v1/", m: "morioka" };
+const mnEsc = t => String(t == null ? "" : t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const MN_K = { eid: "🎉", ramadan: "🌙", event: "📅", closed: "⚠️", other: "📢" };
+function mnPost(path, body) {
+  return fetch(MN.api + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then(r => r.json());
+}
+function mnFollow(ep, on) {
+  if (ep) mnPost("follow", { m: MN.m, ep, on: on ? 1 : 0 }).catch(() => {});
+}
+const mnDate = ymd => {
+  if (!ymd) return "";
+  const [y, m, d] = ymd.split("-").map(Number);
+  return new Intl.DateTimeFormat(lang, { timeZone: "UTC", month: "short", day: "numeric", weekday: "short" }).format(new Date(Date.UTC(y, m - 1, d, 12)));
+};
+function mnCard(n, extra) {
+  return `<div class="nt k-${mnEsc(n.k)}${n.pin ? " pin" : ""}">${n.pin ? '<span class="nt-pin" aria-hidden="true">📌</span>' : ""}`
+    + `<div class="nt-h"><span class="nt-ic" aria-hidden="true">${MN_K[n.k] || "📢"}</span><div><span class="nt-k">${mnEsc(T("k_" + n.k) || T("k_other"))}</span><b>${mnEsc(n.t)}</b></div></div>`
+    + (n.b ? `<p class="nt-b">${mnEsc(n.b)}</p>` : "")
+    + (n.to ? `<p class="nt-d">📅 ${mnEsc(n.from && n.from !== n.to ? mnDate(n.from) + " – " + mnDate(n.to) : T("nt_until").replace("{d}", mnDate(n.to)))}</p>` : "")
+    + (extra || "") + "</div>";
+}
+
+const notices = (() => {
+  const sec = document.getElementById("notice"), list = document.getElementById("ntList");
+  let data = null;
+  try { const c = JSON.parse(store.get("nt") || "null"); if (c && Array.isArray(c.n)) data = c.n; } catch {}
+  function today() { const t = tokyoYMD(); return `${t.y}-${String(t.m).padStart(2, "0")}-${String(t.d).padStart(2, "0")}`; }
+  function render() {
+    const td = today();
+    const n = (data || []).filter(x => (!x.from || x.from <= td) && (!x.to || x.to >= td));
+    sec.hidden = !n.length;
+    list.innerHTML = n.map(x => mnCard(x)).join("");
+  }
+  function load() {
+    fetch(MN.api + "notices?m=" + MN.m + "&t=" + Math.floor(Date.now() / 6e4), { credentials: "omit" })
+      .then(r => r.json()).then(d => { data = d.n || []; store.set("nt", JSON.stringify({ n: data, t: Date.now() })); render(); })
+      .catch(() => {});
+  }
+  render();
+  window.addEventListener("load", () => setTimeout(load, 300));
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+  return { render, load };
+})();
+
+const mnAdmin = (() => {
+  const sheet = document.getElementById("mnSheet"), body = document.getElementById("mnBody");
+  const st = { tk: store.get("mn_tk") || "", me: null, step: "email", email: "", msg: "", err: false, tab: "new", list: null, busy: false };
+  const dev = () => (/Android/i.test(navigator.userAgent) ? "Android" : /iPhone|iPad/i.test(navigator.userAgent) ? "iPhone" : /Windows/i.test(navigator.userAgent) ? "Windows" : /Mac/i.test(navigator.userAgent) ? "Mac" : "Phone")
+    + ((window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone ? " · app" : "");
+  const ep = () => ("serviceWorker" in navigator ? navigator.serviceWorker.getRegistration("/").then(r => r ? r.pushManager.getSubscription() : null) : Promise.resolve(null))
+    .then(s => (s && s.endpoint) || "").catch(() => "");
+  const ERR = { wait: "ad_err_wait", mail: "ad_err_mail", code: "ad_err_code", tries: "ad_err_tries" };
+  const say = (k, err) => { st.msg = k ? T(k) : ""; st.err = !!err; };
+  const fail = e => { say(ERR[e] || "ad_err", true); st.busy = false; draw(); };
+
+  function open() {
+    sheet.hidden = false; document.body.style.overflow = "hidden";
+    if (st.tk && !st.me) { st.step = "load"; draw(); me(); } else draw();
+  }
+  function close() { sheet.hidden = true; document.body.style.overflow = ""; }
+  function me() {
+    ep().then(e => mnPost("me", { tk: st.tk, ep: e })).then(d => {
+      if (d.ok) { st.me = d; st.step = "in"; if (d.r === "approver") st.tab = "list"; loadList(); }
+      else { st.tk = ""; store.set("mn_tk", ""); st.step = "email"; }
+      draw();
+    }).catch(() => { st.step = "email"; fail(""); });
+  }
+  function loadList() {
+    mnPost("list", { tk: st.tk, m: MN.m }).then(d => { st.list = d.ok ? d.n : []; draw(); }).catch(() => {});
+  }
+  const fmtSt = n => n.st === "live" && n.ended ? T("st_ended") : T("st_" + n.st);
+
+  function draw() {
+    const v = st.msg ? `<p class="mn-msg${st.err ? " err" : ""}" role="status">${mnEsc(st.msg)}</p>` : "";
+    if (st.step === "load") { body.innerHTML = "<p>⏳</p>"; return; }
+    if (st.step === "email") {
+      body.innerHTML = `<p><b>${mnEsc(T("ad_login_h"))}</b></p><p>${mnEsc(T("ad_login_p"))}</p>${v}
+        <form class="mn-f" id="mnF"><label>${mnEsc(T("ad_email"))}<input type="email" name="e" required autocomplete="email" value="${mnEsc(st.email)}"></label>
+        <button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("ad_send"))}</button></form>`;
+      body.querySelector("#mnF").onsubmit = e => {
+        e.preventDefault(); st.email = e.target.e.value.trim().toLowerCase(); st.busy = true; say(""); draw();
+        mnPost("login", { email: st.email }).then(d => { st.busy = false; if (d.ok) { st.step = "code"; say(""); draw(); } else fail(d.err); }).catch(() => fail(""));
+      };
+      return;
+    }
+    if (st.step === "code") {
+      body.innerHTML = `<p>${mnEsc(T("ad_code_p").replace("{e}", st.email))}</p>${v}
+        <form class="mn-f" id="mnF"><label>${mnEsc(T("ad_code"))}<input class="mn-code" name="c" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required></label>
+        <button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("ad_verify"))}</button>
+        <button type="button" class="mn-link" id="mnBack">${mnEsc(T("ad_back"))}</button></form>`;
+      body.querySelector("#mnBack").onclick = () => { st.step = "email"; say(""); draw(); };
+      body.querySelector("#mnF").onsubmit = e => {
+        e.preventDefault(); st.busy = true; say(""); draw();
+        const code = e.target.c.value;
+        ep().then(p => mnPost("verify", { email: st.email, code, dev: dev(), ep: p })).then(d => {
+          st.busy = false;
+          if (!d.ok) return fail(d.err);
+          st.tk = d.tk; store.set("mn_tk", d.tk); st.me = d; st.step = "in"; st.tab = d.r === "approver" ? "list" : "new"; say(""); loadList(); draw();
+        }).catch(() => fail(""));
+      };
+      return;
+    }
+    // logged in
+    const m = st.me, ap = m.r === "approver";
+    let h = `<div class="mn-me"><span>${mnEsc(T("ad_hi").replace("{n}", m.n || m.e))}<br><small>${mnEsc(T(ap ? "ad_role_a" : "ad_role_w"))}</small></span>
+      <button type="button" class="chip" id="mnOut">${mnEsc(T("ad_out"))}</button></div>
+      <div class="mn-tabs"><button type="button" class="chip" data-t="new" aria-pressed="${st.tab === "new"}">${mnEsc(T("ad_new"))}</button>
+      <button type="button" class="chip" data-t="list" aria-pressed="${st.tab === "list"}">${mnEsc(T("ad_list"))}</button></div>${v}`;
+    if (st.tab === "new") {
+      const t = tokyoYMD(), d0 = `${t.y}-${String(t.m).padStart(2, "0")}-${String(t.d).padStart(2, "0")}`;
+      const n7 = addDays(t, 7), d7 = `${n7.y}-${String(n7.m).padStart(2, "0")}-${String(n7.d).padStart(2, "0")}`;
+      h += `<form class="mn-f" id="mnF">
+        <label>${mnEsc(T("ad_kind"))}<select name="k">${Object.keys(MN_K).map(k => `<option value="${k}">${MN_K[k]} ${mnEsc(T("k_" + k))}</option>`).join("")}</select></label>
+        <label>${mnEsc(T("ad_t"))}<input type="text" name="t" maxlength="120" required></label>
+        <label>${mnEsc(T("ad_b"))}<textarea name="b" maxlength="1500"></textarea></label>
+        <div class="mn-row2"><label>${mnEsc(T("ad_from"))}<input type="date" name="f" value="${d0}" required></label>
+        <label>${mnEsc(T("ad_to"))}<input type="date" name="u" value="${d7}" required></label></div>
+        <label class="ck"><input type="checkbox" name="p"> ${mnEsc(T("ad_pin"))}</label>
+        <label class="ck"><input type="checkbox" name="n" checked> ${mnEsc(T("ad_notify"))}</label>
+        <button class="btn" ${st.busy ? "disabled" : ""}>${st.busy ? "⏳" : mnEsc(T("ad_submit"))}</button></form>`;
+    } else {
+      const l = st.list;
+      h += l === null ? "<p>⏳</p>" : !l.length ? `<p>${mnEsc(T("ad_none"))}</p>` : l.map(n => {
+        let a = "";
+        if (ap && n.st === "wait") a = `<button type="button" class="chip ok" data-a="approve" data-id="${n.id}">${mnEsc(T("ad_ok"))}</button><button type="button" class="chip no" data-a="reject" data-id="${n.id}">${mnEsc(T("ad_no"))}</button>`;
+        if (ap && n.st === "live") a = `<button type="button" class="chip no" data-a="remove" data-id="${n.id}">${mnEsc(T("ad_rm"))}</button>`;
+        return `<div class="mn-it">${mnCard(n, `<span class="mn-st">${mnEsc(fmtSt(n))}</span> <small class="nt-d">${mnEsc(T("ad_by").replace("{e}", n.by))}</small>${a ? `<div class="mn-acts">${a}</div>` : ""}`)}</div>`;
+      }).join("");
+    }
+    body.innerHTML = h;
+    body.querySelector("#mnOut").onclick = () => { mnPost("logout", { tk: st.tk }).catch(() => {}); st.tk = ""; st.me = null; store.set("mn_tk", ""); st.step = "email"; say(""); draw(); };
+    body.querySelectorAll(".mn-tabs .chip").forEach(b => b.onclick = () => { st.tab = b.dataset.t; say(""); if (st.tab === "list") loadList(); draw(); });
+    body.querySelectorAll("[data-a]").forEach(b => b.onclick = () => {
+      if (b.dataset.a === "remove" && !confirm(T("ad_rm_q"))) return;
+      b.disabled = true;
+      mnPost("act", { tk: st.tk, id: +b.dataset.id, a: b.dataset.a }).then(d => { say(d.ok ? "" : "ad_err", !d.ok); loadList(); notices.load(); }).catch(() => fail(""));
+    });
+    const f = body.querySelector("#mnF");
+    if (f) f.onsubmit = e => {
+      e.preventDefault();
+      if (!f.t.value.trim()) { say("ad_need_t", true); return draw(); }
+      if (f.u.value < f.f.value) f.u.value = f.f.value;
+      st.busy = true; say(""); draw();
+      mnPost("submit", { tk: st.tk, m: MN.m, kind: f.k.value, title: f.t.value, body: f.b.value, from: f.f.value, to: f.u.value, pin: f.p.checked ? 1 : 0, notify: f.n.checked ? 1 : 0 })
+        .then(d => {
+          st.busy = false;
+          if (!d.ok) { if (d.err === "login") { st.tk = ""; st.me = null; store.set("mn_tk", ""); st.step = "email"; } return fail(d.err); }
+          say(d.st === "live" ? "ad_sent_a" : "ad_sent_w"); st.tab = "list"; loadList(); notices.load(); draw();
+        }).catch(() => fail(""));
+    };
+  }
+  document.getElementById("mnOpen").addEventListener("click", open);
+  document.getElementById("mnX").addEventListener("click", close);
+  sheet.addEventListener("click", e => { if (e.target === sheet) close(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !sheet.hidden) close(); });
+  if (/[?&]mn=admin\b/.test(location.search)) window.addEventListener("load", () => setTimeout(open, 200));
+  return { draw: () => { if (!sheet.hidden) draw(); } };
+})();
+
 function renderAll() {
   renderTexts();
   renderDates();
@@ -1483,6 +1712,7 @@ function renderAll() {
   renderQibla();
   quranLang();
   if (window.tasDraw) window.tasDraw();
+  if (typeof notices !== "undefined") { notices.render(); mnAdmin.draw(); }
   if (typeof notif !== "undefined") notif.render();
 }
 
@@ -1778,8 +2008,8 @@ const notif = (function () {
   const ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const app = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
   const can = "serviceWorker" in navigator && "PushManager" in window && "Notification" in window && window.isSecureContext;
-  const TYPES = ["prayer", "ramz", "jumu", "isl", "jpdz"];
-  let types = { prayer: 1, ramz: 1, jumu: 1, isl: 1, jpdz: 1 };
+  const TYPES = ["prayer", "ramz", "notice", "jumu", "isl", "jpdz"];
+  let types = { prayer: 1, ramz: 1, notice: 1, jumu: 1, isl: 1, jpdz: 1 };
   try { Object.assign(types, JSON.parse(store.get("n_types") || "{}")); } catch {}
   let sub = null, busy = false, msg = "", err = false;
   // notification language: chosen once, then it no longer follows the page language
@@ -1861,7 +2091,7 @@ const notif = (function () {
       name: (I18N[NL()] || {}).title || T("title"), mosque: (I18N[NL()] || {}).title || T("title"), jamaat: [], lang: NL(),
       types: { prayer: types.prayer ? 1 : 0, ramz: types.ramz ? 1 : 0, jumu: types.jumu ? 1 : 0, isl: types.isl ? 1 : 0, jpdz: types.jpdz ? 1 : 0, post: 0, live: 0, sunnah: 0 },
       dev: dev()
-    }) }).then(r => { if (!r.ok) throw new Error("http " + r.status); store.set("n_sig", sig()); });
+    }) }).then(r => { if (!r.ok) throw new Error("http " + r.status); store.set("n_sig", sig()); mnFollow(s.endpoint, types.notice); });
   }
 
   // floating button for new visitors (hidden in the app, or for 14 days after ✕)
@@ -1945,6 +2175,7 @@ const notif = (function () {
     if (busy || !sub) return;
     busy = true; render();
     const ep = sub.endpoint;
+    mnFollow(ep, 0);
     sub.unsubscribe().catch(() => {}).then(() => fetch(PUSH.off, { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ endpoint: ep }) }).catch(() => {}))
       .then(() => { sub = null; msg = ""; err = false; busy = false; store.set("n_sig", ""); render(); });

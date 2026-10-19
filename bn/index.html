@@ -832,7 +832,15 @@
   .q-tip { min-height: 0; margin: 0; font-size: .85rem; font-weight: 600; color: var(--green); transition: opacity .3s; }
   .q-tip:empty { display: none; }
   .q-now { position: sticky; top: 56px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 8px; padding: 8px 10px; border-radius: 12px; background: var(--green); color: #fff; box-shadow: var(--shadow); }
-  .q-now-t { flex: 1 1 auto; font-weight: 700; font-size: .92rem; }
+  .q-now-t { flex: 1 1 auto; min-width: 0; font-weight: 700; font-size: .92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* mini player: at the foot of the screen while the big player is scrolled away (one ⏯ in sight at a time) */
+  .q-now { position: fixed; top: auto; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 56; max-width: 560px; margin: 0 auto; box-shadow: 0 8px 24px rgba(0, 0, 0, .3); }
+  body.q-mini .to-top, body.q-mini .app-fab, body.q-mini .pend-pill { bottom: calc(86px + env(safe-area-inset-bottom)); }
+  .q-main { gap: 8px; }
+  .q-main.on .q-main-t b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+  .q-main .q-rb[hidden] { display: none; }
+  .q-endc { display: block; margin: 10px auto 0; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .1); color: #fff; font: inherit; font-size: .84rem; cursor: pointer; }
+  .q-endc b { color: #e9cf8f; }
   .q-now .chip { background: rgba(255, 255, 255, .14); border-color: transparent; color: #fff; }
   .q-ay.on .q-tr.say { background: rgba(184, 137, 59, .18); border-radius: 6px; }
   .q-ay { padding: 12px 14px; border-bottom: 1px solid var(--line); cursor: pointer; }
@@ -1132,11 +1140,14 @@
         <button type="button" data-l="tr" data-i18n="q_s_tr">শুধু অর্থ</button>
       </div>
       <div class="q-main">
+        <button type="button" class="q-rb sm" id="qPrev" hidden aria-label="⏮"><span aria-hidden="true">⏮</span></button>
         <button type="button" class="q-big" id="qSeq"><span aria-hidden="true">▶</span></button>
+        <button type="button" class="q-rb sm" id="qNext" hidden aria-label="⏭"><span aria-hidden="true">⏭</span></button>
         <div class="q-main-t"><b data-i18n="q_seq_t">আয়াত ধরে ধরে শুনুন</b><small id="qSurahName"></small></div>
         <button type="button" class="q-rb" id="qPlay"><span aria-hidden="true">🎧</span></button>
-        <button type="button" class="q-rb q-end" data-qend></button>
+        <button type="button" class="q-rb sm" id="qStopM" hidden><span aria-hidden="true">⏹</span></button>
       </div>
+      <button type="button" class="q-endc" id="qEndC" data-qend></button>
       <div class="q-opts">
         <label id="qTrWrap" class="q-sw"><input type="checkbox" id="qTl"><i aria-hidden="true"></i><span data-i18n="q_tl">উচ্চারণ দেখান (ইংরেজি অক্ষরে)</span></label>
         <span class="q-size" role="group" aria-label="Text size">
@@ -1152,8 +1163,9 @@
     <div class="q-now" id="qNow" hidden>
       <div class="q-now-row">
         <span class="q-now-t" id="qNowT"></span>
-        <button type="button" class="q-rb sm q-end" data-qend></button>
+        <button type="button" class="q-rb sm" id="qBPrev" aria-label="⏮"><span aria-hidden="true">⏮</span></button>
         <button type="button" class="q-rb sm" id="qPause"></button>
+        <button type="button" class="q-rb sm" id="qBNext" aria-label="⏭"><span aria-hidden="true">⏭</span></button>
         <button type="button" class="q-rb sm" id="qStop"><span aria-hidden="true">⏹</span></button>
       </div>
       <div class="q-prog"><i id="qProg"></i></div>
@@ -1358,7 +1370,7 @@ const I18N = {
     q_v_book: "Book view (like a printed Quran)", q_v_list: "List view", bk_page: "Page {p}", bk_of: "{i} of {n} in this surah", bk_next: "Next page", bk_prev: "Previous page", bk_next_s: "Next surah",
     q_tl: "Show pronunciation", q_tl_src: " · Pronunciation: Quran.com",
     q_s_ar: "Arabic", q_s_both: "Arabic + meaning", q_s_tr: "Meaning", q_seq_t: "Verse by verse", q_whole: "Play the whole surah (one recording)",
-    q_end_stop: "At the end of the surah: stop", q_end_repeat: "At the end of the surah: repeat it", q_end_next: "At the end of the surah: go on to the next one",
+    q_end_stop: "At the end of the surah: stop", q_end_repeat: "At the end of the surah: repeat it", q_end_next: "At the end of the surah: go on to the next one", q_endc: "When the surah ends:", q_ev_next: "next surah", q_ev_repeat: "repeat it", q_ev_stop: "stop",
     ml_title: "🍽 Meals at the masjid", ml_lead: "Please register before the time shown, so the masjid can cook the right amount. Your name and phone number are seen only by the organizers.", ml_today: "Today", ml_tomorrow: "Tomorrow", ml_dl: "Register by {d}", ml_closed: "Registration closed", ml_people: "{n} people", ml_mine: "✓ You are registered: {a} aged 7+{k} — {m}", ml_kids: ", {k} under 7", ml_reg: "✍️ Register", ml_edit: "✏️ Change", ml_cancel: "✕ Cancel", ml_cancel_q: "Cancel your registration for this day?", ml_name: "Name", ml_phone: "Phone number", ml_phone_h: "Japanese phone number — only the organizers see it", ml_a: "Age 7 and over (with you)", ml_k: "Children under 7", ml_meals: "Which meals", ml_all: "Same for the other open days ({n})", ml_save: "Save", ml_saved: "✓ Saved. Jazakallahu khairan!", ml_err_name: "Please write your name.", ml_err_phone: "Please check the phone number (e.g. 090-1234-5678).", ml_err_count: "Please check the number of people and choose at least one meal.", ml_err_closed: "Registration for this day is closed.", ml_err: "Something went wrong. Please check the connection and try again.", m_sehri: "Sehri", m_lunch: "Lunch", m_iftar: "Iftar", m_dinner: "Dinner", ml_test: "TEST", ad_meal: "🍽 Meals", mo_new: "➕ New day", mo_ram: "🌙 Make all Ramadan days", mo_ram_q: "Ramadan {y}: {a} – {b} ({n} days). Every day: Sehri, Iftar, Dinner; registration until {t} the same day. Days that already exist are skipped. Make them?", mo_ram_none: "Could not work out Ramadan on this phone.", mo_date: "Date", mo_meals: "Meals", mo_custom: "Other (name)", mo_dl: "Registration closes", mo_same: "the same day", mo_before: "the day before", mo_note: "Note (optional)", mo_test: "Test only — only people with the test link see it", mo_notice: "Also post a notice (with notification)", mo_save: "Save", mo_list: "👥 Names", mo_print: "🖨 Print", mo_del: "🗑 Delete", mo_del_q: "Delete this day and its names?", mo_link: "🔗 Copy test link", mo_copied: "✓ Copied", mo_none: "No days yet. Make one with ➕.", mo_regs: "{n} registrations", mo_sent: "✓ Sent to the organizers", mo_made: "✓ Made: {n} day(s)", mo_dup: "⚠ same phone twice", mo_edit: "✏️ Change", mo_aged: "7+", mo_kid: "<7",
     to_top: "Back to top",
     th_auto: "🌓 Auto", th_light: "☀️ Day", th_dark: "🌙 Night", th_hint: "Colours: tap to switch (Auto follows the phone)",
@@ -1418,7 +1430,7 @@ const I18N = {
     q_v_book: "本の形で表示（印刷版のように）", q_v_list: "一覧で表示", bk_page: "{p}ページ", bk_of: "このスーラの {i}/{n}", bk_next: "次のページ", bk_prev: "前のページ", bk_next_s: "次のスーラ",
     q_tl: "読み方を表示（ローマ字）", q_tl_src: " · 読み方：Quran.com",
     q_s_ar: "アラビア語", q_s_both: "アラビア語＋訳", q_s_tr: "訳のみ", q_seq_t: "1節ずつ再生", q_whole: "スーラ全体を再生",
-    q_end_stop: "スーラの終わりで停止", q_end_repeat: "スーラを繰り返し再生", q_end_next: "終わったら次のスーラへ",
+    q_end_stop: "スーラの終わりで停止", q_end_repeat: "スーラを繰り返し再生", q_end_next: "終わったら次のスーラへ", q_endc: "スーラが終わったら：", q_ev_next: "次のスーラ", q_ev_repeat: "もう一度", q_ev_stop: "停止",
     ml_title: "🍽 マスジドでの食事", ml_lead: "表示の時刻までに申し込んでください。人数に合わせて準備します。お名前と電話番号は担当者だけが見ます。", ml_today: "今日", ml_tomorrow: "明日", ml_dl: "締切：{d}", ml_closed: "受付終了", ml_people: "{n}人", ml_mine: "✓ 申込済み：7歳以上 {a}人{k} — {m}", ml_kids: "、7歳未満 {k}人", ml_reg: "✍️ 申し込む", ml_edit: "✏️ 変更", ml_cancel: "✕ 取り消し", ml_cancel_q: "この日の申し込みを取り消しますか？", ml_name: "お名前", ml_phone: "電話番号", ml_phone_h: "日本の電話番号（担当者だけが見ます）", ml_a: "7歳以上（ご本人を含む）", ml_k: "7歳未満の子ども", ml_meals: "食事", ml_all: "ほかの受付中の日も同じ内容で（{n}日）", ml_save: "保存", ml_saved: "✓ 保存しました。ありがとうございます。", ml_err_name: "お名前を入力してください。", ml_err_phone: "電話番号を確認してください（例：090-1234-5678）。", ml_err_count: "人数を確認し、食事を1つ以上選んでください。", ml_err_closed: "この日の受付は終了しました。", ml_err: "問題が発生しました。接続を確認してもう一度お試しください。", m_sehri: "サフール", m_lunch: "昼食", m_iftar: "イフタール", m_dinner: "夕食", ml_test: "テスト", ad_meal: "🍽 食事", mo_new: "➕ 新しい日", mo_ram: "🌙 ラマダンの全日程を作成", mo_ram_q: "ラマダン {y}：{a}〜{b}（{n}日）。毎日サフール・イフタール・夕食、締切は当日 {t}。作成済みの日は飛ばします。作成しますか？", mo_ram_none: "この端末ではラマダンの日付を計算できませんでした。", mo_date: "日付", mo_meals: "食事", mo_custom: "その他（名前）", mo_dl: "締切", mo_same: "当日", mo_before: "前日", mo_note: "メモ（任意）", mo_test: "テストのみ — テスト用リンクを持つ人だけに表示", mo_notice: "お知らせも出す（通知あり）", mo_save: "保存", mo_list: "👥 名簿", mo_print: "🖨 印刷", mo_del: "🗑 削除", mo_del_q: "この日と名簿を削除しますか？", mo_link: "🔗 テスト用リンクをコピー", mo_copied: "✓ コピーしました", mo_none: "まだありません。➕ から作成してください。", mo_regs: "{n}件", mo_sent: "✓ 担当者に送信済み", mo_made: "✓ 作成：{n}日", mo_dup: "⚠ 同じ電話番号が2回", mo_edit: "✏️ 変更", mo_aged: "7歳以上", mo_kid: "7歳未満",
     to_top: "ページの先頭へ",
     th_auto: "🌓 自動", th_light: "☀️ ライト", th_dark: "🌙 ダーク", th_hint: "表示の明るさ：タップで切り替え（自動は端末の設定どおり）",
@@ -1478,7 +1490,7 @@ const I18N = {
     q_v_book: "বইয়ের মতো দেখান (ছাপা কুরআনের মতো)", q_v_list: "তালিকা আকারে দেখান", bk_page: "পৃষ্ঠা {p}", bk_of: "এই সূরার {i} / {n}", bk_next: "পরের পৃষ্ঠা", bk_prev: "আগের পৃষ্ঠা", bk_next_s: "পরের সূরা",
     q_tl: "উচ্চারণ দেখান (ইংরেজি অক্ষরে)", q_tl_src: " · উচ্চারণ: Quran.com",
     q_s_ar: "আরবি", q_s_both: "আরবি + অর্থ", q_s_tr: "শুধু অর্থ", q_seq_t: "আয়াত ধরে ধরে শুনুন", q_whole: "পুরো সূরা একটানা শুনুন",
-    q_end_stop: "সূরা শেষ হলে থামবে", q_end_repeat: "একই সূরা আবার শুরু হবে", q_end_next: "সূরা শেষ হলে পরের সূরা চলবে",
+    q_end_stop: "সূরা শেষ হলে থামবে", q_end_repeat: "একই সূরা আবার শুরু হবে", q_end_next: "সূরা শেষ হলে পরের সূরা চলবে", q_endc: "সূরা শেষে:", q_ev_next: "পরের সূরা", q_ev_repeat: "আবার এই সূরা", q_ev_stop: "থামবে",
     ml_title: "🍽 মসজিদে খাবার", ml_lead: "দেখানো সময়ের আগে নাম দিন, যাতে মসজিদ ঠিক পরিমাণ রান্না করতে পারে। নাম আর ফোন নম্বর শুধু আয়োজকরা দেখেন।", ml_today: "আজ", ml_tomorrow: "আগামীকাল", ml_dl: "নাম দেওয়ার শেষ সময়: {d}", ml_closed: "নাম দেওয়া বন্ধ", ml_people: "{n} জন", ml_mine: "✓ আপনার নাম আছে: ৭ বছর বা বেশি {a} জন{k} — {m}", ml_kids: ", ৭-এর কম {k} জন", ml_reg: "✍️ নাম দিন", ml_edit: "✏️ বদলান", ml_cancel: "✕ বাতিল", ml_cancel_q: "এই দিনের নাম বাতিল করবেন?", ml_name: "নাম", ml_phone: "ফোন নম্বর", ml_phone_h: "জাপানের ফোন নম্বর — শুধু আয়োজকরা দেখবেন", ml_a: "৭ বছর বা তার বেশি (আপনিসহ)", ml_k: "৭ বছরের কম বাচ্চা", ml_meals: "কোন বেলা", ml_all: "অন্য খোলা দিনগুলোতেও একই ({n} দিন)", ml_save: "জমা দিন", ml_saved: "✓ জমা হয়েছে। জাযাকাল্লাহু খাইরান!", ml_err_name: "নাম লিখুন।", ml_err_phone: "ফোন নম্বর দেখুন (যেমন 090-1234-5678)।", ml_err_count: "কতজন দেখুন, আর অন্তত একটা বেলা বাছুন।", ml_err_closed: "এই দিনের নাম দেওয়া বন্ধ হয়ে গেছে।", ml_err: "কিছু একটা সমস্যা হয়েছে। ইন্টারনেট দেখে আবার চেষ্টা করুন।", m_sehri: "সেহরি", m_lunch: "দুপুরের খাবার", m_iftar: "ইফতার", m_dinner: "রাতের খাবার", ml_test: "পরীক্ষা", ad_meal: "🍽 আয়োজন", mo_new: "➕ নতুন দিন", mo_ram: "🌙 রমজানের সব দিন বানাও", mo_ram_q: "রমজান {y}: {a} – {b} ({n} দিন)। প্রতিদিন সেহরি, ইফতার, ডিনার; নাম দেওয়া যাবে সেদিন {t} পর্যন্ত। আগে থেকে থাকা দিন বাদ যাবে। বানাবো?", mo_ram_none: "এই ফোনে রমজানের তারিখ বের করা গেল না।", mo_date: "তারিখ", mo_meals: "কোন বেলা", mo_custom: "অন্য (নাম লিখুন)", mo_dl: "নাম দেওয়ার শেষ সময়", mo_same: "সেদিন", mo_before: "আগের দিন", mo_note: "ছোট লেখা (ইচ্ছা হলে)", mo_test: "শুধু পরীক্ষা — পরীক্ষার লিংক ছাড়া কেউ দেখবে না", mo_notice: "সাথে নোটিশও দাও (নোটিফিকেশনসহ)", mo_save: "জমা দিন", mo_list: "👥 নামের তালিকা", mo_print: "🖨 প্রিন্ট", mo_del: "🗑 মুছুন", mo_del_q: "এই দিন আর এর নামগুলো মুছে ফেলবেন?", mo_link: "🔗 পরীক্ষার লিংক কপি", mo_copied: "✓ কপি হয়েছে", mo_none: "এখনো কোনো দিন নেই। ➕ দিয়ে বানান।", mo_regs: "{n}টি নাম", mo_sent: "✓ আয়োজকদের কাছে পাঠানো হয়েছে", mo_made: "✓ বানানো হলো: {n} দিন", mo_dup: "⚠ একই ফোন দুবার", mo_edit: "✏️ বদলান", mo_aged: "৭+", mo_kid: "<৭",
     to_top: "একদম উপরে যান",
     th_auto: "🌓 অটো", th_light: "☀️ দিন", th_dark: "🌙 রাত", th_hint: "রং: চাপ দিয়ে বদলান (অটো = ফোনের সেটিং)",
@@ -1536,7 +1548,7 @@ const I18N = {
     q_v_book: "کتاب کی طرح دکھائیں (چھپے قرآن کی طرح)", q_v_list: "فہرست کی صورت میں", bk_page: "صفحہ {p}", bk_of: "اس سورت کا {i} / {n}", bk_next: "اگلا صفحہ", bk_prev: "پچھلا صفحہ", bk_next_s: "اگلی سورت",
     q_tl: "تلفظ دکھائیں (انگریزی حروف میں)", q_tl_src: " · تلفظ: Quran.com",
     q_s_ar: "عربی", q_s_both: "عربی + ترجمہ", q_s_tr: "صرف ترجمہ", q_seq_t: "آیت بہ آیت سنیں", q_whole: "پوری سورت ایک ساتھ سنیں",
-    q_end_stop: "سورت ختم ہونے پر رک جائے", q_end_repeat: "یہی سورت دوبارہ چلے", q_end_next: "سورت ختم ہونے پر اگلی سورت چلے",
+    q_end_stop: "سورت ختم ہونے پر رک جائے", q_end_repeat: "یہی سورت دوبارہ چلے", q_end_next: "سورت ختم ہونے پر اگلی سورت چلے", q_endc: "سورت ختم ہونے پر:", q_ev_next: "اگلی سورت", q_ev_repeat: "یہی دوبارہ", q_ev_stop: "رک جائے",
     ml_title: "🍽 مسجد میں کھانا", ml_lead: "دیے گئے وقت سے پہلے نام لکھوائیں تاکہ مسجد صحیح مقدار میں کھانا بنا سکے۔ نام اور فون نمبر صرف منتظمین دیکھتے ہیں۔", ml_today: "آج", ml_tomorrow: "کل", ml_dl: "آخری وقت: {d}", ml_closed: "اندراج بند", ml_people: "{n} افراد", ml_mine: "✓ آپ کا نام درج ہے: 7 سال یا زیادہ {a}{k} — {m}", ml_kids: "، 7 سے کم {k}", ml_reg: "✍️ نام لکھوائیں", ml_edit: "✏️ تبدیل", ml_cancel: "✕ منسوخ", ml_cancel_q: "اس دن کا اندراج منسوخ کریں؟", ml_name: "نام", ml_phone: "فون نمبر", ml_phone_h: "جاپان کا فون نمبر — صرف منتظمین دیکھیں گے", ml_a: "7 سال یا زیادہ (آپ سمیت)", ml_k: "7 سال سے کم بچے", ml_meals: "کون سا کھانا", ml_all: "باقی کھلے دنوں کے لیے بھی یہی ({n})", ml_save: "جمع کریں", ml_saved: "✓ جمع ہو گیا۔ جزاک اللہ خیراً!", ml_err_name: "نام لکھیں۔", ml_err_phone: "فون نمبر دیکھیں (مثلاً 090-1234-5678)۔", ml_err_count: "افراد کی تعداد دیکھیں اور کم از کم ایک کھانا چنیں۔", ml_err_closed: "اس دن کا اندراج بند ہو گیا۔", ml_err: "کچھ مسئلہ ہوا۔ انٹرنیٹ دیکھ کر دوبارہ کوشش کریں۔", m_sehri: "سحری", m_lunch: "دوپہر کا کھانا", m_iftar: "افطار", m_dinner: "رات کا کھانا", ml_test: "ٹیسٹ",
     to_top: "اوپر جائیں",
     th_auto: "🌓 خودکار", th_light: "☀️ دن", th_dark: "🌙 رات", th_hint: "رنگ: بدلنے کے لیے ٹیپ کریں (خودکار = فون کی سیٹنگ)",
@@ -1594,7 +1606,7 @@ const I18N = {
     q_v_book: "किताब की तरह दिखाएँ (छपे क़ुरआन जैसा)", q_v_list: "सूची के रूप में", bk_page: "पृष्ठ {p}", bk_of: "इस सूरह का {i} / {n}", bk_next: "अगला पृष्ठ", bk_prev: "पिछला पृष्ठ", bk_next_s: "अगली सूरह",
     q_tl: "उच्चारण दिखाएँ (अंग्रेज़ी अक्षरों में)", q_tl_src: " · उच्चारण: Quran.com",
     q_s_ar: "अरबी", q_s_both: "अरबी + अनुवाद", q_s_tr: "सिर्फ़ अनुवाद", q_seq_t: "आयत-दर-आयत सुनें", q_whole: "पूरी सूरह एक साथ सुनें",
-    q_end_stop: "सूरह ख़त्म होने पर रुक जाए", q_end_repeat: "यही सूरह फिर से चले", q_end_next: "सूरह ख़त्म होने पर अगली सूरह चले",
+    q_end_stop: "सूरह ख़त्म होने पर रुक जाए", q_end_repeat: "यही सूरह फिर से चले", q_end_next: "सूरह ख़त्म होने पर अगली सूरह चले", q_endc: "सूरह ख़त्म होने पर:", q_ev_next: "अगली सूरह", q_ev_repeat: "यही दोबारा", q_ev_stop: "रुक जाए",
     ml_title: "🍽 मस्जिद में खाना", ml_lead: "दिए गए समय से पहले नाम लिखवाएँ ताकि मस्जिद सही मात्रा में खाना बना सके। नाम और फ़ोन नंबर सिर्फ़ आयोजक देखते हैं।", ml_today: "आज", ml_tomorrow: "कल", ml_dl: "आख़िरी समय: {d}", ml_closed: "नाम लिखवाना बंद", ml_people: "{n} लोग", ml_mine: "✓ आपका नाम है: 7 साल या ज़्यादा {a}{k} — {m}", ml_kids: ", 7 से कम {k}", ml_reg: "✍️ नाम लिखवाएँ", ml_edit: "✏️ बदलें", ml_cancel: "✕ रद्द", ml_cancel_q: "इस दिन का नाम रद्द करें?", ml_name: "नाम", ml_phone: "फ़ोन नंबर", ml_phone_h: "जापान का फ़ोन नंबर — सिर्फ़ आयोजक देखेंगे", ml_a: "7 साल या ज़्यादा (आप समेत)", ml_k: "7 साल से कम बच्चे", ml_meals: "कौन सा खाना", ml_all: "बाक़ी खुले दिनों के लिए भी यही ({n})", ml_save: "जमा करें", ml_saved: "✓ जमा हो गया। जज़ाकल्लाहु ख़ैरन!", ml_err_name: "नाम लिखें।", ml_err_phone: "फ़ोन नंबर देखें (जैसे 090-1234-5678)।", ml_err_count: "लोगों की संख्या देखें और कम से कम एक खाना चुनें।", ml_err_closed: "इस दिन का नाम लिखवाना बंद हो गया।", ml_err: "कुछ गड़बड़ हुई। इंटरनेट देखकर फिर कोशिश करें।", m_sehri: "सहरी", m_lunch: "दोपहर का खाना", m_iftar: "इफ़्तार", m_dinner: "रात का खाना", ml_test: "टेस्ट",
     to_top: "ऊपर जाएँ",
     th_auto: "🌓 ऑटो", th_light: "☀️ दिन", th_dark: "🌙 रात", th_hint: "रंग: बदलने के लिए टैप करें (ऑटो = फ़ोन की सेटिंग)",
@@ -1652,7 +1664,7 @@ const I18N = {
     q_v_book: "عرض المصحف", q_v_list: "عرض القائمة", bk_page: "صفحة {p}", bk_of: "{i} من {n} في هذه السورة", bk_next: "الصفحة التالية", bk_prev: "الصفحة السابقة", bk_next_s: "السورة التالية",
     q_tl: "إظهار النطق بالحروف اللاتينية", q_tl_src: " · النطق: Quran.com",
     q_s_ar: "التلاوة", q_s_both: "التلاوة", q_s_tr: "التلاوة", q_seq_t: "آية آية", q_whole: "السورة كاملة",
-    q_end_stop: "التوقف عند نهاية السورة", q_end_repeat: "تكرار السورة", q_end_next: "الانتقال إلى السورة التالية",
+    q_end_stop: "التوقف عند نهاية السورة", q_end_repeat: "تكرار السورة", q_end_next: "الانتقال إلى السورة التالية", q_endc: "عند انتهاء السورة:", q_ev_next: "السورة التالية", q_ev_repeat: "إعادتها", q_ev_stop: "التوقف",
     ml_title: "🍽 الطعام في المسجد", ml_lead: "يُرجى التسجيل قبل الموعد المذكور ليُعدّ المسجد الكمية المناسبة. لا يرى الاسم ورقم الهاتف إلا المنظمون.", ml_today: "اليوم", ml_tomorrow: "غدًا", ml_dl: "آخر موعد: {d}", ml_closed: "انتهى التسجيل", ml_people: "{n} أشخاص", ml_mine: "✓ أنت مسجّل: 7 سنوات فأكثر {a}{k} — {m}", ml_kids: "، أقل من 7: {k}", ml_reg: "✍️ سجّل", ml_edit: "✏️ تعديل", ml_cancel: "✕ إلغاء", ml_cancel_q: "إلغاء التسجيل لهذا اليوم؟", ml_name: "الاسم", ml_phone: "رقم الهاتف", ml_phone_h: "رقم هاتف ياباني — لا يراه إلا المنظمون", ml_a: "7 سنوات فأكثر (معك)", ml_k: "أطفال دون 7 سنوات", ml_meals: "الوجبات", ml_all: "نفس التسجيل للأيام المفتوحة الأخرى ({n})", ml_save: "حفظ", ml_saved: "✓ تم الحفظ. جزاكم الله خيرًا!", ml_err_name: "يُرجى كتابة الاسم.", ml_err_phone: "يُرجى التحقق من رقم الهاتف (مثل 090-1234-5678).", ml_err_count: "يُرجى التحقق من العدد واختيار وجبة واحدة على الأقل.", ml_err_closed: "انتهى التسجيل لهذا اليوم.", ml_err: "حدث خطأ. تحقّق من الاتصال وحاول مرة أخرى.", m_sehri: "السحور", m_lunch: "الغداء", m_iftar: "الإفطار", m_dinner: "العشاء", ml_test: "تجربة",
     to_top: "العودة إلى الأعلى",
     th_auto: "🌓 تلقائي", th_light: "☀️ نهاري", th_dark: "🌙 ليلي", th_hint: "الألوان: اضغط للتبديل (تلقائي = إعداد الهاتف)",
@@ -2150,7 +2162,7 @@ function renderCal() {
     if (ZK.guard) { ZK.guard = false; ZK.media(); if (!qOn()) silOff(); return; }
     if (!ZK.active()) {   // the dhikr has let go: the Quran's verses
       ZK.media();
-      try { if (q.mode === "ayah") qPlayAyah(d > 0 ? q.ayah + 1 : Math.max(1, q.ayah - 1)); } catch {}
+      try { qStep(d > 0 ? 1 : -1); } catch {}
       return;
     }
     count(d);
@@ -3147,16 +3159,17 @@ function qLabels() {
   set("qSeq", "q_seq"); set("qPlay", "q_whole"); set("qStop", "q_stop");
   // Bangla meaning = the whole surah in one go: the big button says so (not "verse by verse")
   const st = document.querySelector(".q-main-t b");
-  if (st) { st.dataset.i18n = qContOn() ? "q_seq_cont" : "q_seq_t"; st.textContent = T(st.dataset.i18n); }
+  if (st) { st.dataset.i18n = qContOn() ? "q_seq_cont" : "q_seq_t"; if (!q.mode) st.textContent = T(st.dataset.i18n); }
   const v = $q("qLsn") ? $q("qLsn").value : "ar";
   document.querySelectorAll(".q-seg [data-l]").forEach(b => b.setAttribute("aria-pressed", b.dataset.l === v ? "true" : "false"));
   const nm = $q("qSurahName");
-  if (nm && q.list && q.list[q.surah - 1]) { const x = q.list[q.surah - 1]; nm.textContent = `${localDigits(String(x.number))}. ${x.englishName} · ${x.name.replace(/^سُورَةُ\s*/, "")}`; }
+  if (nm && q.list && q.list[q.surah - 1] && !q.mode) { const x = q.list[q.surah - 1]; nm.textContent = `${localDigits(String(x.number))}. ${x.englishName} · ${x.name.replace(/^سُورَةُ\s*/, "")}`; }
 }
 function qEndDraw() {
   qLabels();
   document.querySelectorAll("[data-qend]").forEach(b => {
-    b.dataset.v = q.end; b.textContent = Q_END[q.end];
+    b.dataset.v = q.end;
+    b.textContent = T("q_endc") + " "; const v = document.createElement("b"); v.textContent = T("q_ev_" + q.end); b.appendChild(v);
     b.title = T("q_end_" + q.end); b.setAttribute("aria-label", T("q_end_" + q.end));
   });
 }
@@ -3516,8 +3529,8 @@ function qMark() {
   qSession();
   document.querySelectorAll(".q-ay.on, .bk-v.on, .bk-ay.on").forEach(e => e.classList.remove("on"));
   document.querySelectorAll(".q-tr.say").forEach(e => e.classList.remove("say"));
-  const bar = $q("qNow");
-  if (q.mode !== "ayah" || !q.ayah) { if (bar) bar.hidden = true; return; }
+  qBar();
+  if (q.mode !== "ayah" || !q.ayah) return;
   if (q.view === "book" && q.ar[q.surah]) {
     const pages = qPages(q.surah), want = pages.findIndex(p => p.a.includes(q.ayah));
     if (want > -1 && want !== q.bk) bookShow(want, want > q.bk ? 1 : -1);
@@ -3538,14 +3551,46 @@ function qMark() {
     const list = $q("qList"), top = el.offsetTop - list.offsetTop;
     if (top < list.scrollTop || top + el.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTo({ top: Math.max(0, top - 12), behavior: "smooth" });
   }
-  if (bar) {
-    bar.hidden = false;
+}
+// what plays shows on the buttons: ⏮ ⏯ ⏭ ⏹ while playing, ▶ 🎧 when not; the mini player only while the big one is out of sight
+function qBar() {
+  const bar = $q("qNow"), au = $q("qAudio"); if (!bar) return;
+  const on = !!q.mode && !q.read, n = q.ar[q.surah] ? q.ar[q.surah].length : 0, x = q.list && q.list[q.surah - 1];
+  ["qPrev", "qNext", "qStopM"].forEach(id => { const b = $q(id); if (b) b.hidden = !on; });
+  if ($q("qPlay")) $q("qPlay").hidden = on;
+  const verse = q.mode === "ayah" && q.ayah ? T("q_now").replace("{n}", localDigits(String(q.ayah))).replace("{t}", localDigits(String(n))) : "";
+  const sname = x ? localDigits(String(x.number)) + ". " + x.englishName : "";
+  // while playing, the words beside the big button say where it is (verse n / t · surah); when not, what it will do
+  const nm = $q("qSurahName"), lab = document.querySelector(".q-main-t b");
+  // beside the big button: "12 / 286" big, "verse · Al-Baqara" small (short enough for one line with ⏮ ⏭ ⏹)
+  let vw = T("q_now").replace(/\{n\}.*$/, "").trim(); if (vw.includes("{")) vw = "";   // "Verse", "আয়াত"… (Japanese: none)
+  if (lab) lab.textContent = on ? (verse ? localDigits(q.ayah + " / " + n) : sname) : T(lab.dataset.i18n || "q_seq_t");
+  if (nm && x) nm.textContent = on ? (verse ? vw || x.englishName : T(q.cont ? "q_seq_cont" : "q_whole").replace(/^🎧\s*/, "")) : `${localDigits(String(x.number))}. ${x.englishName} · ${x.name.replace(/^سُورَةُ\s*/, "")}`;
+  const qmn = document.querySelector("#quran .q-main"); if (qmn) qmn.classList.toggle("on", on);
+  bar.hidden = !(on && q.mainOut);
+  document.body.classList.toggle("q-mini", !bar.hidden);
+  $q("qNowT").textContent = verse || sname;
+  const pb = $q("qPause");
+  pb.textContent = q.paused ? "▶" : "⏸"; pb.title = T(q.paused ? "q_resume" : "q_pause"); pb.setAttribute("aria-label", pb.title);
+  const pr = $q("qProg");
+  if (pr) pr.style.width = (q.mode === "ayah" ? (n ? Math.round(q.ayah / n * 100) : 0) : (au.duration ? Math.round(au.currentTime / au.duration * 100) : 0)) + "%";
+}
+// ⏮ ⏭: the verse before / after; with a whole-surah recording, the surah before / after
+function qStep(d) {
+  const au = $q("qAudio");
+  if (q.mode === "ayah") {
     const n = q.ar[q.surah] ? q.ar[q.surah].length : 0;
-    $q("qNowT").textContent = T("q_now").replace("{n}", localDigits(String(q.ayah))).replace("{t}", localDigits(String(n)));
-    const pb = $q("qPause");
-    pb.textContent = q.paused ? "▶" : "⏸"; pb.title = T(q.paused ? "q_resume" : "q_pause"); pb.setAttribute("aria-label", pb.title);
-    const pr = $q("qProg"); if (pr) pr.style.width = (n ? Math.round(q.ayah / n * 100) : 0) + "%";
+    if (d < 0) return qPlayAyah(Math.max(1, q.ayah - 1));
+    if (q.ayah < n) return qPlayAyah(q.ayah + 1);
+    if (q.surah >= 114) return;
+    qStopAll(); qGoSurah(q.surah + 1); q.bk = 0; q.after = "ayah"; q.mode = "ayah"; q.ayah = 0; quranLoad();
+    return;
   }
+  if (q.mode !== "surah") return;
+  const s = q.surah + d; if (s < 1 || s > 114) return;
+  qGoSurah(s); q.bk = 0; quranLoad();
+  if (q.cont) { qContPlay(); return; }
+  q.src = 0; q.paused = false; au.src = qSurahUrl(0, s); au.play().catch(() => {}); qMark();
 }
 // pause / go on — from exactly where it was; if the sound had not come yet, it is asked again
 function qToggle() {
@@ -3563,7 +3608,7 @@ function qToggle() {
 // lock screen / headphones: ⏸ ▶ and the next / previous verse
 const Q_ART = [{ src: "/icon-192.png", sizes: "192x192", type: "image/png" }, { src: "/icon-512.png", sizes: "512x512", type: "image/png" }];
 function qSession() {
-  const sb = $q("qSeq"); if (sb && sb.firstElementChild) sb.firstElementChild.textContent = (q.mode === "ayah" || (q.mode === "surah" && q.cont)) && !q.paused ? "⏸" : "▶";
+  const sb = $q("qSeq"); if (sb && sb.firstElementChild) sb.firstElementChild.textContent = q.mode && !q.paused ? "⏸" : "▶";
   if (!("mediaSession" in navigator) || !q.mode) { if (window.ZK && !q.mode) ZK.media(); return; }
   const ms = navigator.mediaSession, x = q.list && q.list[q.surah - 1], au = $q("qAudio");
   const zk = window.ZK && ZK.active();
@@ -3571,8 +3616,8 @@ function qSession() {
     ms.metadata = new MediaMetadata({ title: (x ? x.number + ". " + x.englishName : "Quran") + (zk ? " · 📿 " + ZK.label() : q.mode === "ayah" && q.ayah ? " · " + q.ayah : ""), artist: q.cont ? "Mishary Alafasy" : Q_REC[qRc].en, album: "Quran", artwork: Q_ART });
     ms.setActionHandler("play", () => { if (q.mode === "surah") { au.play().catch(() => {}); q.paused = false; qMark(); } else if (q.paused) qToggle(); });
     ms.setActionHandler("pause", () => { if (q.mode === "surah") { au.pause(); q.paused = true; qMark(); } else if (!q.paused) qToggle(); });
-    ms.setActionHandler("nexttrack", zk ? () => ZK.lock(1) : q.mode === "ayah" ? () => qPlayAyah(q.ayah + 1) : null);
-    ms.setActionHandler("previoustrack", zk ? () => ZK.lock(-1) : q.mode === "ayah" ? () => qPlayAyah(Math.max(1, q.ayah - 1)) : null);
+    ms.setActionHandler("nexttrack", zk ? () => ZK.lock(1) : () => qStep(1));
+    ms.setActionHandler("previoustrack", zk ? () => ZK.lock(-1) : () => qStep(-1));
   } catch {}
 }
 function qStopAll() {
@@ -3736,12 +3781,22 @@ function qPlayAyah(a, phase) {
   setTimeout(qVoiceNote, 800);
   $q("qSeq").addEventListener("click", () => {
     quranStart();
-    if (q.mode === "ayah" || (q.mode === "surah" && q.cont)) { qToggle(); return; }
+    if (q.mode) { qToggle(); return; }
     if (qContOn()) { qContPlay(); return; }
     qPlayAyah(1);
   });
   $q("qPause").addEventListener("click", qToggle);
-  $q("qStop").addEventListener("click", qStopAll);
+  [["qPrev", -1], ["qNext", 1], ["qBPrev", -1], ["qBNext", 1]].forEach(([id, d]) => { const b = $q(id); if (b) b.addEventListener("click", () => qStep(d)); });
+  $q("qStopM").addEventListener("click", () => { qStopAll(); au.pause(); au.hidden = true; });
+  // the mini player shows only while the big player is out of sight
+  q.mainOut = false;
+  const qm = document.querySelector("#quran .q-main");
+  if (qm && "IntersectionObserver" in window) new IntersectionObserver(es => { q.mainOut = es[0].intersectionRatio < 0.6; qBar(); },
+    { rootMargin: "-64px 0px 0px 0px", threshold: [0, 0.6, 1] }).observe(qm);   // the top bar covers ~56px: half hidden under it = out of sight
+  // whole-surah recording: the bar's line follows the time; its own ⏸ (lock screen, headphones) shows on the buttons
+  au.addEventListener("timeupdate", () => { if (q.mode === "surah" && !$q("qNow").hidden) qBar(); });
+  au.addEventListener("pause", () => { if (q.mode === "surah" && !au.ended && !q.paused) { q.paused = true; qMark(); } });
+  $q("qStop").addEventListener("click", () => { qStopAll(); au.pause(); au.hidden = true; });
   // text size
   let qz = Math.min(1.6, Math.max(0.85, +(store.get("q_z") || 1)));
   const setZ = z => { qz = Math.round(Math.min(1.6, Math.max(0.85, z)) * 100) / 100; $q("qList").style.setProperty("--qz", qz); store.set("q_z", String(qz)); if (q.view === "book" && q.ar[q.surah]) qBusy(() => { bookDraw(); qMark(); }); };
@@ -3811,7 +3866,7 @@ function qPlayAyah(a, phase) {
   document.querySelectorAll("[data-qend]").forEach(b => b.addEventListener("click", () => {
     const order = ["stop", "repeat", "next"];
     q.end = order[(order.indexOf(q.end) + 1) % order.length];
-    store.set("q_end", q.end); qEndDraw(); qTip(Q_END[q.end] + " " + T("q_end_" + q.end));
+    store.set("q_end", q.end); qEndDraw();
   }));
   $q("qList").addEventListener("click", e => {
     const bk = e.target.closest("[data-bk]");

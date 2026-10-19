@@ -834,8 +834,8 @@
   .q-now { position: sticky; top: 56px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 8px; padding: 8px 10px; border-radius: 12px; background: var(--green); color: #fff; box-shadow: var(--shadow); }
   .q-now-t { flex: 1 1 auto; min-width: 0; font-weight: 700; font-size: .92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   /* mini player: at the foot of the screen while the big player is scrolled away (one ⏯ in sight at a time) */
-  .q-now { position: fixed; top: auto; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 56; max-width: 560px; margin: 0 auto; box-shadow: 0 8px 24px rgba(0, 0, 0, .3); }
-  body.q-mini .to-top, body.q-mini .app-fab, body.q-mini .pend-pill { bottom: calc(86px + env(safe-area-inset-bottom)); }
+  .q-now { position: sticky; top: auto; bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 56; margin: 10px 0 0; box-shadow: 0 8px 24px rgba(0, 0, 0, .3); }
+  body.q-mini .to-top, body.q-mini .app-fab, body.q-mini .pend-pill { bottom: calc(140px + env(safe-area-inset-bottom)); }
   .q-main { gap: 8px; }
   .q-main.on .q-main-t b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
   .q-main .q-rb[hidden] { display: none; }
@@ -1161,7 +1161,9 @@
     <p class="note q-vn" id="qVn"></p>
     <p class="q-tip" id="qTip" aria-live="polite"></p>
     <audio class="q-audio" id="qAudio" controls preload="none" hidden></audio>
-    <div class="q-now" id="qNow" hidden>
+    <p class="note q-tapnote" style="margin:6px 0 10px" data-i18n="quran_tap">آیت پر ٹیپ کریں تو اس کی تلاوت سنائی دے گی۔</p>
+    <div class="q-list" id="qList"><p class="q-st" data-i18n="quran_loading">لوڈ ہو رہا ہے…</p></div>
+    <div class="q-now" id="qNow" hidden>   <!-- the mini player: at the end of the verses, held at the screen's foot (sticky) — it never leaves the Quran card -->
       <div class="q-now-row">
         <span class="q-now-t" id="qNowT"></span>
         <button type="button" class="q-rb sm" id="qBPrev" aria-label="⏮"><span aria-hidden="true">⏮</span></button>
@@ -1171,8 +1173,6 @@
       </div>
       <div class="q-prog"><i id="qProg"></i></div>
     </div>
-    <p class="note q-tapnote" style="margin:6px 0 10px" data-i18n="quran_tap">آیت پر ٹیپ کریں تو اس کی تلاوت سنائی دے گی۔</p>
-    <div class="q-list" id="qList"><p class="q-st" data-i18n="quran_loading">لوڈ ہو رہا ہے…</p></div>
     <p class="note"><span data-i18n="quran_src">عربی متن: Tanzil (بذریعہ alquran.cloud) · ترجمہ: فتح محمد جالندھری · تلاوت: مشاری العفاسی</span><span class="q-tl-src" data-i18n="q_tl_src"> · تلفظ: Quran.com</span></p>
   </section>
 
@@ -3865,7 +3865,7 @@ function qPlayAyah(a, phase) {
   // the mini player belongs to the Quran: it leaves when the Quran part of the page is scrolled away
   const qsec = document.getElementById("quran");
   if (qsec && "IntersectionObserver" in window) new IntersectionObserver(es => { q.secIn = es[0].isIntersecting; qBar(); },
-    { rootMargin: "-64px 0px -90px 0px" }).observe(qsec);   // the top bar covers ~56px: half hidden under it = out of sight
+    { rootMargin: "-64px 0px 0px 0px" }).observe(qsec);   // the top bar covers ~56px: half hidden under it = out of sight
   // whole-surah recording: the bar's line follows the time; its own ⏸ (lock screen, headphones) shows on the buttons
   au.addEventListener("timeupdate", () => { if (q.mode === "surah" && !$q("qNow").hidden) qBar(); });
   au.addEventListener("pause", () => { if (q.mode === "surah" && !au.ended && !q.paused) { q.paused = true; qMark(); } });

@@ -2265,7 +2265,7 @@ function renderCal() {
 // Starts after the page has loaded and the phone is idle — nothing here slows the page. No cookies; the
 // visitor is a random id kept on this phone. The area (country, city) once a day from the browser (GeoJS).
 (() => {
-  const ON = false;   // turned on once Site Monitor 1.8.0 is on iwate-bd.org (before it, these visits would mix into its own)
+  const ON = true;    // Site Monitor 1.8.0 is on iwate-bd.org (it keeps the two sites apart)
   if (!ON) return;
   const URL_T = "https://iwate-bd.org/wp-json/iwm/v1/t";
   const ua = navigator.userAgent || "";

@@ -4168,8 +4168,8 @@ const gomi = (function () {
   try { Object.assign(G, JSON.parse(store.get("gomi") || "{}")); } catch {}
   const save = () => store.set("gomi", JSON.stringify(G));
   let P = { open: false, msg: "", cands: null, city: "", cname: "", q: "", busy: false };   // the area picker
-  let cities = null, rer = () => {}, changed = () => {};
-  const hook = (render, sync) => { rer = render; changed = sync; };
+  let cities = null, rer = () => {}, changed = () => {}, pushOn = () => true;
+  const hook = (render, sync, isOn) => { rer = render; changed = sync; if (isOn) pushOn = isOn; };
 
   function getJ(u, key, ttl) {
     if (key) { try { const c = JSON.parse(store.get(key) || "null"); if (c && Date.now() - c.at < ttl) return Promise.resolve(c.d); } catch {} }
@@ -4378,9 +4378,10 @@ const gomi = (function () {
   function link(href) {
     try {
       const u = new URL(href);
-      ["gx_h", "gx_c", "gx_k", "gx_t"].forEach(k => u.searchParams.delete(k));
+      ["gx_h", "gx_c", "gx_k", "gx_t", "gx_on"].forEach(k => u.searchParams.delete(k));
       u.searchParams.set("gx_h", token());
       if (G.k) { u.searchParams.set("gx_c", G.c); u.searchParams.set("gx_k", G.k); u.searchParams.set("gx_t", G.tn || ""); }
+      u.searchParams.set("gx_on", G.on && G.k && pushOn() ? "1" : "0");   // the calendar says whether a reminder will come
       store.set("g_pend", String(Date.now()));
       return u.toString();
     } catch { return href; }
@@ -4649,7 +4650,7 @@ const notif = (function () {
 
   function start() {
     if (!box) return;
-    gomi.hook(render, sync);
+    gomi.hook(render, sync, () => !!sub);
     render();
     if (can && !(ios && !app)) getSub().then(s => {
       sub = s;

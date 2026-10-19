@@ -2260,6 +2260,73 @@ function renderCal() {
   });
 })();
 
+/* ===================== Visits: Japan Probashe's Site Monitor ===================== */
+// The same report as iwate-bd.org (admin → সাইট মনিটর), the pages under "/masjid/…" so they stand apart.
+// Starts after the page has loaded and the phone is idle — nothing here slows the page. No cookies; the
+// visitor is a random id kept on this phone. The area (country, city) once a day from the browser (GeoJS).
+(() => {
+  const ON = false;   // turned on once Site Monitor 1.8.0 is on iwate-bd.org (before it, these visits would mix into its own)
+  if (!ON) return;
+  const URL_T = "https://iwate-bd.org/wp-json/iwm/v1/t";
+  const ua = navigator.userAgent || "";
+  if (/bot|crawl|spider|headless|lighthouse/i.test(ua)) return;
+  const rid = () => { const a = "abcdefghijklmnopqrstuvwxyz0123456789"; let s = "", r = null; try { r = crypto.getRandomValues(new Uint8Array(16)); } catch {} for (let i = 0; i < 16; i++) s += a[(r ? r[i] : Math.floor(Math.random() * 256)) % 36]; return s; };
+  const keep = (st, k) => { try { const s = window[st]; let v = s.getItem(k); if (!v || v.length !== 16) { v = rid(); s.setItem(k, v); } return v; } catch { return rid(); } };
+  let fresh = false; try { fresh = !localStorage.getItem("iwm_vid"); } catch {}
+  const vid = keep("localStorage", "iwm_vid"), sid = keep("sessionStorage", "iwm_sid");
+  const dev = /SmartTV|Tizen|Web0S|WebOS|Android TV|GoogleTV/i.test(ua) ? "tv" : (/iPad|Tablet/i.test(ua) || (/Android/i.test(ua) && !/Mobile/i.test(ua))) ? "tablet" : /Mobi|iPhone|Android/i.test(ua) ? "mobile" : "desktop";
+  const pl = (/iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) ? "ios" : /Android/i.test(ua) ? "android" : "other";
+  let app = 0; try { app = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true ? 1 : 0; } catch {}
+  const os = pl !== "other" ? pl : /Windows/.test(ua) ? "windows" : /Macintosh/.test(ua) ? "mac" : /Linux/.test(ua) ? "linux" : "other";
+  const br = /FBAN|FBAV/.test(ua) ? "facebook" : /\bLine\//.test(ua) ? "line" : /Edg/.test(ua) ? "edge" : /Firefox|FxiOS/.test(ua) ? "firefox" : /CriOS|Chrome\//.test(ua) ? "chrome" : /Safari\//.test(ua) ? "safari" : "other";
+  let sw = 0; try { sw = Math.min(screen.width, screen.height); } catch {}
+  const sc = /^(windows|mac|linux)$/.test(os) ? "desktop" : !sw ? "" : sw < 380 ? "phone_s" : sw < 600 ? "phone_l" : "tablet";
+  const today = new Date().toISOString().slice(0, 10); let nv = 0;
+  try { let f = localStorage.getItem("iwm_first"); if (!f) { f = fresh ? today : "old"; localStorage.setItem("iwm_first", f); } nv = f === today ? 1 : 0; } catch {}
+  let where = null; try { where = JSON.parse(localStorage.getItem("iwm_loc") || "null"); } catch {}
+  const page = () => "/masjid" + location.pathname;   // "/masjid/", "/masjid/bn/" …
+  function send(d) {
+    Object.assign(d, { sid, vid, dev, pl, page: page() });
+    if (app) d.app = 1;
+    if (where && where.cc) { d.cc = where.cc; d.loc = where.city || ""; d.rg = where.region || ""; }
+    const body = JSON.stringify(d);
+    try { if (navigator.sendBeacon && navigator.sendBeacon(URL_T, new Blob([body], { type: "text/plain" }))) return; } catch {}
+    try { fetch(URL_T, { method: "POST", body, keepalive: true, credentials: "omit", headers: { "Content-Type": "text/plain" } }).catch(() => {}); } catch {}
+  }
+  // listening to the Quran here counts as "Quran" (with the surah's name), like on iwate-bd.org
+  const now = () => { try { if (q.mode && !q.paused) { const x = q.list && q.list[q.surah - 1]; return { state: "quran", label: "🕌 " + (x ? x.number + ". " + x.englishName : "Quran") }; } } catch {} return { state: "browse", label: document.title }; };
+  let lastQ = "";
+  function hb(t) {
+    const c = now();
+    if (c.state === "quran" && c.label !== lastQ) { lastQ = c.label; send({ e: "play", state: "quran", label: c.label }); return; }
+    if (c.state !== "quran") lastQ = "";
+    if (t && document.visibilityState !== "visible" && c.state === "browse") return;
+    send({ e: "hb", t: t ? 1 : 0, state: c.state, label: c.label });
+  }
+  function start() {
+    send({ e: "view", label: document.title, ref: document.referrer, os, br, sc, ln: String(navigator.language || "").slice(0, 2).toLowerCase(), tl: lang, nv });
+    setInterval(() => hb(true), 90000);
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") hb(false); });
+    window.addEventListener("pagehide", () => send({ e: "leave" }));
+    const au = document.getElementById("qAudio");
+    if (au) ["play", "playing"].forEach(ev => au.addEventListener(ev, () => setTimeout(() => hb(false), 1500)));
+    // the area for the map — once a day
+    setTimeout(() => {
+      try { if (localStorage.getItem("iwm_geo") === today) return; } catch { return; }
+      fetch("https://get.geojs.io/v1/ip/geo.json", { credentials: "omit" }).then(r => r.json()).then(g => {
+        if (!g || !g.country_code) return;
+        try { localStorage.setItem("iwm_geo", today); } catch {}
+        where = { cc: g.country_code, city: g.city || g.region || "", region: g.region || "" };
+        try { localStorage.setItem("iwm_loc", JSON.stringify(where)); } catch {}
+        send({ e: "geo", cc: g.country_code, country: g.country || "", region: g.region || "", city: g.city || "",
+          lat: Math.round(parseFloat(g.latitude) * 10) / 10, lng: Math.round(parseFloat(g.longitude) * 10) / 10 });
+      }).catch(() => {});
+    }, 6000);
+  }
+  const go = () => (window.requestIdleCallback ? requestIdleCallback(start, { timeout: 5000 }) : setTimeout(start, 1500));
+  if (document.readyState === "complete") go(); else window.addEventListener("load", go, { once: true });
+})();
+
 /* ===================== Works without internet (after the first visit) ===================== */
 // sw.js keeps a copy of the pages; prayer times, Qibla and the calendar are worked out on the phone itself.
 if ("serviceWorker" in navigator && window.isSecureContext) {
@@ -3569,7 +3636,7 @@ function qBar() {
   if (lab) lab.textContent = on ? (verse ? localDigits(q.ayah + " / " + n) : sname) : T(lab.dataset.i18n || "q_seq_t");
   if (nm && x) nm.textContent = on ? (verse ? vw || x.englishName : T(q.cont ? "q_seq_cont" : "q_whole").replace(/^🎧\s*/, "")) : `${localDigits(String(x.number))}. ${x.englishName} · ${x.name.replace(/^سُورَةُ\s*/, "")}`;
   const qmn = document.querySelector("#quran .q-main"); if (qmn) qmn.classList.toggle("on", on);
-  bar.hidden = !(on && q.mainOut);
+  bar.hidden = !(on && q.mainOut && q.secIn);   // only inside the Quran part of the page
   document.body.classList.toggle("q-mini", !bar.hidden);
   $q("qNowT").textContent = verse || sname;
   const pb = $q("qPause");
@@ -3791,10 +3858,14 @@ function qPlayAyah(a, phase) {
   [["qPrev", -1], ["qNext", 1], ["qBPrev", -1], ["qBNext", 1]].forEach(([id, d]) => { const b = $q(id); if (b) b.addEventListener("click", () => qStep(d)); });
   $q("qStopM").addEventListener("click", () => { qStopAll(); au.pause(); au.hidden = true; });
   // the mini player shows only while the big player is out of sight
-  q.mainOut = false;
+  q.mainOut = false; q.secIn = true;
   const qm = document.querySelector("#quran .q-main");
   if (qm && "IntersectionObserver" in window) new IntersectionObserver(es => { q.mainOut = es[0].intersectionRatio < 0.6; qBar(); },
-    { rootMargin: "-64px 0px 0px 0px", threshold: [0, 0.6, 1] }).observe(qm);   // the top bar covers ~56px: half hidden under it = out of sight
+    { rootMargin: "-64px 0px 0px 0px", threshold: [0, 0.6, 1] }).observe(qm);
+  // the mini player belongs to the Quran: it leaves when the Quran part of the page is scrolled away
+  const qsec = document.getElementById("quran");
+  if (qsec && "IntersectionObserver" in window) new IntersectionObserver(es => { q.secIn = es[0].isIntersecting; qBar(); },
+    { rootMargin: "-64px 0px -90px 0px" }).observe(qsec);   // the top bar covers ~56px: half hidden under it = out of sight
   // whole-surah recording: the bar's line follows the time; its own ⏸ (lock screen, headphones) shows on the buttons
   au.addEventListener("timeupdate", () => { if (q.mode === "surah" && !$q("qNow").hidden) qBar(); });
   au.addEventListener("pause", () => { if (q.mode === "surah" && !au.ended && !q.paused) { q.paused = true; qMark(); } });

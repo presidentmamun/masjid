@@ -1814,7 +1814,7 @@ function renderTexts() {
   const db = document.getElementById("devBy");
   if (db) {
     const [a0, a1 = ""] = T("dev_by").split("{n}"), ln = document.createElement("a");
-    ln.href = "https://drmamun.org/"; ln.rel = "noopener"; ln.target = "_blank"; ln.textContent = T("dev_name");
+    ln.href = "https://drmamun.org/";   // same window: inside the app, not another browser ln.textContent = T("dev_name");
     db.textContent = ""; db.append(a0, ln, a1);
   }
   document.querySelectorAll(".lang-btn").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));

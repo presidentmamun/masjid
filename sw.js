@@ -5,6 +5,8 @@
    them) what to show, exactly like its own worker does. */
 var MSG = 'https://iwate-bd.org/?pt_msg=1';
 var ICON = '/icon-192.png';
+// a picture per kind (Android / computer; iPhone always shows the app's icon — there the title's first emoji tells them apart)
+var KINDS = ['adhan', 'jamaat', 'iftar', 'dua', 'hijri', 'gomi', 'live', 'post', 'admin', 'alert', 'test'];
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) { e.waitUntil(self.clients.claim()); });
@@ -53,9 +55,10 @@ self.addEventListener('push', function (e) {
       return fetch(MSG + '&e=' + encodeURIComponent(ep)).then(function (r) { return r.json(); });
     }).catch(function () { return null; }).then(function (d) {
       // iPhone needs a notification for every push, or it cancels the subscription
-      if (!d || !d.title) d = { title: '🕌 Morioka Masjid', body: 'Prayer times · 礼拝時間', url: '/' };
+      if (!d || !d.title) d = { title: '🕌 Morioka Masjid', body: 'Prayer times · 礼拝時間', url: '/', k: 'adhan' };
+      var kd = KINDS.indexOf(d.k) > -1;
       jid = d.id || '';
-      var opts = { body: d.body || '', tag: d.id ? 'pt-' + d.id : 'prayer', renotify: true, icon: ICON, badge: ICON,
+      var opts = { body: d.body || '', tag: d.id ? 'pt-' + d.id : 'prayer', renotify: true, icon: kd ? '/notif/' + d.k + '.png' : ICON, badge: kd ? '/notif/' + d.k + '-b.png' : ICON,
         data: { url: d.url || '/', id: d.id || '', ep: ep } };
       if (d.image) opts.image = d.image;
       return self.registration.showNotification(d.title, opts)

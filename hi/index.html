@@ -4405,6 +4405,10 @@ const gomi = (function () {
     pull();
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") pull(); });
     window.addEventListener("pageshow", e => { if (e.persisted) pull(); });
+    // iPhone home-screen app: the calendar opens in a sheet on top, and closing it is not a "page shown again" —
+    // so while a change may be waiting (after opening the calendar), also look on focus and now and then
+    window.addEventListener("focus", pull);
+    setInterval(() => { const t = +store.get("g_pend") || 0; if (t && document.visibilityState === "visible" && Date.now() - t < 6e5) pull(); }, 15000);
     // any link to the garbage calendar carries this app's area
     document.addEventListener("click", e => {
       const a = e.target.closest && e.target.closest("a[href]");

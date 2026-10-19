@@ -511,8 +511,9 @@
   .tas-fx[hidden] { display: none; }
   .tas-fx .fx-n { font-size: 96px; font-weight: 700; line-height: 1; }
   .tas-fx .fx-p { font-size: 22px; }
-  .tas-fx .fx-h { position: absolute; left: 16px; right: 16px; bottom: 28px; font-size: 13px; color: #2c2c2c; }
-  .tas-fx .fx-x { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; width: 44px; height: 44px; border: 1px solid #262626; border-radius: 50%; background: none; color: #555; font-size: 20px; }
+  .tas-fx .fx-h { position: absolute; left: 16px; right: 16px; bottom: max(28px, env(safe-area-inset-bottom)); margin: 0; font-size: 16px; line-height: 1.7; color: #8a8a8a; }
+  .tas-fx .fx-h span { display: block; }
+  .tas-fx .fx-x { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; width: 44px; height: 44px; border: 1px solid #444; border-radius: 50%; background: none; color: #8a8a8a; font-size: 20px; }
   .tas-fx.hit .fx-n { color: #555; }
   .tas-mode { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
   .tas-btn { position: relative; display: grid; place-content: center; gap: 2px; width: 220px; max-width: 80vw; aspect-ratio: 1; margin: 16px auto 6px; border: 0; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #1a7a52, #0f5a3c 60%, #0b4330); color: #fff; cursor: pointer; box-shadow: 0 10px 26px rgba(15, 90, 60, .3), inset 0 -6px 14px rgba(0, 0, 0, .18); -webkit-tap-highlight-color: transparent; user-select: none; touch-action: manipulation; transition: transform .08s; }
@@ -2182,13 +2183,22 @@ function renderCal() {
   }
   const keepOn = () => { try { if (navigator.wakeLock && !fx.hidden) navigator.wakeLock.request("screen").then(l => { wl = l; }).catch(() => {}); } catch {} };
   function fxOpen() {
-    fx.hidden = false; document.getElementById("tasFxH").textContent = T("tas_focus_h");
+    fx.hidden = false;
+    // the hint in two lines: what to do / how to leave
+    const h = document.getElementById("tasFxH"); h.textContent = "";
+    T("tas_focus_h").split(" · ").forEach(t => { const sp = document.createElement("span"); sp.textContent = t; h.appendChild(sp); });
+    // the phone's top bar black too
+    let tc = document.querySelector('meta[name="theme-color"]');
+    if (!tc) { tc = document.createElement("meta"); tc.name = "theme-color"; tc.dataset.fx = "1"; document.head.appendChild(tc); }
+    fx.dataset.tc = tc.content || ""; tc.content = "#000000";
     document.body.style.overflow = "hidden"; fxDraw(); keepOn();
     try { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {}); } catch {}
     tone(1500, 1, 0.0001);   // the sound is allowed only from a tap: wake it now
   }
   function fxClose() {
     fx.hidden = true; document.body.style.overflow = "";
+    const tc = document.querySelector('meta[name="theme-color"]');
+    if (tc) { if (tc.dataset.fx) tc.remove(); else tc.content = fx.dataset.tc || ""; }
     try { if (wl) wl.release(); } catch {} wl = null;
     try { if (document.fullscreenElement) document.exitFullscreen(); } catch {}
   }

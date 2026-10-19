@@ -2070,15 +2070,82 @@ function renderCal() {
     document.getElementById("tasTl").textContent = pi > -1 && lang !== "ar" ? T("tas_p" + pi) : "";
     ring.style.strokeDashoffset = String(C * (1 - frac));
   }
-  btn.addEventListener("click", () => {
-    if (s.m === "after" && s.n >= 100) s.n = 0;
-    else s.n++;
-    if (s.m === "after") { const [i, k] = phase(s.n); buzz(i >= PH.length ? [60, 60, 60] : k === 0 ? 80 : 12); }
-    else buzz(s.n % 33 === 0 ? 80 : 12);
+  /* Lock screen: the counting goes on with the screen locked — ⏭ +1, ⏮ −1, ⏸ stops.
+     With the Quran playing here, the same box shows both (⏭ ⏮ count; ⏸ ▶ is the Quran).
+     The dhikr lets go of ⏭ ⏮ by itself: when the set is done, or after 3 minutes without a count.
+     Just after "done", the first ⏭ only shows "done" (a counting habit must not skip a verse). */
+  const IDLE = 180000;
+  const ZK = window.ZK = { on: false, last: 0, guard: false };
+  const qOn = () => { try { return !!q.mode; } catch { return false; } };
+  ZK.active = () => { if (ZK.on && Date.now() - ZK.last > IDLE) ZK.on = false; return ZK.on || ZK.guard; };
+  ZK.label = () => {
+    const done = "✓ " + T("tas_done");
+    if (ZK.guard) return done;
+    if (s.m !== "after") return localDigits(String(s.n));
+    const [i, k] = phase(s.n);
+    if (i >= PH.length) return done;
+    return (lang === "ar" ? PH[i][0] : T("tas_p" + i)) + " " + localDigits(k + "/" + PH[i][1]);
+  };
+  let sil = null, silT = 0;
+  // a sound that makes no sound (5 s, made here, no download): it lets the phone show the box when nothing else plays
+  function silence() {
+    if (sil) return sil;
+    const sr = 8000, n = sr * 5, b = new Uint8Array(44 + n), dv = new DataView(b.buffer);
+    const w = (o, t) => { for (let i = 0; i < t.length; i++) b[o + i] = t.charCodeAt(i); };
+    w(0, "RIFF"); dv.setUint32(4, 36 + n, true); w(8, "WAVEfmt "); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+    dv.setUint32(24, sr, true); dv.setUint32(28, sr, true); dv.setUint16(32, 1, true); dv.setUint16(34, 8, true); w(36, "data"); dv.setUint32(40, n, true);
+    b.fill(128, 44);
+    sil = new Audio(URL.createObjectURL(new Blob([b], { type: "audio/wav" }))); sil.loop = true;
+    return sil;
+  }
+  const silOff = () => { clearTimeout(silT); if (sil && !sil.paused) sil.pause(); };
+  ZK.media = () => {
+    if (!("mediaSession" in navigator)) return;
+    if (qOn()) { silOff(); qSession(); return; }   // the Quran's box, with the dhikr in it
+    if (!ZK.active()) { silOff(); return; }
+    const ms = navigator.mediaSession;
+    try {
+      ms.metadata = new MediaMetadata({ title: ZK.label(), artist: T("zk_title"), album: "Masjid", artwork: Q_ART });
+      ms.setActionHandler("nexttrack", () => ZK.lock(1));
+      ms.setActionHandler("previoustrack", () => ZK.lock(-1));
+      ms.setActionHandler("pause", () => { ZK.on = false; ZK.guard = false; silOff(); });
+      ms.setActionHandler("play", () => { ZK.on = true; ZK.last = Date.now(); if (sil) sil.play().catch(() => {}); ZK.media(); });
+      ms.setActionHandler("seekto", null);
+    } catch {}
+  };
+  function count(d) {
+    if (d > 0) {
+      if (s.m === "after" && s.n >= 100) s.n = 0;
+      else s.n++;
+      if (s.m === "after") { const [i, k] = phase(s.n); buzz(i >= PH.length ? [60, 60, 60] : k === 0 ? 80 : 12); }
+      else buzz(s.n % 33 === 0 ? 80 : 12);
+    } else if (s.n > 0) s.n--;
     save(); draw();
+    ZK.on = true; ZK.last = Date.now(); ZK.guard = false;
+    if (s.m === "after" && s.n >= 100) {   // the set is done: ⏭ ⏮ go back to the Quran (after one "done")
+      ZK.on = false; ZK.guard = true;
+      if (!qOn()) { clearTimeout(silT); silT = setTimeout(() => { ZK.guard = false; silOff(); }, 5000); }
+    }
+    ZK.media();
+  }
+  // ⏭ / ⏮ from the lock screen or headphones
+  ZK.lock = d => {
+    if (ZK.guard) { ZK.guard = false; ZK.media(); if (!qOn()) silOff(); return; }
+    if (!ZK.active()) {   // the dhikr has let go: the Quran's verses
+      ZK.media();
+      try { if (q.mode === "ayah") qPlayAyah(d > 0 ? q.ayah + 1 : Math.max(1, q.ayah - 1)); } catch {}
+      return;
+    }
+    count(d);
+  };
+  setInterval(() => { if (ZK.on && Date.now() - ZK.last > IDLE) { ZK.on = false; ZK.media(); } }, 15000);
+  btn.addEventListener("click", () => {
+    count(1);
+    // the tap lets the phone start the quiet sound (it allows it only on a tap); not while the Quran plays here
+    if (!qOn() && ZK.on) { const a = silence(); if (a.paused) a.play().then(ZK.media).catch(() => {}); }
   });
   document.querySelectorAll(".tas-mode .chip").forEach(c => c.addEventListener("click", () => { s.m = c.dataset.m; s.n = 0; save(); draw(); }));
-  document.getElementById("tasReset").addEventListener("click", () => { s.n = 0; save(); draw(); });
+  document.getElementById("tasReset").addEventListener("click", () => { s.n = 0; save(); draw(); ZK.on = false; ZK.guard = false; ZK.media(); });
   window.tasDraw = draw;
 })();
 
@@ -3407,16 +3474,18 @@ function qToggle() {
   qMark();
 }
 // lock screen / headphones: ⏸ ▶ and the next / previous verse
+const Q_ART = [{ src: "/icon-192.png", sizes: "192x192", type: "image/png" }, { src: "/icon-512.png", sizes: "512x512", type: "image/png" }];
 function qSession() {
   const sb = $q("qSeq"); if (sb && sb.firstElementChild) sb.firstElementChild.textContent = (q.mode === "ayah" || (q.mode === "surah" && q.cont)) && !q.paused ? "⏸" : "▶";
-  if (!("mediaSession" in navigator) || !q.mode) return;
+  if (!("mediaSession" in navigator) || !q.mode) { if (window.ZK && !q.mode) ZK.media(); return; }
   const ms = navigator.mediaSession, x = q.list && q.list[q.surah - 1], au = $q("qAudio");
+  const zk = window.ZK && ZK.active();
   try {
-    ms.metadata = new MediaMetadata({ title: (x ? x.number + ". " + x.englishName : "Quran") + (q.mode === "ayah" && q.ayah ? " · " + q.ayah : ""), artist: q.cont ? "Mishary Alafasy" : Q_REC[qRc].en, album: "Quran" });
+    ms.metadata = new MediaMetadata({ title: (x ? x.number + ". " + x.englishName : "Quran") + (zk ? " · 📿 " + ZK.label() : q.mode === "ayah" && q.ayah ? " · " + q.ayah : ""), artist: q.cont ? "Mishary Alafasy" : Q_REC[qRc].en, album: "Quran", artwork: Q_ART });
     ms.setActionHandler("play", () => { if (q.mode === "surah") { au.play().catch(() => {}); q.paused = false; qMark(); } else if (q.paused) qToggle(); });
     ms.setActionHandler("pause", () => { if (q.mode === "surah") { au.pause(); q.paused = true; qMark(); } else if (!q.paused) qToggle(); });
-    ms.setActionHandler("nexttrack", q.mode === "ayah" ? () => qPlayAyah(q.ayah + 1) : null);
-    ms.setActionHandler("previoustrack", q.mode === "ayah" ? () => qPlayAyah(Math.max(1, q.ayah - 1)) : null);
+    ms.setActionHandler("nexttrack", zk ? () => ZK.lock(1) : q.mode === "ayah" ? () => qPlayAyah(q.ayah + 1) : null);
+    ms.setActionHandler("previoustrack", zk ? () => ZK.lock(-1) : q.mode === "ayah" ? () => qPlayAyah(Math.max(1, q.ayah - 1)) : null);
   } catch {}
 }
 function qStopAll() {

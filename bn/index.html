@@ -4189,7 +4189,7 @@ const gomi = (function () {
     ov.innerHTML = `<div class="g-sheet" role="dialog" aria-modal="true" aria-labelledby="gHead"><div class="g-head"><b id="gHead">🗑</b>`
       + `<button type="button" class="g-x" aria-label="${escH(T("g_close"))}">✕</button></div>`
       + `<div class="g-body"><p class="g-note">${escH(T("g_loading"))}</p></div>`
-      + `<a class="g-cal" href="https://iwate-bd.org/#pt-gomi" target="_blank" rel="noopener">${escH(T("g_cal"))}</a></div>`;
+      + `<a class="g-cal" href="https://iwate-bd.org/#pt-gomi">${escH(T("g_cal"))}</a></div>`;
     document.body.appendChild(ov);
     ov.addEventListener("click", e => { if (e.target === ov) close(); });
     ov.querySelector(".g-x").onclick = close;

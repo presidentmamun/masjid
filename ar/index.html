@@ -4365,9 +4365,51 @@ const gomi = (function () {
       show(isoOf(t));
     }).catch(() => show(isoOf(tokyoYMD())));
   }
+  /* The garbage calendar on iwate-bd.org, opened from here, uses THIS app's area; if it is changed there,
+     iwate-bd.org keeps it for a day under this phone's random token and we take it back on return. */
+  function token() {
+    let h = store.get("g_h");
+    if (!h || !/^[a-z0-9]{24}$/.test(h)) {
+      const a = new Uint8Array(12); (window.crypto || {}).getRandomValues ? crypto.getRandomValues(a) : a.forEach((_, i) => { a[i] = Math.random() * 256; });
+      h = Array.from(a, b => ("0" + b.toString(16)).slice(-2)).join(""); store.set("g_h", h);
+    }
+    return h;
+  }
+  function link(href) {
+    try {
+      const u = new URL(href);
+      ["gx_h", "gx_c", "gx_k", "gx_t"].forEach(k => u.searchParams.delete(k));
+      u.searchParams.set("gx_h", token());
+      if (G.k) { u.searchParams.set("gx_c", G.c); u.searchParams.set("gx_k", G.k); u.searchParams.set("gx_t", G.tn || ""); }
+      store.set("g_pend", String(Date.now()));
+      return u.toString();
+    } catch { return href; }
+  }
+  function pull() {
+    const t = +store.get("g_pend") || 0;
+    if (!t) return;
+    if (Date.now() - t > 864e5) { store.set("g_pend", ""); return; }
+    fetch(API + "hand?h=" + token() + "&nc=" + Date.now(), { cache: "no-store" }).then(r => r.json()).then(d => {
+      if (!d || !d.c || !d.k) return;
+      store.set("g_pend", "");
+      if (d.c === G.c && d.k === G.k) return;
+      (cities ? Promise.resolve() : loadCities()).then(() => {
+        G.c = d.c; G.k = d.k; G.tn = d.t || ""; G.cn = (cities && cities[d.c]) || d.c;
+        save(); rer(); changed();
+      });
+    }).catch(() => {});
+  }
   function start(query) {
     const d = query && query.get("gomi");
     if (d) show(d);
+    pull();
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") pull(); });
+    window.addEventListener("pageshow", e => { if (e.persisted) pull(); });
+    // any link to the garbage calendar carries this app's area
+    document.addEventListener("click", e => {
+      const a = e.target.closest && e.target.closest("a[href]");
+      if (a && /^https:\/\/iwate-bd\.org\/[^#]*#pt-gomi$/.test(a.href)) a.href = link(a.href);
+    }, true);
   }
   return { hook, ui, param, sig, start };
 })();

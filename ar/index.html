@@ -911,6 +911,8 @@
   footer .name { font-family: "Amiri", serif; color: #e9cf8f; font-size: 1.2rem; display: block; margin-bottom: 4px; }
   .jp-comm { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.15); opacity: .85; }
   .jp-comm a { color: #e9cf8f; }
+  .dev-by { max-width: 34em; margin: 10px auto 0; font-size: .78rem; line-height: 1.6; opacity: .7; }
+  .dev-by a { color: #e9cf8f; text-decoration: none; border-bottom: 1px dotted rgba(233, 207, 143, .6); }
 </style>
 </head>
 <body>
@@ -1319,6 +1321,7 @@
     <span class="name">مسجد التوحيد</span>
     <span data-i18n="footer">قد تتغير المعلومات. تابع صفحتنا على Facebook لآخر الأخبار.</span>
     <p class="jp-comm"><span data-i18n="jp_by">بدعم من</span> <a href="https://iwate-bd.org/">iwate-bd.org</a></p>
+    <p class="dev-by" id="devBy"></p>
     <p class="adm"><button type="button" id="mnOpen" data-i18n="ad_link">🔐 لوحة الإعلانات (المشرف)</button></p>
   </div>
 </footer>
@@ -1401,7 +1404,7 @@ const I18N = {
     v4: "Please remove your shoes before entering the prayer hall.", v5: "Please switch your phone to silent.",
     contact_title: "Contact", contact_person: "Contact person", phone: "Phone", fb_btn: "Message us on Facebook",
     footer: "Information may change. Please check our Facebook page for the latest news.",
-    jp_by: "Courtesy of"
+    jp_by: "Courtesy of", dev_by: "Built with the intention of sadaqah jariyah by {n} — no commercial purpose. Please remember him in your du'a.", dev_name: "Khairuzzaman Mamun"
   },
   ja: {
     more_gomi: "ごみカレンダー", more_gomi_d: "お住まいの地域のごみ出しの日と、前日の夜のお知らせ",
@@ -1461,7 +1464,7 @@ const I18N = {
     v4: "礼拝室に入る前に靴を脱いでください。", v5: "携帯電話はマナーモードにしてください。",
     contact_title: "連絡先", contact_person: "担当者", phone: "電話", fb_btn: "Facebookでメッセージを送る",
     footer: "情報は変更される場合があります。最新情報はFacebookページをご確認ください。",
-    jp_by: "協力："
+    jp_by: "協力：", dev_by: "このサイトは{n}がサダカ・ジャーリヤ（継続する善行）の意図で制作しました。営利目的はありません。彼のためにドゥアーをお願いします。", dev_name: "カイルッザマン・マムン"
   },
   bn: {
     more_gomi: "ময়লার ক্যালেন্ডার", more_gomi_d: "আপনার এলাকায় কোন দিন কোন ময়লা, আর আগের রাতে রিমাইন্ডার",
@@ -1521,7 +1524,7 @@ const I18N = {
     v4: "নামাজের ঘরে ঢোকার আগে জুতা খুলুন।", v5: "মোবাইল ফোন সাইলেন্ট রাখুন।",
     contact_title: "যোগাযোগ", contact_person: "যোগাযোগের জন্য", phone: "ফোন", fb_btn: "Facebook-এ মেসেজ পাঠান",
     footer: "তথ্য পরিবর্তন হতে পারে। সর্বশেষ খবরের জন্য আমাদের Facebook পেজ দেখুন।",
-    jp_by: "সৌজন্যে"
+    jp_by: "সৌজন্যে", dev_by: "সাইটটি সাদাকায়ে জারিয়ার নিয়তে বানিয়েছেন {n} — কোনো ব্যবসায়িক উদ্দেশ্য নেই। দোয়ায় রাখবেন।", dev_name: "খায়রুজ্জামান মামুন"
   },
   ur: {
     more_gomi: "کچرے کا کیلنڈر", more_gomi_d: "آپ کے علاقے میں کس دن کون سا کچرا، اور ایک رات پہلے یاد دہانی",
@@ -1579,7 +1582,7 @@ const I18N = {
     v4: "نماز ہال میں داخل ہونے سے پہلے جوتے اتار دیں۔", v5: "موبائل فون خاموش رکھیں۔",
     contact_title: "رابطہ", contact_person: "رابطہ کار", phone: "فون", fb_btn: "Facebook پر پیغام بھیجیں",
     footer: "معلومات تبدیل ہو سکتی ہیں۔ تازہ خبروں کے لیے ہمارا Facebook صفحہ دیکھیں۔",
-    jp_by: "بشکریہ"
+    jp_by: "بشکریہ", dev_by: "یہ سائٹ {n} نے صدقۂ جاریہ کی نیت سے بنائی ہے — کوئی تجارتی مقصد نہیں۔ انہیں اپنی دعاؤں میں یاد رکھیں۔", dev_name: "خیر الزمان مامون"
   },
   hi: {
     more_gomi: "कूड़े का कैलेंडर", more_gomi_d: "आपके इलाके में किस दिन कौन-सा कूड़ा, और एक रात पहले रिमाइंडर",
@@ -1637,7 +1640,7 @@ const I18N = {
     v4: "नमाज़ हॉल में जाने से पहले जूते उतारें।", v5: "मोबाइल फ़ोन साइलेंट रखें।",
     contact_title: "संपर्क", contact_person: "संपर्क व्यक्ति", phone: "फ़ोन", fb_btn: "Facebook पर संदेश भेजें",
     footer: "जानकारी बदल सकती है। ताज़ा ख़बरों के लिए हमारा Facebook पेज देखें।",
-    jp_by: "सौजन्य:"
+    jp_by: "सौजन्य:", dev_by: "यह साइट {n} ने सदक़ा-ए-जारिया की नीयत से बनाई है — कोई व्यावसायिक उद्देश्य नहीं। उन्हें अपनी दुआओं में याद रखें।", dev_name: "ख़ैरुज़्ज़मान मामून"
   },
   ar: {
     more_gomi: "تقويم النفايات", more_gomi_d: "أي نوع من النفايات يُخرج في أي يوم في منطقتك، مع تذكير في الليلة السابقة",
@@ -1695,7 +1698,7 @@ const I18N = {
     v4: "يُرجى خلع الحذاء قبل دخول المصلى.", v5: "يُرجى وضع الهاتف على الوضع الصامت.",
     contact_title: "التواصل", contact_person: "للتواصل", phone: "الهاتف", fb_btn: "راسلنا على Facebook",
     footer: "قد تتغير المعلومات. تابع صفحتنا على Facebook لآخر الأخبار.",
-    jp_by: "بدعم من"
+    jp_by: "بدعم من", dev_by: "صُمِّم هذا الموقع بنيّة الصدقة الجارية بواسطة {n} — بلا أي غرض تجاري. نرجو أن تذكروه في دعائكم.", dev_name: "خير الزمان مأمون"
   }
 };
 const RTL = new Set(["ar", "ur"]);
@@ -1807,6 +1810,13 @@ function renderTexts() {
   document.documentElement.dir = RTL.has(lang) ? "rtl" : "ltr";
   document.title = T("title") + " – " + T("sub");
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T(el.dataset.i18n); });
+  // who built the site (a line in the footer, the name a link)
+  const db = document.getElementById("devBy");
+  if (db) {
+    const [a0, a1 = ""] = T("dev_by").split("{n}"), ln = document.createElement("a");
+    ln.href = "https://drmamun.org/"; ln.rel = "noopener"; ln.target = "_blank"; ln.textContent = T("dev_name");
+    db.textContent = ""; db.append(a0, ln, a1);
+  }
   document.querySelectorAll(".lang-btn").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
   const rl = document.getElementById("reload");
   if (rl) { rl.title = T("reload"); rl.setAttribute("aria-label", T("title") + " — " + T("reload")); }

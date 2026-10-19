@@ -363,6 +363,13 @@
   .notif .n-types input { width: 18px; height: 18px; accent-color: var(--green); }
   .notif .n-lang { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 12px; font-size: .92rem; }
   /* garbage-day reminder (inside the notification box) and the day's card */
+  .g-ban { position: fixed; left: 12px; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 10px); z-index: 60; display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 2px solid var(--gold); border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 10px 12px; font-size: .95rem; }
+  .g-ban span { flex: 1 1 0; min-width: 0; }
+  .g-ban button { border: 0; border-radius: 999px; padding: 8px 16px; font: inherit; font-weight: 700; background: var(--green, #1f5e3b); color: #fff; cursor: pointer; }
+  .g-ban .g-ban-x { background: transparent; color: var(--muted); padding: 6px 10px; }
+  .notif .g-xl { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 4px; font-size: .92rem; }
+  .notif .g-xl .n-gear { padding: 2px 8px; margin-inline-start: 6px; }
   .notif .n-gomi { display: grid; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
   .notif .n-gsw { display: flex; gap: 8px; align-items: center; font-size: .92rem; font-weight: 600; }
   .notif .n-gsw input { width: 18px; height: 18px; accent-color: var(--green); flex: none; }
@@ -4147,12 +4154,12 @@ const I18N_I = {
 };
 for (const l in I18N_I) Object.assign(I18N[l], I18N_I[l]);
 const I18N_G = {
-  en: {"g_on": "🗑 Garbage day reminder (your area)", "g_gps": "📍 Find my area from my location", "g_wait": "Finding your location…", "g_or": "or pick from the list:", "g_city": "— Choose your city —", "g_find": "Neighbourhood in Japanese (e.g. 青山)", "g_hint": "The neighbourhood part of your address (住所), as on your residence card.", "g_loading": "Loading…", "g_cands": "which one is yours?", "g_nomatch": "not exactly in the list; please pick yours below.", "g_notjp": "No address in Japan was found for your location — pick from the list.", "g_err": "Could not get it right now — please try again, or pick from the list.", "g_denied": "Location permission was denied. Allow it in the browser settings, or pick from the list.", "g_notyet": "Your city ({p}) is not added yet. We have noted it — the more people ask, the sooner it comes.", "g_chg": "Change", "g_when": "When:", "g_prev": "The day before", "g_same": "On the day", "g_peek": "👁 See the next garbage day", "g_today": "Today", "g_tmr": "Tomorrow", "g_none": "No collection on this day.", "g_close": "Close", "g_how": "put it out in the morning, in the city's bag.", "g_cal": "📅 Full garbage calendar →"},
-  ja: {"g_on": "🗑 ごみの日のお知らせ（お住まいの地域）", "g_gps": "📍 現在地から地域を探す", "g_wait": "現在地を確認中…", "g_or": "または一覧から選ぶ：", "g_city": "— 市町村を選択 —", "g_find": "町名を入力（例：青山）", "g_hint": "住所の町名（在留カードに書かれています）。", "g_loading": "読み込み中…", "g_cands": "どれがお住まいですか？", "g_nomatch": "一覧に同じ名前がありません。下から選んでください。", "g_notjp": "日本国内の住所が見つかりませんでした。一覧から選んでください。", "g_err": "今は取得できませんでした。もう一度試すか、一覧から選んでください。", "g_denied": "位置情報が許可されていません。ブラウザの設定で許可するか、一覧から選んでください。", "g_notyet": "お住まいの市町村（{p}）はまだ追加されていません。記録しました。希望が多いほど早く追加されます。", "g_chg": "変更", "g_when": "いつ：", "g_prev": "前の日", "g_same": "当日", "g_peek": "👁 次のごみの日を見る", "g_today": "今日", "g_tmr": "明日", "g_none": "この日は収集がありません。", "g_close": "閉じる", "g_how": "当日の朝、指定袋で出してください。", "g_cal": "📅 ごみカレンダーをすべて見る →"},
-  bn: {"g_on": "🗑 ময়লা ফেলার দিনের রিমাইন্ডার (আপনার এলাকা)", "g_gps": "📍 আমার অবস্থান থেকে এলাকা খুঁজুন", "g_wait": "অবস্থান খোঁজা হচ্ছে…", "g_or": "অথবা তালিকা থেকে বাছুন:", "g_city": "— আপনার শহর বাছুন —", "g_find": "পাড়ার নাম জাপানিতে (যেমন 青山)", "g_hint": "বাসার ঠিকানার (住所) পাড়ার নাম — রেসিডেন্স কার্ডে লেখা থাকে।", "g_loading": "লোড হচ্ছে…", "g_cands": "কোনটা আপনার?", "g_nomatch": "তালিকায় ঠিক এই নাম নেই, নিচ থেকে আপনারটা বাছুন।", "g_notjp": "আপনার অবস্থানে জাপানের কোনো ঠিকানা পাওয়া যায়নি — তালিকা থেকে বাছুন।", "g_err": "এখন পাওয়া গেল না — আবার চেষ্টা করুন, বা তালিকা থেকে বাছুন।", "g_denied": "অবস্থানের অনুমতি দেওয়া হয়নি। ব্রাউজারের সেটিংসে অনুমতি দিন, বা তালিকা থেকে বাছুন।", "g_notyet": "আপনার শহর ({p}) এখনো যোগ হয়নি। আমরা নোট করেছি — যত বেশি মানুষ চাইবেন, তত আগে যোগ হবে।", "g_chg": "বদলান", "g_when": "কখন:", "g_prev": "আগের দিন", "g_same": "সংগ্রহের দিন", "g_peek": "👁 পরের ময়লার দিন দেখুন", "g_today": "আজ", "g_tmr": "কাল", "g_none": "এই দিনে কোনো ময়লা নেওয়া হয় না।", "g_close": "বন্ধ", "g_how": "সকালে শহরের নির্দিষ্ট ব্যাগে দিন।", "g_cal": "📅 পুরো ময়লার ক্যালেন্ডার →"},
-  ur: {"g_on": "🗑 کچرا ڈالنے کے دن کی یاد دہانی (آپ کا علاقہ)", "g_gps": "📍 میرے مقام سے علاقہ تلاش کریں", "g_wait": "مقام تلاش ہو رہا ہے…", "g_or": "یا فہرست سے منتخب کریں:", "g_city": "— اپنا شہر منتخب کریں —", "g_find": "محلے کا نام جاپانی میں (مثلاً 青山)", "g_hint": "پتے (住所) میں محلے کا نام — رہائشی کارڈ پر لکھا ہوتا ہے۔", "g_loading": "لوڈ ہو رہا ہے…", "g_cands": "آپ کا کون سا ہے؟", "g_nomatch": "فہرست میں بالکل یہ نام نہیں، نیچے سے اپنا منتخب کریں۔", "g_notjp": "آپ کے مقام پر جاپان کا کوئی پتہ نہیں ملا — فہرست سے منتخب کریں۔", "g_err": "ابھی نہیں مل سکا — دوبارہ کوشش کریں، یا فہرست سے منتخب کریں۔", "g_denied": "مقام کی اجازت نہیں دی گئی۔ براؤزر کی سیٹنگ میں اجازت دیں، یا فہرست سے منتخب کریں۔", "g_notyet": "آپ کا شہر ({p}) ابھی شامل نہیں۔ ہم نے نوٹ کر لیا ہے — جتنے زیادہ لوگ چاہیں گے، اتنی جلدی شامل ہوگا۔", "g_chg": "تبدیل کریں", "g_when": "کب:", "g_prev": "ایک دن پہلے", "g_same": "اسی دن", "g_peek": "👁 کچرے کا اگلا دن دیکھیں", "g_today": "آج", "g_tmr": "کل", "g_none": "اس دن کچرا نہیں اٹھایا جاتا۔", "g_close": "بند", "g_how": "صبح شہر کے مقررہ تھیلے میں رکھیں۔", "g_cal": "📅 کچرے کا پورا کیلنڈر ←"},
-  hi: {"g_on": "🗑 कूड़ा डालने के दिन की याद (आपका इलाका)", "g_gps": "📍 मेरी लोकेशन से इलाका खोजें", "g_wait": "लोकेशन खोजी जा रही है…", "g_or": "या सूची से चुनें:", "g_city": "— अपना शहर चुनें —", "g_find": "मोहल्ले का नाम जापानी में (जैसे 青山)", "g_hint": "पते (住所) में मोहल्ले का नाम — रेज़िडेंस कार्ड पर लिखा होता है।", "g_loading": "लोड हो रहा है…", "g_cands": "आपका कौन-सा है?", "g_nomatch": "सूची में ठीक यही नाम नहीं, नीचे से अपना चुनें।", "g_notjp": "आपकी लोकेशन पर जापान का कोई पता नहीं मिला — सूची से चुनें।", "g_err": "अभी नहीं मिल पाया — फिर कोशिश करें, या सूची से चुनें।", "g_denied": "लोकेशन की अनुमति नहीं दी गई। ब्राउज़र की सेटिंग में अनुमति दें, या सूची से चुनें।", "g_notyet": "आपका शहर ({p}) अभी जुड़ा नहीं है। हमने नोट कर लिया है — जितने ज़्यादा लोग चाहेंगे, उतनी जल्दी जुड़ेगा।", "g_chg": "बदलें", "g_when": "कब:", "g_prev": "एक दिन पहले", "g_same": "उसी दिन", "g_peek": "👁 कूड़े का अगला दिन देखें", "g_today": "आज", "g_tmr": "कल", "g_none": "इस दिन कूड़ा नहीं उठाया जाता।", "g_close": "बंद", "g_how": "सुबह शहर के तय बैग में रखें।", "g_cal": "📅 कूड़े का पूरा कैलेंडर →"},
-  ar: {"g_on": "🗑 تذكير بيوم جمع النفايات (منطقتك)", "g_gps": "📍 ابحث عن منطقتي من موقعي", "g_wait": "جارٍ تحديد موقعك…", "g_or": "أو اختر من القائمة:", "g_city": "— اختر مدينتك —", "g_find": "اسم الحي باليابانية (مثل 青山)", "g_hint": "اسم الحي في عنوانك (住所) — مكتوب على بطاقة الإقامة.", "g_loading": "جارٍ التحميل…", "g_cands": "أيّها منطقتك؟", "g_nomatch": "هذا الاسم ليس في القائمة تمامًا، اختر منطقتك من الأسفل.", "g_notjp": "لم يُعثر على عنوان داخل اليابان لموقعك — اختر من القائمة.", "g_err": "تعذّر ذلك الآن — حاول مرة أخرى، أو اختر من القائمة.", "g_denied": "لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح، أو اختر من القائمة.", "g_notyet": "مدينتك ({p}) لم تُضف بعد. سجّلنا طلبك — كلما زاد الطلب أُضيفت أسرع.", "g_chg": "تغيير", "g_when": "متى:", "g_prev": "في اليوم السابق", "g_same": "في اليوم نفسه", "g_peek": "👁 اعرض يوم الجمع التالي", "g_today": "اليوم", "g_tmr": "غدًا", "g_none": "لا يوجد جمع في هذا اليوم.", "g_close": "إغلاق", "g_how": "ضعها صباحًا في الكيس المخصص من المدينة.", "g_cal": "📅 تقويم النفايات كاملًا ←"}
+  en: {"g_xday": "📅 Reminder for {d}", "g_xban": "🔔 Garbage reminder for {d} — turn on notifications to get it", "g_xon": "Turn on", "g_on": "🗑 Garbage day reminder (your area)", "g_gps": "📍 Find my area from my location", "g_wait": "Finding your location…", "g_or": "or pick from the list:", "g_city": "— Choose your city —", "g_find": "Neighbourhood in Japanese (e.g. 青山)", "g_hint": "The neighbourhood part of your address (住所), as on your residence card.", "g_loading": "Loading…", "g_cands": "which one is yours?", "g_nomatch": "not exactly in the list; please pick yours below.", "g_notjp": "No address in Japan was found for your location — pick from the list.", "g_err": "Could not get it right now — please try again, or pick from the list.", "g_denied": "Location permission was denied. Allow it in the browser settings, or pick from the list.", "g_notyet": "Your city ({p}) is not added yet. We have noted it — the more people ask, the sooner it comes.", "g_chg": "Change", "g_when": "When:", "g_prev": "The day before", "g_same": "On the day", "g_peek": "👁 See the next garbage day", "g_today": "Today", "g_tmr": "Tomorrow", "g_none": "No collection on this day.", "g_close": "Close", "g_how": "put it out in the morning, in the city's bag.", "g_cal": "📅 Full garbage calendar →"},
+  ja: {"g_xday": "📅 {d} のお知らせ", "g_xban": "🔔 {d} のごみのお知らせ — 受け取るには通知をオンにしてください", "g_xon": "オンにする", "g_on": "🗑 ごみの日のお知らせ（お住まいの地域）", "g_gps": "📍 現在地から地域を探す", "g_wait": "現在地を確認中…", "g_or": "または一覧から選ぶ：", "g_city": "— 市町村を選択 —", "g_find": "町名を入力（例：青山）", "g_hint": "住所の町名（在留カードに書かれています）。", "g_loading": "読み込み中…", "g_cands": "どれがお住まいですか？", "g_nomatch": "一覧に同じ名前がありません。下から選んでください。", "g_notjp": "日本国内の住所が見つかりませんでした。一覧から選んでください。", "g_err": "今は取得できませんでした。もう一度試すか、一覧から選んでください。", "g_denied": "位置情報が許可されていません。ブラウザの設定で許可するか、一覧から選んでください。", "g_notyet": "お住まいの市町村（{p}）はまだ追加されていません。記録しました。希望が多いほど早く追加されます。", "g_chg": "変更", "g_when": "いつ：", "g_prev": "前の日", "g_same": "当日", "g_peek": "👁 次のごみの日を見る", "g_today": "今日", "g_tmr": "明日", "g_none": "この日は収集がありません。", "g_close": "閉じる", "g_how": "当日の朝、指定袋で出してください。", "g_cal": "📅 ごみカレンダーをすべて見る →"},
+  bn: {"g_xday": "📅 {d}-এর রিমাইন্ডার", "g_xban": "🔔 {d}-এর ময়লার রিমাইন্ডার — পেতে নোটিফিকেশন চালু করুন", "g_xon": "চালু করুন", "g_on": "🗑 ময়লা ফেলার দিনের রিমাইন্ডার (আপনার এলাকা)", "g_gps": "📍 আমার অবস্থান থেকে এলাকা খুঁজুন", "g_wait": "অবস্থান খোঁজা হচ্ছে…", "g_or": "অথবা তালিকা থেকে বাছুন:", "g_city": "— আপনার শহর বাছুন —", "g_find": "পাড়ার নাম জাপানিতে (যেমন 青山)", "g_hint": "বাসার ঠিকানার (住所) পাড়ার নাম — রেসিডেন্স কার্ডে লেখা থাকে।", "g_loading": "লোড হচ্ছে…", "g_cands": "কোনটা আপনার?", "g_nomatch": "তালিকায় ঠিক এই নাম নেই, নিচ থেকে আপনারটা বাছুন।", "g_notjp": "আপনার অবস্থানে জাপানের কোনো ঠিকানা পাওয়া যায়নি — তালিকা থেকে বাছুন।", "g_err": "এখন পাওয়া গেল না — আবার চেষ্টা করুন, বা তালিকা থেকে বাছুন।", "g_denied": "অবস্থানের অনুমতি দেওয়া হয়নি। ব্রাউজারের সেটিংসে অনুমতি দিন, বা তালিকা থেকে বাছুন।", "g_notyet": "আপনার শহর ({p}) এখনো যোগ হয়নি। আমরা নোট করেছি — যত বেশি মানুষ চাইবেন, তত আগে যোগ হবে।", "g_chg": "বদলান", "g_when": "কখন:", "g_prev": "আগের দিন", "g_same": "সংগ্রহের দিন", "g_peek": "👁 পরের ময়লার দিন দেখুন", "g_today": "আজ", "g_tmr": "কাল", "g_none": "এই দিনে কোনো ময়লা নেওয়া হয় না।", "g_close": "বন্ধ", "g_how": "সকালে শহরের নির্দিষ্ট ব্যাগে দিন।", "g_cal": "📅 পুরো ময়লার ক্যালেন্ডার →"},
+  ur: {"g_xday": "📅 {d} کی یاد دہانی", "g_xban": "🔔 {d} کی کچرے کی یاد دہانی — پانے کے لیے نوٹیفکیشن آن کریں", "g_xon": "آن کریں", "g_on": "🗑 کچرا ڈالنے کے دن کی یاد دہانی (آپ کا علاقہ)", "g_gps": "📍 میرے مقام سے علاقہ تلاش کریں", "g_wait": "مقام تلاش ہو رہا ہے…", "g_or": "یا فہرست سے منتخب کریں:", "g_city": "— اپنا شہر منتخب کریں —", "g_find": "محلے کا نام جاپانی میں (مثلاً 青山)", "g_hint": "پتے (住所) میں محلے کا نام — رہائشی کارڈ پر لکھا ہوتا ہے۔", "g_loading": "لوڈ ہو رہا ہے…", "g_cands": "آپ کا کون سا ہے؟", "g_nomatch": "فہرست میں بالکل یہ نام نہیں، نیچے سے اپنا منتخب کریں۔", "g_notjp": "آپ کے مقام پر جاپان کا کوئی پتہ نہیں ملا — فہرست سے منتخب کریں۔", "g_err": "ابھی نہیں مل سکا — دوبارہ کوشش کریں، یا فہرست سے منتخب کریں۔", "g_denied": "مقام کی اجازت نہیں دی گئی۔ براؤزر کی سیٹنگ میں اجازت دیں، یا فہرست سے منتخب کریں۔", "g_notyet": "آپ کا شہر ({p}) ابھی شامل نہیں۔ ہم نے نوٹ کر لیا ہے — جتنے زیادہ لوگ چاہیں گے، اتنی جلدی شامل ہوگا۔", "g_chg": "تبدیل کریں", "g_when": "کب:", "g_prev": "ایک دن پہلے", "g_same": "اسی دن", "g_peek": "👁 کچرے کا اگلا دن دیکھیں", "g_today": "آج", "g_tmr": "کل", "g_none": "اس دن کچرا نہیں اٹھایا جاتا۔", "g_close": "بند", "g_how": "صبح شہر کے مقررہ تھیلے میں رکھیں۔", "g_cal": "📅 کچرے کا پورا کیلنڈر ←"},
+  hi: {"g_xday": "📅 {d} की याद", "g_xban": "🔔 {d} की कूड़े की याद — पाने के लिए नोटिफ़िकेशन चालू करें", "g_xon": "चालू करें", "g_on": "🗑 कूड़ा डालने के दिन की याद (आपका इलाका)", "g_gps": "📍 मेरी लोकेशन से इलाका खोजें", "g_wait": "लोकेशन खोजी जा रही है…", "g_or": "या सूची से चुनें:", "g_city": "— अपना शहर चुनें —", "g_find": "मोहल्ले का नाम जापानी में (जैसे 青山)", "g_hint": "पते (住所) में मोहल्ले का नाम — रेज़िडेंस कार्ड पर लिखा होता है।", "g_loading": "लोड हो रहा है…", "g_cands": "आपका कौन-सा है?", "g_nomatch": "सूची में ठीक यही नाम नहीं, नीचे से अपना चुनें।", "g_notjp": "आपकी लोकेशन पर जापान का कोई पता नहीं मिला — सूची से चुनें।", "g_err": "अभी नहीं मिल पाया — फिर कोशिश करें, या सूची से चुनें।", "g_denied": "लोकेशन की अनुमति नहीं दी गई। ब्राउज़र की सेटिंग में अनुमति दें, या सूची से चुनें।", "g_notyet": "आपका शहर ({p}) अभी जुड़ा नहीं है। हमने नोट कर लिया है — जितने ज़्यादा लोग चाहेंगे, उतनी जल्दी जुड़ेगा।", "g_chg": "बदलें", "g_when": "कब:", "g_prev": "एक दिन पहले", "g_same": "उसी दिन", "g_peek": "👁 कूड़े का अगला दिन देखें", "g_today": "आज", "g_tmr": "कल", "g_none": "इस दिन कूड़ा नहीं उठाया जाता।", "g_close": "बंद", "g_how": "सुबह शहर के तय बैग में रखें।", "g_cal": "📅 कूड़े का पूरा कैलेंडर →"},
+  ar: {"g_xday": "📅 تذكير يوم {d}", "g_xban": "🔔 تذكير النفايات ليوم {d} — فعّل الإشعارات لتصلك", "g_xon": "تفعيل", "g_on": "🗑 تذكير بيوم جمع النفايات (منطقتك)", "g_gps": "📍 ابحث عن منطقتي من موقعي", "g_wait": "جارٍ تحديد موقعك…", "g_or": "أو اختر من القائمة:", "g_city": "— اختر مدينتك —", "g_find": "اسم الحي باليابانية (مثل 青山)", "g_hint": "اسم الحي في عنوانك (住所) — مكتوب على بطاقة الإقامة.", "g_loading": "جارٍ التحميل…", "g_cands": "أيّها منطقتك؟", "g_nomatch": "هذا الاسم ليس في القائمة تمامًا، اختر منطقتك من الأسفل.", "g_notjp": "لم يُعثر على عنوان داخل اليابان لموقعك — اختر من القائمة.", "g_err": "تعذّر ذلك الآن — حاول مرة أخرى، أو اختر من القائمة.", "g_denied": "لم يُسمح بالوصول إلى الموقع. اسمح به من إعدادات المتصفح، أو اختر من القائمة.", "g_notyet": "مدينتك ({p}) لم تُضف بعد. سجّلنا طلبك — كلما زاد الطلب أُضيفت أسرع.", "g_chg": "تغيير", "g_when": "متى:", "g_prev": "في اليوم السابق", "g_same": "في اليوم نفسه", "g_peek": "👁 اعرض يوم الجمع التالي", "g_today": "اليوم", "g_tmr": "غدًا", "g_none": "لا يوجد جمع في هذا اليوم.", "g_close": "إغلاق", "g_how": "ضعها صباحًا في الكيس المخصص من المدينة.", "g_cal": "📅 تقويم النفايات كاملًا ←"}
 };
 for (const l in I18N_G) Object.assign(I18N[l], I18N_G[l]);
 
@@ -4164,7 +4171,7 @@ const gomi = (function () {
   const API = "https://iwate-bd.org/wp-json/gomi/v1/";
   const IMG = "https://iwate-bd.org/wp-content/plugins/gomi-calendar/assets/notify/";
   const CARD_LANGS = ["bn", "en", "ja", "ur", "hi", "ar"];
-  let G = { on: 0, c: "", k: "", tn: "", cn: "", w: "prev", t: "20:00" };
+  let G = { on: 0, c: "", k: "", tn: "", cn: "", w: "prev", t: "20:00", x: [] };
   try { Object.assign(G, JSON.parse(store.get("gomi") || "{}")); } catch {}
   const save = () => store.set("gomi", JSON.stringify(G));
   let P = { open: false, msg: "", cands: null, city: "", cname: "", q: "", busy: false };   // the area picker
@@ -4188,9 +4195,11 @@ const gomi = (function () {
   const towns = c => getJ("towns?c=" + encodeURIComponent(c), "g_t_" + c, 864e5);
   const area = () => getJ("area?c=" + encodeURIComponent(G.c) + "&k=" + encodeURIComponent(G.k), "g_a_" + G.k, 864e5);
 
-  // what the server needs (the notification's own subscription)
-  const param = () => ({ on: G.on && G.k ? 1 : 0, c: G.c, k: G.k, w: G.w === "same" ? "same" : "prev", t: G.t });
-  const sig = () => [G.on && G.k ? 1 : 0, G.k, G.w, G.t].join(",");
+  // reminders for one day (set in the garbage calendar opened from here) — still to come
+  const xs = () => { const t = isoOf(tokyoYMD()); return (Array.isArray(G.x) ? G.x : []).filter(e => e && e.d >= t); };
+  // what the server needs (the notification's own subscription); a day reminder works even with the daily one off
+  const param = () => ({ on: G.on && G.k ? 1 : 0, c: G.c, k: G.k, w: G.w === "same" ? "same" : "prev", t: G.t, x: xs() });
+  const sig = () => [G.on && G.k ? 1 : 0, G.k, G.w, G.t, xs().map(e => e.d + e.w + e.t).join(";")].join(",");
 
   function choose(c, t) {
     G.c = c; G.k = t[1]; G.tn = t[0]; G.cn = (cities && cities[c]) || P.cname || c; G.on = 1; save();
@@ -4275,6 +4284,16 @@ const gomi = (function () {
     cb.onchange = () => { G.on = cb.checked ? 1 : 0; save(); if (G.on && !G.k) P.open = true; rer(); changed(); };
     lb.appendChild(cb); lb.appendChild(document.createTextNode(T("g_on")));
     wrap.appendChild(lb);
+    if (G.k && xs().length) {
+      const ul = el("ul", "g-xl");
+      xs().forEach(e => {
+        const li = el("li", "", T("g_xday").replace("{d}", dayLabel(e.d)) + " · " + (e.w === "same" ? T("g_same") : T("g_prev")) + " " + e.t + " ");
+        const del = el("button", "n-gear", "✕"); del.type = "button"; del.setAttribute("aria-label", T("g_close"));
+        del.onclick = () => { G.x = xs().filter(z => z.d !== e.d); save(); rer(); changed(); banner(); };
+        li.appendChild(del); ul.appendChild(li);
+      });
+      wrap.appendChild(ul);
+    }
     if (!G.on) return wrap;
     if (!G.k || P.open) { wrap.appendChild(picker(el)); return wrap; }
     const a = el("div", "g-area");
@@ -4378,10 +4397,11 @@ const gomi = (function () {
   function link(href) {
     try {
       const u = new URL(href);
-      ["gx_h", "gx_c", "gx_k", "gx_t", "gx_on"].forEach(k => u.searchParams.delete(k));
+      ["gx_h", "gx_c", "gx_k", "gx_t", "gx_on", "gx_x"].forEach(k => u.searchParams.delete(k));
       u.searchParams.set("gx_h", token());
       if (G.k) { u.searchParams.set("gx_c", G.c); u.searchParams.set("gx_k", G.k); u.searchParams.set("gx_t", G.tn || ""); }
       u.searchParams.set("gx_on", G.on && G.k && pushOn() ? "1" : "0");   // the calendar says whether a reminder will come
+      if (xs().length) u.searchParams.set("gx_x", xs().map(e => e.d + "~" + e.w + "~" + e.t).join(","));
       store.set("g_pend", String(Date.now()));
       return u.toString();
     } catch { return href; }
@@ -4393,12 +4413,38 @@ const gomi = (function () {
     fetch(API + "hand?h=" + token() + "&nc=" + Date.now(), { cache: "no-store" }).then(r => r.json()).then(d => {
       if (!d || !d.c || !d.k) return;
       store.set("g_pend", "");
-      if (d.c === G.c && d.k === G.k) return;
-      (cities ? Promise.resolve() : loadCities()).then(() => {
-        G.c = d.c; G.k = d.k; G.tn = d.t || ""; G.cn = (cities && cities[d.c]) || d.c;
-        save(); rer(); changed();
+      const newX = Array.isArray(d.x) ? d.x : null;
+      const sameArea = d.c === G.c && d.k === G.k;
+      if (sameArea && !newX) return;
+      (cities || sameArea ? Promise.resolve() : loadCities()).then(() => {
+        if (!sameArea) { G.c = d.c; G.k = d.k; G.tn = d.t || ""; G.cn = (cities && cities[d.c]) || d.c; }
+        if (newX) G.x = newX;
+        save(); rer(); changed(); banner();
       });
     }).catch(() => {});
+  }
+  function dayLabel(iso) {
+    try { return new Intl.DateTimeFormat(lang, { timeZone: "UTC", month: "short", day: "numeric", weekday: "short" }).format(new Date(iso + "T12:00:00Z")); } catch { return iso; }
+  }
+  // a day reminder is waiting but this phone has no notifications from us: one tap here turns them on
+  let ban = null;
+  function banner() {
+    const need = G.k && xs().length && !pushOn();
+    if (!need) { if (ban) { ban.remove(); ban = null; } return; }
+    if (!ban) {
+      ban = document.createElement("div"); ban.className = "g-ban"; ban.setAttribute("role", "status");
+      document.body.appendChild(ban);
+    }
+    ban.innerHTML = "";
+    const p = document.createElement("span"); p.textContent = T("g_xban").replace("{d}", dayLabel(xs()[0].d));
+    const b = document.createElement("button"); b.type = "button"; b.textContent = T("g_xon");
+    b.onclick = () => {
+      if (notif.canPush()) notif.enable();
+      else { const nb = document.getElementById("notif"); if (nb) nb.scrollIntoView({ behavior: "smooth", block: "start" }); }
+    };
+    const x = document.createElement("button"); x.type = "button"; x.className = "g-ban-x"; x.textContent = "✕"; x.setAttribute("aria-label", T("g_close"));
+    x.onclick = () => { if (ban) { ban.remove(); ban = null; } };
+    ban.append(p, b, x);
   }
   function start(query) {
     const d = query && query.get("gomi");
@@ -4416,7 +4462,7 @@ const gomi = (function () {
       if (a && /^https:\/\/iwate-bd\.org\/[^#]*#pt-gomi$/.test(a.href)) a.href = link(a.href);
     }, true);
   }
-  return { hook, ui, param, sig, start };
+  return { hook, ui, param, sig, start, banner };
 })();
 
 const notif = (function () {
@@ -4433,7 +4479,7 @@ const notif = (function () {
   const TYPES = ["prayer", "ramz", "notice", "jumu", "isl", "jpdz"];
   let types = { prayer: 1, ramz: 1, notice: 1, jumu: 1, isl: 1, jpdz: 1 };
   try { Object.assign(types, JSON.parse(store.get("n_types") || "{}")); } catch {}
-  let sub = null, busy = false, msg = "", err = false, nOpen = false;
+  let sub = null, busy = false, msg = "", err = false, nOpen = false, known = false;   // known: this phone's subscription has been looked up
   // notification language: chosen once, then it no longer follows the page language
   const NLANGS = { ja: "日本語", bn: "বাংলা", en: "English", ur: "اردو", hi: "हिन्दी", ar: "العربية" };
   let nlang = NLANGS[store.get("n_lang")] ? store.get("n_lang") : "";
@@ -4559,6 +4605,7 @@ const notif = (function () {
 
   function render() {
     fabRender();
+    gomi.banner();
     if (!box) return;
     box.hidden = false;
     const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; };
@@ -4650,15 +4697,17 @@ const notif = (function () {
 
   function start() {
     if (!box) return;
-    gomi.hook(render, sync, () => !!sub);
+    gomi.hook(render, sync, () => !!sub || !known);
+    if (!(can && !(ios && !app))) known = true;
     render();
     if (can && !(ios && !app)) getSub().then(s => {
-      sub = s;
+      sub = s; known = true;
       if (s && !nlang) { const old = (store.get("n_sig") || "").split("|")[0]; setNL(NLANGS[old] ? old : lang); }
       render(); sync();
     });
   }
-  return { start, lang: NL, render: () => { if (box && !box.hidden) render(); sync(); } };
+  return { start, lang: NL, render: () => { if (box && !box.hidden) render(); sync(); },
+    canPush: () => can && !(ios && !app), enable: () => { if (nOpen === false) nOpen = true; turnOn(); } };
 })();
 
 /* ===================== Azan player =====================

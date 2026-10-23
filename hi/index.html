@@ -2049,24 +2049,26 @@ document.addEventListener("DOMContentLoaded", function () {
     if (box.hidden) return;
     box.hidden = true;
     document.documentElement.classList.remove("mf-open");
-    // pages stay loaded, so opening them again is instant
+    // other pages stay loaded, so opening them again is instant
+    if (isScan(cur)) { fr.src = "about:blank"; cur = ""; }
     if (!fromHistory && history.state && history.state.mf) history.back();
   }
-  // iPhone does not give the camera to a page inside a frame, so the scanner opens the normal way
-  const inFrame = a => a && !/[?&]hs=scan/.test(a.href);
+  // The scanner starts the camera as soon as it loads; iPhone allows that only while the frame is on screen,
+  // so it is never loaded early in the background and is emptied on close (camera off).
+  const isScan = h => /[?&]hs=scan/.test(h);
   document.addEventListener("pointerdown", e => {
     const a = e.target.closest && e.target.closest("a[data-more]");
-    if (inFrame(a) && !e.button) load(a.href);
+    if (a && !isScan(a.href) && !e.button) load(a.href);
   }, { passive: true });
   document.addEventListener("click", e => {
     const a = e.target.closest && e.target.closest("a[data-more]");
-    if (!inFrame(a) || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
+    if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
     e.preventDefault();
     title.textContent = (a.querySelector("b") || a).textContent;
     ext.href = a.href;
     fr.title = title.textContent;
-    load(a.href);
     box.hidden = false;
+    load(a.href);
     document.documentElement.classList.add("mf-open");
     history.pushState({ mf: 1 }, "");            // phone Back closes the frame, not the app
   });

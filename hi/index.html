@@ -2049,9 +2049,18 @@ document.addEventListener("DOMContentLoaded", function () {
     title.textContent = (a.querySelector("b") || a).textContent;
     ext.href = a.href;
     fr.title = title.textContent;
-    fr.src = a.href;
     box.hidden = false;
     document.documentElement.classList.add("mf-open");
+    // iPhone does not ask for the camera from inside a frame: for the scanner, ask here (same tap), close it
+    // again at once, then load the scanner, which can now use the camera
+    const md = navigator.mediaDevices;
+    if (/[?&]hs=scan/.test(a.href) && md && md.getUserMedia) {
+      md.getUserMedia({ video: { facingMode: "environment" } })
+        .then(st => st.getTracks().forEach(t => t.stop()), () => {})
+        .then(() => { if (!box.hidden) fr.src = a.href; });
+    } else {
+      fr.src = a.href;
+    }
     history.pushState({ mf: 1 }, "");            // phone Back closes the frame, not the app
   });
   box.querySelector(".mf-back").addEventListener("click", () => close(false));

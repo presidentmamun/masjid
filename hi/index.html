@@ -2027,7 +2027,8 @@ function moreUrl(base, l) {
 
 // "More services": open inside the app in a full-screen frame, so it feels like one app.
 // The link itself stays a normal link (new tab, long-press, no JavaScript all still work).
-(function () {
+// The frame's HTML sits after this script, so it is wired up once the page has loaded.
+document.addEventListener("DOMContentLoaded", function () {
   const box = document.getElementById("mframe");
   if (!box) return;
   const fr = box.querySelector("iframe"), title = box.querySelector(".mf-t"), ext = box.querySelector(".mf-ext");
@@ -2054,7 +2055,7 @@ function moreUrl(base, l) {
   ext.addEventListener("click", () => close(false));
   window.addEventListener("popstate", () => close(true));
   document.addEventListener("keydown", e => { if (e.key === "Escape") close(false); });
-})();
+});
 
 /* ===================== Rendering ===================== */
 let todayTimes = null, todayKey = "";

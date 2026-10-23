@@ -724,6 +724,15 @@
   .more-item { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); text-decoration: none; }
   .more-item:hover { border-color: var(--green); }
   .more-item .ic { font-size: 1.6rem; line-height: 1; }
+  /* "More services" open inside the app (no iPhone browser sheet with another domain on top) */
+  #mframe { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; background: var(--bg, #fff); }
+  #mframe[hidden] { display: none; }
+  #mframe .mf-bar { display: flex; align-items: center; gap: 8px; padding: calc(env(safe-area-inset-top) + 6px) 10px 6px; border-bottom: 1px solid var(--line); background: var(--surface, #fff); }
+  #mframe .mf-bar button, #mframe .mf-bar a { min-width: 44px; height: 44px; border: 0; border-radius: 22px; background: var(--surface-2); color: var(--text); font-size: 1.3rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+  #mframe .mf-t { flex: 1; font-weight: 700; color: var(--green); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  #mframe iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+  html.mf-open, html.mf-open body { overflow: hidden; }
+  [dir="rtl"] #mframe .mf-back { transform: scaleX(-1); }
   .more-item b { display: block; color: var(--green); }
   .more-item span { font-size: 0.9rem; color: var(--muted); }
 
@@ -2015,6 +2024,37 @@ function moreUrl(base, l) {
   u.searchParams.set("app", "1");   // opens the tool full screen; closing it (or Back) shows the community site
   return u.toString();
 }
+
+// "More services": open inside the app in a full-screen frame, so it feels like one app.
+// The link itself stays a normal link (new tab, long-press, no JavaScript all still work).
+(function () {
+  const box = document.getElementById("mframe");
+  if (!box) return;
+  const fr = box.querySelector("iframe"), title = box.querySelector(".mf-t"), ext = box.querySelector(".mf-ext");
+  function close(fromHistory) {
+    if (box.hidden) return;
+    box.hidden = true;
+    document.documentElement.classList.remove("mf-open");
+    fr.src = "about:blank";
+    if (!fromHistory && history.state && history.state.mf) history.back();
+  }
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest("a[data-more]");
+    if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
+    e.preventDefault();
+    title.textContent = (a.querySelector("b") || a).textContent;
+    ext.href = a.href;
+    fr.title = title.textContent;
+    fr.src = a.href;
+    box.hidden = false;
+    document.documentElement.classList.add("mf-open");
+    history.pushState({ mf: 1 }, "");            // phone Back closes the frame, not the app
+  });
+  box.querySelector(".mf-back").addEventListener("click", () => close(false));
+  ext.addEventListener("click", () => close(false));
+  window.addEventListener("popstate", () => close(true));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") close(false); });
+})();
 
 /* ===================== Rendering ===================== */
 let todayTimes = null, todayKey = "";
@@ -4998,5 +5038,13 @@ function setUrl() {
   setInterval(tick, 1000);
 })();
 </script>
+<div id="mframe" hidden role="dialog" aria-modal="true">
+  <div class="mf-bar">
+    <button type="button" class="mf-back" aria-label="Back">←</button>
+    <span class="mf-t"></span>
+    <a class="mf-ext" target="_blank" rel="noopener" aria-label="Open in browser">↗</a>
+  </div>
+  <iframe title="" allow="camera; geolocation; clipboard-write; web-share; fullscreen"></iframe>
+</div>
 </body>
 </html>

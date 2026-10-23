@@ -2049,17 +2049,18 @@ document.addEventListener("DOMContentLoaded", function () {
     if (box.hidden) return;
     box.hidden = true;
     document.documentElement.classList.remove("mf-open");
-    // the scanner page is emptied (camera off); the other pages stay loaded, so opening them again is instant
-    if (/[?&]hs=scan/.test(cur)) { fr.src = "about:blank"; cur = ""; }
+    // pages stay loaded, so opening them again is instant
     if (!fromHistory && history.state && history.state.mf) history.back();
   }
+  // iPhone does not give the camera to a page inside a frame, so the scanner opens the normal way
+  const inFrame = a => a && !/[?&]hs=scan/.test(a.href);
   document.addEventListener("pointerdown", e => {
     const a = e.target.closest && e.target.closest("a[data-more]");
-    if (a && !e.button) load(a.href);
+    if (inFrame(a) && !e.button) load(a.href);
   }, { passive: true });
   document.addEventListener("click", e => {
     const a = e.target.closest && e.target.closest("a[data-more]");
-    if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
+    if (!inFrame(a) || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
     e.preventDefault();
     title.textContent = (a.querySelector("b") || a).textContent;
     ext.href = a.href;

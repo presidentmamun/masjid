@@ -37,7 +37,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://iwate-bd.org">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2036,30 +2035,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const box = document.getElementById("mframe");
   if (!box) return;
   const fr = box.querySelector("iframe"), title = box.querySelector(".mf-t"), ext = box.querySelector(".mf-ext");
-  let cur = "";
-  fr.addEventListener("load", () => box.classList.remove("mf-loading"));
-  // start loading as soon as the finger touches the button (saves a few hundred ms)
-  function load(href) {
-    if (href === cur) return;
-    cur = href;
-    box.classList.add("mf-loading");
-    fr.src = href;
-  }
   function close(fromHistory) {
     if (box.hidden) return;
     box.hidden = true;
     document.documentElement.classList.remove("mf-open");
-    // other pages stay loaded, so opening them again is instant
-    if (isScan(cur)) { fr.src = "about:blank"; cur = ""; }
+    fr.src = "about:blank";
     if (!fromHistory && history.state && history.state.mf) history.back();
   }
-  // The scanner starts the camera as soon as it loads; iPhone allows that only while the frame is on screen,
-  // so it is never loaded early in the background and is emptied on close (camera off).
-  const isScan = h => /[?&]hs=scan/.test(h);
-  document.addEventListener("pointerdown", e => {
-    const a = e.target.closest && e.target.closest("a[data-more]");
-    if (a && !isScan(a.href) && !e.button) load(a.href);
-  }, { passive: true });
   document.addEventListener("click", e => {
     const a = e.target.closest && e.target.closest("a[data-more]");
     if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
@@ -2067,8 +2049,8 @@ document.addEventListener("DOMContentLoaded", function () {
     title.textContent = (a.querySelector("b") || a).textContent;
     ext.href = a.href;
     fr.title = title.textContent;
+    fr.src = a.href;
     box.hidden = false;
-    load(a.href);
     document.documentElement.classList.add("mf-open");
     history.pushState({ mf: 1 }, "");            // phone Back closes the frame, not the app
   });

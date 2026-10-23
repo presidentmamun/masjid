@@ -810,6 +810,8 @@
   /* Quran player */
   .q-player { display: grid; gap: 12px; padding: 14px; margin-bottom: 10px; border-radius: 18px; color: #fff;
     background: radial-gradient(circle at 15% 0%, #1a7a52 0%, #0f5a3c 45%, #0b4330 100%); box-shadow: 0 8px 24px rgba(15, 90, 60, .25); }
+  .q-player .sf-in { padding: 10px 12px; border-radius: 12px; border: 0; background: rgba(255, 255, 255, .95); color: #1f2a24; font: inherit; font-weight: 600; }
+  .q-player .sf:after { color: #1f2a24; }
   .q-player select#qSel { width: 100%; padding: 10px 12px; border-radius: 12px; border: 0; background: rgba(255, 255, 255, .95); color: #1f2a24; font: inherit; font-weight: 600; }
   .q-picks { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: -4px; }
   .q-picks select { width: 100%; min-width: 0; padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .28); background: rgba(0, 0, 0, .2); color: #fff; font: inherit; font-size: .86rem; font-weight: 600; text-overflow: ellipsis; }
@@ -1360,6 +1362,184 @@
   </div>
 </footer>
 
+<script>
+/* sura-find.js — same file as iwate-bd prayer-times/assets/sura-find.js (keep both in step) */
+/* SuraFind — surah search instead of a long drop-down (iwate-bd Quran tab + masjid site; same file in both).
+   Type a name in any script: "mu" -> every surah starting with mu, "muluk" / "mulk" / "ムルク" / "মুলক" / "الملك" -> Al-Mulk, "67" -> 67.
+   Latin and kana are also compared by consonants only (vowels and al-/an- dropped), so spelling variants still match.
+   SuraFind.keys(i -> [names...]) builds the search keys once; SuraFind.match(q, keys) -> sura indexes, best first;
+   SuraFind.combo(select, keys, idx) puts a search box in front of a <select> (the select stays the source of truth). */
+(function () {
+    if (window.SuraFind) return;
+    var KANA = {}, KT = 'アa イi ウu エe オo カka キki クku ケke コko サsa シshi スsu セse ソso タta チchi ツtsu テte トto ナna ニni ヌnu ネne ノno '
+        + 'ハha ヒhi フfu ヘhe ホho マma ミmi ムmu メme モmo ヤya ユyu ヨyo ラra リri ルru レre ロro ワwa ヲwo ンn ガga ギgi グgu ゲge ゴgo '
+        + 'ザza ジji ズzu ゼze ゾzo ダda ヂji ヅzu デde ドdo バba ビbi ブbu ベbe ボbo パpa ピpi プpu ペpe ポpo ヴvu ァa ィi ゥu ェe ォo ャa ュu ョo ヮa';
+    KT.split(' ').forEach(function (p) { KANA[p[0]] = p.slice(1); });
+    var ART = /^(aal|a[a-z]{0,3})[-\s'’・·=_]+/;
+
+    function digits(s) {
+        return s.replace(/[০-৯]/g, function (c) { return c.charCodeAt(0) - 0x9e6; })
+            .replace(/[٠-٩]/g, function (c) { return c.charCodeAt(0) - 0x660; })
+            .replace(/[۰-۹]/g, function (c) { return c.charCodeAt(0) - 0x6f0; })
+            .replace(/[０-９]/g, function (c) { return c.charCodeAt(0) - 0xff10; });
+    }
+    function kana(s) {           // hiragana/katakana -> rough romaji ("アル・ムルク" -> "aru muruku")
+        var o = '';
+        for (var i = 0; i < s.length; i++) {
+            var c = s.charCodeAt(i), ch = (c >= 0x3041 && c <= 0x3096) ? String.fromCharCode(c + 0x60) : s[i];
+            o += KANA[ch] != null ? KANA[ch] : /[ッっー]/.test(ch) ? '' : /[・＝=\s]/.test(ch) ? ' ' : ch;
+        }
+        return o.replace(/n(?=[bmp])/g, '');      // ン before m/b/p: ムハンマド = muhammad
+    }
+    function lat(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ‘’'`ʿʾ]/g, ''); }
+    function flat(s) { return s.replace(/[^a-z0-9]/g, ''); }
+    function sk(s) {             // consonant skeleton: al-mulk / muluk / muruku -> mrk
+        s = flat(s.replace(ART, ''));
+        s = s.replace(/th/g, 's').replace(/dh/g, 'z').replace(/sh/g, 's').replace(/kh/g, 'h').replace(/gh/g, 'g')
+            .replace(/ch/g, 't').replace(/ts/g, 's').replace(/q/g, 'k').replace(/l/g, 'r').replace(/v/g, 'b')
+            .replace(/([aeiou])h$/, '$1').replace(/h/g, 'f').replace(/[aeiouw]/g, '').replace(/(.)\1+/g, '$1');
+        return s;
+    }
+    function bn(s) {
+        return s.normalize('NFC').replace(/^আ(?:লে|ল|ন|ত|স|শ|য|দ|র)[-\s]/, '').replace(/ী/g, 'ি').replace(/ূ/g, 'ু')
+            .replace(/য়|য়/g, 'য').replace(/[\s\-‌‍]/g, '');
+    }
+    function bsk(s) { return bn(s).replace(/[া-্ৗঁ-ঃ়]/g, ''); }   // Bangla consonants only: মুলুক = মুলক
+    function ar(s) {
+        return s.replace(/[ً-ٰٟۖ-ۭـ]/g, '').replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه')
+            .replace(/ى/g, 'ي').replace(/^سوره\s*/, '').replace(/^ال/, '').replace(/\s/g, '');
+    }
+
+    function keys(n, namesOf) {
+        var K = [];
+        for (var i = 0; i < n; i++) {
+            var k = { n: i + 1, f: [], s: [], k: [], b: [], c: [], a: [] };
+            (namesOf(i) || []).forEach(function (x) {
+                if (!x) return;
+                x = String(x).replace(/^\s*[\d০-৯٠-٩]+[.)]\s*/, '');
+                x.split(/\s+[—–]\s+/).forEach(function (y) {
+                    if (/[ঀ-৿]/.test(y)) { k.b.push(bn(y)); k.c.push(bsk(y)); }
+                    else if (/[؀-ۿ]/.test(y)) k.a.push(ar(y));
+                    else { var l = lat(y); k.f.push(flat(l)); k.s.push(flat(l.replace(ART, ''))); k.k.push(sk(l)); }
+                });
+            });
+            K.push(k);
+        }
+        return K;
+    }
+    function any(arr, f) { for (var i = 0; i < arr.length; i++) if (arr[i] && f(arr[i])) return true; return false; }
+    function starts(q) { return function (x) { return x.indexOf(q) === 0; }; }
+    function has(q) { return function (x) { return x.indexOf(q) > -1; }; }
+
+    function match(q, K) {
+        q = digits(String(q || '')).trim();
+        var out = [];
+        if (!q) return K.map(function (_, i) { return i; });
+        var num = /^\d+$/.test(q), isK = /[぀-ヿ]/.test(q);
+        var score;
+        if (num) score = function (k) { var s = String(k.n); return s === q ? 0 : s.indexOf(q) === 0 ? 1 : -1; };
+        else if (/[ঀ-৿]/.test(q)) {
+            var qb = bn(q), qb0 = q.normalize('NFC').replace(/[\s\-]/g, ''), qc = bsk(q);
+            score = function (k) { return any(k.b, starts(qb)) || any(k.b, starts(qb0)) ? 0 : qc.length > 1 && any(k.c, starts(qc)) ? 1 : qb.length > 1 && any(k.b, has(qb)) ? 2 : qc.length > 1 && any(k.c, has(qc)) ? 3 : -1; };
+        } else if (/[؀-ۿ]/.test(q)) {
+            var qa = ar(q);
+            score = function (k) { return any(k.a, starts(qa)) ? 0 : qa.length > 1 && any(k.a, has(qa)) ? 2 : -1; };
+        } else {
+            var ql = lat(isK ? kana(q) : q), qs = flat(ql.replace(ART, '')), qf = flat(ql), qk = sk(ql);
+            var qk2 = isK ? sk(ql.replace(/^a(ru|n|t|s|z|d)/, '')) : '';
+            score = function (k) {
+                if (!isK && qf && (any(k.s, starts(qs)) || any(k.f, starts(qf)))) return 0;
+                if (qk && (isK || qk.length > 1) && (any(k.k, starts(qk)) || (qk2 && any(k.k, starts(qk2))))) return 1;
+                if (!isK && qs.length > 1 && any(k.f, has(qs))) return 2;
+                if (qk.length > 1 && any(k.k, has(qk))) return 3;
+                return -1;
+            };
+        }
+        K.forEach(function (k, i) { var s = score(k); if (s >= 0) out.push([s, i]); });
+        out.sort(function (a, b) { return a[0] - b[0] || a[1] - b[1]; });
+        return out.map(function (x) { return x[1]; });
+    }
+
+    var css = '.sf{position:relative}.sf input.sf-in{display:block;width:100%;box-sizing:border-box;cursor:pointer;padding-right:2.2em}.sf input.sf-in:focus{cursor:text}'
+        + '.sf:after{content:"▾";position:absolute;right:.75em;top:50%;transform:translateY(-50%);pointer-events:none;opacity:.7;font-size:1.1em}'   // ▾ = it is still a list too
+        + '[dir=rtl] .sf:after{right:auto;left:.75em}[dir=rtl] .sf input.sf-in{padding-right:.7em;padding-left:2.2em}'
+        + '.sf-list{position:absolute;left:0;right:0;top:100%;z-index:60;margin:4px 0 0;padding:4px;list-style:none;max-height:min(55vh,360px);overflow:auto;'
+        + 'background:var(--sf-bg,#fff);color:var(--sf-fg,#1f2a24);border:1px solid rgba(128,128,128,.3);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);text-align:start}'
+        + '.sf-list[hidden]{display:none}.sf-list li{padding:.55em .7em;border-radius:8px;cursor:pointer;font-weight:500;line-height:1.35}'
+        + '.sf-list li.on{background:var(--sf-on,rgba(26,122,82,.14))}.sf-list li.cur{font-weight:700}.sf-list .sf-no{opacity:.6;cursor:default}';
+
+    function combo(sel, K, idx, noText) {
+        if (sel._sf) return sel._sf;
+        if (!document.getElementById('sf-css')) { var st = document.createElement('style'); st.id = 'sf-css'; st.textContent = css; document.head.appendChild(st); }
+        var wrap = document.createElement('div'), inp = document.createElement('input'), ul = document.createElement('ul');
+        wrap.className = 'sf';
+        inp.type = 'text'; inp.className = 'sf-in ' + sel.className; inp.autocomplete = 'off'; inp.spellcheck = false;
+        inp.setAttribute('role', 'combobox'); inp.setAttribute('aria-expanded', 'false'); inp.setAttribute('aria-autocomplete', 'list');
+        inp.setAttribute('aria-label', sel.getAttribute('aria-label') || 'Surah'); inp.enterKeyHint = 'go';
+        ul.className = 'sf-list'; ul.setAttribute('role', 'listbox'); ul.hidden = true;
+        sel.parentNode.insertBefore(wrap, sel); wrap.appendChild(inp); wrap.appendChild(ul); sel.hidden = true; sel.style.display = 'none';
+        var items = [], act = -1, open = false;
+        function txt() { var o = sel.options[sel.selectedIndex]; return o ? o.text : ''; }
+        function show() { if (document.activeElement !== inp) inp.value = txt(); }
+        var d = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value');
+        try {
+            Object.defineProperty(sel, 'value', { configurable: true, get: function () { return d.get.call(sel); },
+                set: function (v) { d.set.call(sel, v); show(); } });
+        } catch (e) { /* old browser: text syncs on change/focus only */ }
+        if (window.MutationObserver) new MutationObserver(show).observe(sel, { childList: true, subtree: true, characterData: true });
+        sel.addEventListener('change', show);
+        function mark(j) {
+            if (items[act]) items[act].li.classList.remove('on');
+            act = j;
+            if (items[act]) { items[act].li.classList.add('on'); inp.setAttribute('aria-activedescendant', items[act].li.id); items[act].li.scrollIntoView({ block: 'nearest' }); }
+        }
+        function draw() {
+            var ops = sel.options, q = inp.value, by = {}, order, i;
+            for (i = 0; i < ops.length; i++) { var s = idx(ops[i]); if (s >= 0) by[s] = ops[i]; }
+            order = match(q, K).filter(function (s) { return by[s]; });
+            ul.innerHTML = ''; items = []; act = -1;
+            order.forEach(function (s, j) {
+                var o = by[s], li = document.createElement('li');
+                li.textContent = o.text; li.id = 'sf' + s + '-' + (sel.id || 'x'); li.setAttribute('role', 'option');
+                if (o.selected) li.className = 'cur';
+                li.onmousedown = function (e) { e.preventDefault(); };
+                li.onclick = function () { pick(o); };
+                ul.appendChild(li); items.push({ li: li, o: o });
+            });
+            if (!items.length) { var no = document.createElement('li'); no.className = 'sf-no'; no.textContent = noText || '—'; ul.appendChild(no); }
+            if (q.trim()) mark(0);
+            else for (i = 0; i < items.length; i++) if (items[i].o.selected) { mark(i); break; }
+        }
+        function setOpen(v) { open = v; ul.hidden = !v; inp.setAttribute('aria-expanded', v ? 'true' : 'false'); }
+        function pick(o) {
+            setOpen(false);
+            var ch = sel.value !== o.value;
+            sel.value = o.value; inp.value = o.text; inp.blur();
+            if (ch) sel.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        inp.addEventListener('focus', function () { inp.placeholder = txt(); inp.value = ''; draw(); setOpen(true); });
+        inp.addEventListener('input', function () { draw(); setOpen(true); });
+        inp.addEventListener('blur', function () { setOpen(false); inp.value = txt(); });
+        inp.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault(); if (!open) { draw(); setOpen(true); }
+                if (items.length) mark(Math.max(0, Math.min(items.length - 1, act + (e.key === 'ArrowDown' ? 1 : -1))));
+            } else if (e.key === 'Enter') {
+                e.preventDefault(); var it = items[act >= 0 ? act : 0]; if (it) pick(it.o);
+            } else if (e.key === 'Escape') { inp.blur(); }
+        });
+        show();
+        sel._sf = { input: inp, refresh: show };
+        return sel._sf;
+    }
+
+    window.SuraFind = { keys: keys, match: match, combo: combo, kana: kana, sk: sk };
+})();
+
+/* extra surah names for the search (Banglish/English spellings + Bangla), from iwate-bd pt-quran.php */
+const Q_EN = [ 'Al-Fatiha', 'Al-Baqarah', 'Aal-Imran', 'An-Nisa', 'Al-Maidah', 'Al-Anam', 'Al-Araf', 'Al-Anfal', 'At-Tawbah', 'Yunus', 'Hud', 'Yusuf', 'Ar-Rad', 'Ibrahim', 'Al-Hijr', 'An-Nahl', 'Al-Isra', 'Al-Kahf', 'Maryam', 'Ta-Ha', 'Al-Anbiya', 'Al-Hajj', 'Al-Muminun', 'An-Nur', 'Al-Furqan', 'Ash-Shuara', 'An-Naml', 'Al-Qasas', 'Al-Ankabut', 'Ar-Rum', 'Luqman', 'As-Sajdah', 'Al-Ahzab', 'Saba', 'Fatir', 'Ya-Sin', 'As-Saffat', 'Sad', 'Az-Zumar', 'Ghafir', 'Fussilat', 'Ash-Shura', 'Az-Zukhruf', 'Ad-Dukhan', 'Al-Jathiyah', 'Al-Ahqaf', 'Muhammad', 'Al-Fath', 'Al-Hujurat', 'Qaf', 'Adh-Dhariyat', 'At-Tur', 'An-Najm', 'Al-Qamar', 'Ar-Rahman', 'Al-Waqiah', 'Al-Hadid', 'Al-Mujadilah', 'Al-Hashr', 'Al-Mumtahanah', 'As-Saff', 'Al-Jumuah', 'Al-Munafiqun', 'At-Taghabun', 'At-Talaq', 'At-Tahrim', 'Al-Mulk', 'Al-Qalam', 'Al-Haqqah', 'Al-Maarij', 'Nuh', 'Al-Jinn', 'Al-Muzzammil', 'Al-Muddaththir', 'Al-Qiyamah', 'Al-Insan', 'Al-Mursalat', 'An-Naba', 'An-Naziat', 'Abasa', 'At-Takwir', 'Al-Infitar', 'Al-Mutaffifin', 'Al-Inshiqaq', 'Al-Buruj', 'At-Tariq', 'Al-Ala', 'Al-Ghashiyah', 'Al-Fajr', 'Al-Balad', 'Ash-Shams', 'Al-Layl', 'Ad-Duha', 'Ash-Sharh', 'At-Tin', 'Al-Alaq', 'Al-Qadr', 'Al-Bayyinah', 'Az-Zalzalah', 'Al-Adiyat', 'Al-Qariah', 'At-Takathur', 'Al-Asr', 'Al-Humazah', 'Al-Fil', 'Quraysh', 'Al-Maun', 'Al-Kawthar', 'Al-Kafirun', 'An-Nasr', 'Al-Masad', 'Al-Ikhlas', 'Al-Falaq', 'An-Nas' ];
+const Q_BN = [ 'আল-ফাতিহা', 'আল-বাকারা', 'আলে-ইমরান', 'আন-নিসা', 'আল-মায়িদা', 'আল-আনআম', 'আল-আরাফ', 'আল-আনফাল', 'আত-তাওবা', 'ইউনুস', 'হুদ', 'ইউসুফ', 'আর-রাদ', 'ইবরাহিম', 'আল-হিজর', 'আন-নাহল', 'বনি ইসরাইল', 'আল-কাহফ', 'মারইয়াম', 'ত্বা-হা', 'আল-আম্বিয়া', 'আল-হজ', 'আল-মুমিনুন', 'আন-নূর', 'আল-ফুরকান', 'আশ-শুআরা', 'আন-নামল', 'আল-কাসাস', 'আল-আনকাবুত', 'আর-রুম', 'লুকমান', 'আস-সাজদা', 'আল-আহযাব', 'সাবা', 'ফাতির', 'ইয়া-সীন', 'আস-সাফফাত', 'সোয়াদ', 'আয-যুমার', 'আল-মুমিন', 'হা-মীম সাজদা', 'আশ-শুরা', 'আয-যুখরুফ', 'আদ-দুখান', 'আল-জাসিয়া', 'আল-আহকাফ', 'মুহাম্মাদ', 'আল-ফাতহ', 'আল-হুজুরাত', 'ক্বাফ', 'আয-যারিয়াত', 'আত-তুর', 'আন-নাজম', 'আল-কামার', 'আর-রাহমান', 'আল-ওয়াকিয়া', 'আল-হাদীদ', 'আল-মুজাদালা', 'আল-হাশর', 'আল-মুমতাহিনা', 'আস-সাফ', 'আল-জুমুআ', 'আল-মুনাফিকুন', 'আত-তাগাবুন', 'আত-তালাক', 'আত-তাহরীম', 'আল-মুলক', 'আল-কলম', 'আল-হাক্কাহ', 'আল-মাআরিজ', 'নূহ', 'আল-জিন', 'আল-মুযযাম্মিল', 'আল-মুদ্দাসসির', 'আল-কিয়ামাহ', 'আদ-দাহর', 'আল-মুরসালাত', 'আন-নাবা', 'আন-নাযিয়াত', 'আবাসা', 'আত-তাকবীর', 'আল-ইনফিতার', 'আল-মুতাফফিফীন', 'আল-ইনশিকাক', 'আল-বুরুজ', 'আত-তারিক', 'আল-আলা', 'আল-গাশিয়া', 'আল-ফাজর', 'আল-বালাদ', 'আশ-শামস', 'আল-লাইল', 'আদ-দুহা', 'আলাম নাশরাহ', 'আত-তীন', 'আল-আলাক', 'আল-কদর', 'আল-বাইয়িনাহ', 'আয-যিলযাল', 'আল-আদিয়াত', 'আল-কারিয়া', 'আত-তাকাসুর', 'আল-আসর', 'আল-হুমাযাহ', 'আল-ফীল', 'কুরাইশ', 'আল-মাউন', 'আল-কাওসার', 'আল-কাফিরুন', 'আন-নাসর', 'আল-লাহাব', 'আল-ইখলাস', 'আল-ফালাক', 'আন-নাস' ];
+</script>
 <script>
 /* ===================== Settings ===================== */
 const M_LAT = 39.7176617, M_LNG = 141.1266192, TZ = 9;   // Morioka Masjid, JST (UTC+9, no DST)
@@ -3450,6 +3630,8 @@ function quranStart() {
     q.list = list;
     $q("qSel").innerHTML = list.map(x => `<option value="${x.number}">${x.number}. ${x.englishName} — ${x.name.replace(/^سُورَةُ\s*/, "")}</option>`).join("");
     $q("qSel").value = q.surah;
+    if (window.SuraFind) SuraFind.combo($q("qSel"), SuraFind.keys(114, i => [list[i] && list[i].englishName, list[i] && list[i].name, Q_EN[i], Q_BN[i]]), o => +o.value - 1,
+      { ja: "見つかりません", bn: "কোনো সূরা মেলেনি", ar: "لا توجد سورة", ur: "کوئی سورت نہیں ملی", hi: "कोई सूरह नहीं मिली" }[lang] || "No surah found");   // drop-down -> search box (list still opens on tap)
     qLabels();
   }).catch(() => {});
   quranLoad();

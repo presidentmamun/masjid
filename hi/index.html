@@ -37,6 +37,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://iwate-bd.org">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -731,6 +732,9 @@
   #mframe .mf-bar button, #mframe .mf-bar a { min-width: 44px; height: 44px; border: 0; border-radius: 22px; background: var(--surface-2); color: var(--text); font-size: 1.3rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
   #mframe .mf-t { flex: 1; font-weight: 700; color: var(--green); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   #mframe iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+  #mframe .mf-bar { position: relative; }
+  #mframe.mf-loading .mf-bar:after { content: ""; position: absolute; left: 0; bottom: -1px; height: 3px; width: 40%; background: var(--green); animation: mfload 1s ease-in-out infinite; }
+  @keyframes mfload { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
   html.mf-open, html.mf-open body { overflow: hidden; }
   [dir="rtl"] #mframe .mf-back { transform: scaleX(-1); }
   .more-item b { display: block; color: var(--green); }
@@ -2032,13 +2036,27 @@ document.addEventListener("DOMContentLoaded", function () {
   const box = document.getElementById("mframe");
   if (!box) return;
   const fr = box.querySelector("iframe"), title = box.querySelector(".mf-t"), ext = box.querySelector(".mf-ext");
+  let cur = "";
+  fr.addEventListener("load", () => box.classList.remove("mf-loading"));
+  // start loading as soon as the finger touches the button (saves a few hundred ms)
+  function load(href) {
+    if (href === cur) return;
+    cur = href;
+    box.classList.add("mf-loading");
+    fr.src = href;
+  }
   function close(fromHistory) {
     if (box.hidden) return;
     box.hidden = true;
     document.documentElement.classList.remove("mf-open");
-    fr.src = "about:blank";
+    // the scanner page is emptied (camera off); the other pages stay loaded, so opening them again is instant
+    if (/[?&]hs=scan/.test(cur)) { fr.src = "about:blank"; cur = ""; }
     if (!fromHistory && history.state && history.state.mf) history.back();
   }
+  document.addEventListener("pointerdown", e => {
+    const a = e.target.closest && e.target.closest("a[data-more]");
+    if (a && !e.button) load(a.href);
+  }, { passive: true });
   document.addEventListener("click", e => {
     const a = e.target.closest && e.target.closest("a[data-more]");
     if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
@@ -2046,7 +2064,7 @@ document.addEventListener("DOMContentLoaded", function () {
     title.textContent = (a.querySelector("b") || a).textContent;
     ext.href = a.href;
     fr.title = title.textContent;
-    fr.src = a.href;
+    load(a.href);
     box.hidden = false;
     document.documentElement.classList.add("mf-open");
     history.pushState({ mf: 1 }, "");            // phone Back closes the frame, not the app

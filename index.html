@@ -37,6 +37,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://iwate-bd.org">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2035,13 +2036,34 @@ document.addEventListener("DOMContentLoaded", function () {
   const box = document.getElementById("mframe");
   if (!box) return;
   const fr = box.querySelector("iframe"), title = box.querySelector(".mf-t"), ext = box.querySelector(".mf-ext");
+  const isScan = h => /[?&]hs=scan/.test(h);
+  let cur = "", camOk = false;
+  try {        // camera already allowed for the app? then the scanner does not need the extra question
+    navigator.permissions.query({ name: "camera" }).then(r => {
+      camOk = r.state === "granted";
+      r.onchange = () => { camOk = r.state === "granted"; };
+    }, () => {});
+  } catch (err) {}
+  fr.addEventListener("load", () => box.classList.remove("mf-loading"));
+  function load(href) {
+    if (href === cur) return;
+    cur = href;
+    box.classList.add("mf-loading");
+    fr.src = href;
+  }
   function close(fromHistory) {
     if (box.hidden) return;
     box.hidden = true;
     document.documentElement.classList.remove("mf-open");
-    fr.src = "about:blank";
+    // the scanner is emptied (camera off); other pages stay loaded, so opening them again is instant
+    if (isScan(cur)) { fr.src = "about:blank"; cur = ""; }
     if (!fromHistory && history.state && history.state.mf) history.back();
   }
+  // other services start loading the moment the finger touches the button (the scanner never: see below)
+  document.addEventListener("pointerdown", e => {
+    const a = e.target.closest && e.target.closest("a[data-more]");
+    if (a && !isScan(a.href) && !e.button) load(a.href);
+  }, { passive: true });
   document.addEventListener("click", e => {
     const a = e.target.closest && e.target.closest("a[data-more]");
     if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
@@ -2053,13 +2075,14 @@ document.addEventListener("DOMContentLoaded", function () {
     document.documentElement.classList.add("mf-open");
     // iPhone does not ask for the camera from inside a frame: for the scanner, ask here (same tap), close it
     // again at once, then load the scanner, which can now use the camera
+    // (only when the camera is not allowed yet, so it is asked once, not twice)
     const md = navigator.mediaDevices;
-    if (/[?&]hs=scan/.test(a.href) && md && md.getUserMedia) {
-      md.getUserMedia({ video: { facingMode: "environment" } })
-        .then(st => st.getTracks().forEach(t => t.stop()), () => {})
-        .then(() => { if (!box.hidden) fr.src = a.href; });
+    if (isScan(a.href) && md && md.getUserMedia) {
+      const p = camOk ? Promise.resolve() : md.getUserMedia({ video: { facingMode: "environment" } })   // still inside the tap
+        .then(st => { camOk = true; st.getTracks().forEach(t => t.stop()); }, () => {});
+      p.then(() => { if (!box.hidden) load(a.href); });
     } else {
-      fr.src = a.href;
+      load(a.href);
     }
     history.pushState({ mf: 1 }, "");            // phone Back closes the frame, not the app
   });

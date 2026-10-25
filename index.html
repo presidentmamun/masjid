@@ -3396,7 +3396,7 @@ const cmp = (() => {
   btn.hidden = false;
   function say(k, d) {
     if (d !== undefined) deg = d;
-    state = k; st.textContent = k ? T(k).replace("{d}", deg) : "";
+    state = k; st.textContent = k ? T(k).replace("{d}", new Intl.NumberFormat(lang).format(deg)) : "";
     st.classList.toggle("ok", k === "compass_ok");
     st.classList.toggle("near", k !== "compass_ok" && svg.classList.contains("near"));
   }

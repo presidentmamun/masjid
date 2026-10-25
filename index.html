@@ -444,8 +444,19 @@
   .qibla { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
   .compass { width: 220px; max-width: 100%; aspect-ratio: 1; flex: none; filter: drop-shadow(0 6px 14px rgba(15, 90, 60, .18)); }
   .compass .c-face { transition: fill .3s; }
-  .compass.aligned .c-face { fill: var(--gold-soft); }
+  .compass { overflow: visible; }
+  .compass .c-ring { transition: fill .25s; }
+  .compass .c-ok { opacity: 0; transition: opacity .25s; }
+  .compass.near .c-ring { fill: var(--gold); }
   .compass.aligned .c-ring { fill: var(--green); }
+  .compass.aligned .c-ok { opacity: 1; }
+  .compass.aligned #cTicks { stroke: rgba(255, 255, 255, .55); }
+  .compass.aligned #dial text { fill: #fff; }
+  .compass.aligned #dial .c-n { fill: #ffc9bf; }
+  .compass .c-pulse { opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .compass.aligned .c-pulse { animation: qpulse 1.1s ease-out 1; }
+  @keyframes qpulse { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(1.18); } }
+  @media (prefers-reduced-motion: reduce) { .compass.aligned .c-pulse { animation: none; } }
   @media (max-width: 520px) { .qibla { justify-content: center; } .qibla-info { width: 100%; text-align: center; } }
   .qibla-info .deg { font-size: 2rem; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
   .qibla-info p { margin: 4px 0; }
@@ -455,7 +466,8 @@
   .cmp-btn { margin-top: 12px; padding: 10px 20px; border-radius: 999px; border: 0; background: var(--green); color: #fff; font: inherit; font-weight: 600; cursor: pointer; box-shadow: 0 3px 10px rgba(15, 90, 60, .25); }
   .cmp-btn:active { transform: scale(.97); }
   .cmp-st { font-weight: 600; min-height: 1.4em; }
-  .cmp-st.ok { color: var(--green); }
+  .cmp-st.ok { display: inline-block; padding: 6px 16px; border-radius: 999px; background: var(--green); color: #fff; font-size: 1.05rem; }
+  .cmp-st.near { color: var(--green); }
 
   /* Shared small parts */
   .sub-h { margin: 22px 0 12px; font-size: 1.05rem; color: var(--text); }
@@ -1126,11 +1138,13 @@
           <radialGradient id="cFace" cx="50%" cy="42%" r="62%"><stop offset="0" stop-color="var(--surface)"/><stop offset="1" stop-color="var(--surface-2)"/></radialGradient>
           <linearGradient id="cRing" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--gold)"/><stop offset="1" stop-color="var(--green)"/></linearGradient>
         </defs>
+        <circle class="c-pulse" cx="100" cy="100" r="97" fill="none" stroke="var(--green)" stroke-width="4"/>
         <circle class="c-ring" cx="100" cy="100" r="97" fill="url(#cRing)"/>
         <g id="dial">
         <circle class="c-face" cx="100" cy="100" r="91" fill="url(#cFace)"/>
+        <circle class="c-ok" cx="100" cy="100" r="91" fill="var(--green)"/>
         <g id="cTicks" stroke="var(--muted)" stroke-linecap="round"></g>
-        <text x="100" y="35" text-anchor="middle" font-size="15" font-weight="800" fill="#c0392b">N</text>
+        <text class="c-n" x="100" y="35" text-anchor="middle" font-size="15" font-weight="800" fill="#c0392b">N</text>
         <text x="167" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="var(--muted)">E</text>
         <text x="100" y="174" text-anchor="middle" font-size="12" font-weight="700" fill="var(--muted)">S</text>
         <text x="33" y="105" text-anchor="middle" font-size="12" font-weight="700" fill="var(--muted)">W</text>
@@ -1572,7 +1586,7 @@ const I18N = {
   en: {
     more_gomi: "Garbage calendar", more_gomi_d: "Which garbage goes out on which day in your area, with a reminder the night before",
     more_title: "More services", more_scan: "Halal Check", more_scan_d: "Scan a food package (barcode or ingredients) to see its ingredients explained", more_food: "Halal food near you", more_food_d: "Restaurants and shops nearby, on a map", more_mosque: "Mosques near you", more_mosque_d: "Mosques and prayer rooms across Japan, by distance", more_taxi: "Call a taxi", more_taxi_d: "Nearby taxi companies and what to say on the phone in Japanese", more_note: "These services open on the community site iwate-bd.org. Halal information is the shops' own claims and an ingredient check — not a ruling by the masjid.",
-    nav_quran: "Quran", quran_title: "The Holy Quran", quran_listen: "▶ Listen to the whole surah", quran_tr: "Show translation", quran_loading: "Loading…", quran_fail: "Could not load. Please check your connection.", quran_tap: "Tap a verse to hear its recitation.", quran_src: "Arabic text: Tanzil (via alquran.cloud) · Translation: Saheeh International · Recitation: Mishary Alafasy", compass_btn: "🧭 Use the phone's compass", compass_wait: "Turn your phone slowly…", compass_ok: "✓ You are facing the Qibla", compass_turn: "Turn until the arrow points straight up", compass_na: "No compass on this device — use a compass as described above.",
+    nav_quran: "Quran", quran_title: "The Holy Quran", quran_listen: "▶ Listen to the whole surah", quran_tr: "Show translation", quran_loading: "Loading…", quran_fail: "Could not load. Please check your connection.", quran_tap: "Tap a verse to hear its recitation.", quran_src: "Arabic text: Tanzil (via alquran.cloud) · Translation: Saheeh International · Recitation: Mishary Alafasy", compass_btn: "🧭 Use the phone's compass", compass_wait: "Turn your phone slowly…", compass_ok: "✓ You are facing the Qibla", compass_turn: "Turn until the arrow points straight up", compass_right: "↻ Turn right {d}°", compass_left: "↺ Turn left {d}°", compass_na: "No compass on this device — use a compass as described above.",
     title: "Masjid Al-Tawheed", sub: "Morioka Masjid · Morioka, Iwate",
     welcome: "Welcome. A place for prayer, learning and community in Iwate.",
     nav_times: "Prayer Times", nav_qibla: "Qibla", nav_about: "About", nav_access: "Access", nav_visit: "Visiting", nav_contact: "Contact",
@@ -1632,7 +1646,7 @@ const I18N = {
   ja: {
     more_gomi: "ごみカレンダー", more_gomi_d: "お住まいの地域のごみ出しの日と、前日の夜のお知らせ",
     more_title: "その他のサービス", more_scan: "ハラールチェック", more_scan_d: "食品のバーコードや原材料をスキャンして、原材料の説明を確認", more_food: "近くのハラール料理・店", more_food_d: "近くのレストランや食料品店を地図で", more_mosque: "近くのモスク", more_mosque_d: "全国のモスク・礼拝所を距離順に", more_taxi: "タクシーを呼ぶ", more_taxi_d: "近くのタクシー会社と、電話で話す日本語", more_note: "これらはコミュニティサイト iwate-bd.org で開きます。ハラール情報は各店の自己申告と原材料の確認によるもので、マスジドによる判断ではありません。",
-    nav_quran: "クルアーン", quran_title: "聖クルアーン", quran_listen: "▶ スーラ全体を聴く", quran_tr: "日本語訳を表示", quran_loading: "読み込み中…", quran_fail: "読み込めませんでした。接続を確認してください。", quran_tap: "節をタップすると、その節の朗誦が流れます。", quran_src: "アラビア語本文：Tanzil（alquran.cloud 経由）・日本語訳：alquran.cloud 収録の訳・朗誦：ミシャーリー・アル＝アファースィー", compass_btn: "🧭 スマホのコンパスを使う", compass_wait: "スマホをゆっくり回してください…", compass_ok: "✓ キブラの方向を向いています", compass_turn: "矢印が真上を指すまで向きを変えてください", compass_na: "この端末ではコンパスが使えません。上の説明のとおり方位磁石をお使いください。",
+    nav_quran: "クルアーン", quran_title: "聖クルアーン", quran_listen: "▶ スーラ全体を聴く", quran_tr: "日本語訳を表示", quran_loading: "読み込み中…", quran_fail: "読み込めませんでした。接続を確認してください。", quran_tap: "節をタップすると、その節の朗誦が流れます。", quran_src: "アラビア語本文：Tanzil（alquran.cloud 経由）・日本語訳：alquran.cloud 収録の訳・朗誦：ミシャーリー・アル＝アファースィー", compass_btn: "🧭 スマホのコンパスを使う", compass_wait: "スマホをゆっくり回してください…", compass_ok: "✓ キブラの方向を向いています", compass_turn: "矢印が真上を指すまで向きを変えてください", compass_right: "↻ 右へ {d}° 回ってください", compass_left: "↺ 左へ {d}° 回ってください", compass_na: "この端末ではコンパスが使えません。上の説明のとおり方位磁石をお使いください。",
     title: "マスジド・アル・タウヒード", sub: "盛岡マスジド ・ 岩手県盛岡市",
     welcome: "ようこそ。岩手の礼拝・学び・交流の場です。",
     nav_times: "礼拝時間", nav_qibla: "キブラ", nav_about: "紹介", nav_access: "アクセス", nav_visit: "ご訪問", nav_contact: "連絡先",
@@ -1692,7 +1706,7 @@ const I18N = {
   bn: {
     more_gomi: "ময়লার ক্যালেন্ডার", more_gomi_d: "আপনার এলাকায় কোন দিন কোন ময়লা, আর আগের রাতে রিমাইন্ডার",
     more_title: "আরও সুবিধা", more_scan: "হালাল চেক", more_scan_d: "খাবারের প্যাকেটের বারকোড বা উপাদান স্ক্যান করে উপাদানের ব্যাখ্যা দেখুন", more_food: "কাছের হালাল খাবার ও দোকান", more_food_d: "আশপাশের রেস্টুরেন্ট আর দোকান, ম্যাপে", more_mosque: "কাছের মসজিদ", more_mosque_d: "জাপানজুড়ে মসজিদ ও নামাজের জায়গা, দূরত্ব অনুযায়ী", more_taxi: "ট্যাক্সি ডাকুন", more_taxi_d: "কাছের ট্যাক্সি কোম্পানি আর ফোনে কী বলবেন জাপানিতে", more_note: "এই সুবিধাগুলো কমিউনিটির সাইট iwate-bd.org-এ খুলবে। হালাল তথ্য দোকানের নিজের দাবি ও উপাদানের হিসাব — মসজিদের রায় নয়।",
-    nav_quran: "কুরআন", quran_title: "পবিত্র কুরআন", quran_listen: "▶ পুরো সূরা শুনুন", quran_tr: "বাংলা অর্থ দেখান", quran_loading: "লোড হচ্ছে…", quran_fail: "আনা যায়নি। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।", quran_tap: "আয়াতে চাপ দিলে সেই আয়াতের তিলাওয়াত শুনবেন।", quran_src: "আরবি লেখা: Tanzil (alquran.cloud থেকে) · অর্থ: মুহিউদ্দীন খান · তিলাওয়াত: মিশারি আল-আফাসি", compass_btn: "🧭 ফোনের কম্পাস ব্যবহার করুন", compass_wait: "ফোন আস্তে আস্তে ঘোরান…", compass_ok: "✓ আপনি কিবলার দিকে মুখ করে আছেন", compass_turn: "তীর সোজা উপরের দিকে না আসা পর্যন্ত ঘুরুন", compass_na: "এই ফোনে কম্পাস নেই — উপরের নিয়মে কম্পাস ব্যবহার করুন।",
+    nav_quran: "কুরআন", quran_title: "পবিত্র কুরআন", quran_listen: "▶ পুরো সূরা শুনুন", quran_tr: "বাংলা অর্থ দেখান", quran_loading: "লোড হচ্ছে…", quran_fail: "আনা যায়নি। ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন।", quran_tap: "আয়াতে চাপ দিলে সেই আয়াতের তিলাওয়াত শুনবেন।", quran_src: "আরবি লেখা: Tanzil (alquran.cloud থেকে) · অর্থ: মুহিউদ্দীন খান · তিলাওয়াত: মিশারি আল-আফাসি", compass_btn: "🧭 ফোনের কম্পাস ব্যবহার করুন", compass_wait: "ফোন আস্তে আস্তে ঘোরান…", compass_ok: "✓ আপনি কিবলার দিকে মুখ করে আছেন", compass_turn: "তীর সোজা উপরের দিকে না আসা পর্যন্ত ঘুরুন", compass_right: "↻ ডানে {d}° ঘুরুন", compass_left: "↺ বামে {d}° ঘুরুন", compass_na: "এই ফোনে কম্পাস নেই — উপরের নিয়মে কম্পাস ব্যবহার করুন।",
     title: "মসজিদ আত-তাওহীদ", sub: "মরিওকা মসজিদ · মরিওকা, ইওয়াতে",
     welcome: "স্বাগতম। ইওয়াতের নামাজ, শিক্ষা ও মিলনের স্থান।",
     nav_times: "নামাজের সময়", nav_qibla: "কিবলা", nav_about: "পরিচিতি", nav_access: "যাতায়াত", nav_visit: "আসার আগে", nav_contact: "যোগাযোগ",
@@ -1752,7 +1766,7 @@ const I18N = {
   ur: {
     more_gomi: "کچرے کا کیلنڈر", more_gomi_d: "آپ کے علاقے میں کس دن کون سا کچرا، اور ایک رات پہلے یاد دہانی",
     more_title: "مزید سہولیات", more_scan: "حلال چیک", more_scan_d: "کھانے کے پیکٹ کا بارکوڈ یا اجزاء اسکین کر کے اجزاء کی وضاحت دیکھیں", more_food: "قریبی حلال کھانا اور دکانیں", more_food_d: "آس پاس کے ریسٹورنٹ اور دکانیں، نقشے پر", more_mosque: "قریبی مساجد", more_mosque_d: "پورے جاپان کی مساجد اور نماز کی جگہیں، فاصلے کے لحاظ سے", more_taxi: "ٹیکسی بلائیں", more_taxi_d: "قریبی ٹیکسی کمپنیاں اور فون پر جاپانی میں کیا کہنا ہے", more_note: "یہ سہولیات کمیونٹی کی سائٹ iwate-bd.org پر کھلیں گی۔ حلال معلومات دکانوں کا اپنا دعویٰ اور اجزاء کی جانچ ہیں — مسجد کا فیصلہ نہیں۔",
-    nav_quran: "قرآن", quran_title: "قرآنِ مجید", quran_listen: "▶ پوری سورت سنیں", quran_tr: "اردو ترجمہ دکھائیں", quran_loading: "لوڈ ہو رہا ہے…", quran_fail: "لوڈ نہیں ہو سکا۔ انٹرنیٹ کنکشن چیک کریں۔", quran_tap: "آیت پر ٹیپ کریں تو اس کی تلاوت سنائی دے گی۔", quran_src: "عربی متن: Tanzil (بذریعہ alquran.cloud) · ترجمہ: فتح محمد جالندھری · تلاوت: مشاری العفاسی", compass_btn: "🧭 فون کا قطب نما استعمال کریں", compass_wait: "فون آہستہ آہستہ گھمائیں…", compass_ok: "✓ آپ کا رخ قبلہ کی طرف ہے", compass_turn: "تیر بالکل اوپر آنے تک رخ بدلیں", compass_na: "اس فون میں قطب نما نہیں — اوپر بتائے طریقے سے قطب نما استعمال کریں۔",
+    nav_quran: "قرآن", quran_title: "قرآنِ مجید", quran_listen: "▶ پوری سورت سنیں", quran_tr: "اردو ترجمہ دکھائیں", quran_loading: "لوڈ ہو رہا ہے…", quran_fail: "لوڈ نہیں ہو سکا۔ انٹرنیٹ کنکشن چیک کریں۔", quran_tap: "آیت پر ٹیپ کریں تو اس کی تلاوت سنائی دے گی۔", quran_src: "عربی متن: Tanzil (بذریعہ alquran.cloud) · ترجمہ: فتح محمد جالندھری · تلاوت: مشاری العفاسی", compass_btn: "🧭 فون کا قطب نما استعمال کریں", compass_wait: "فون آہستہ آہستہ گھمائیں…", compass_ok: "✓ آپ کا رخ قبلہ کی طرف ہے", compass_turn: "تیر بالکل اوپر آنے تک رخ بدلیں", compass_right: "↻ دائیں {d}° مڑیں", compass_left: "↺ بائیں {d}° مڑیں", compass_na: "اس فون میں قطب نما نہیں — اوپر بتائے طریقے سے قطب نما استعمال کریں۔",
     title: "مسجد التوحید", sub: "موریوکا مسجد · موریوکا، ایواتے",
     welcome: "خوش آمدید۔ ایواتے میں نماز، تعلیم اور میل جول کی جگہ۔",
     nav_times: "اوقاتِ نماز", nav_qibla: "قبلہ", nav_about: "تعارف", nav_access: "راستہ", nav_visit: "آمد سے پہلے", nav_contact: "رابطہ",
@@ -1810,7 +1824,7 @@ const I18N = {
   hi: {
     more_gomi: "कूड़े का कैलेंडर", more_gomi_d: "आपके इलाके में किस दिन कौन-सा कूड़ा, और एक रात पहले रिमाइंडर",
     more_title: "और सुविधाएँ", more_scan: "हलाल चेक", more_scan_d: "खाने के पैकेट का बारकोड या सामग्री स्कैन करके सामग्री की जानकारी देखें", more_food: "पास का हलाल खाना और दुकानें", more_food_d: "आस-पास के रेस्टोरेंट और दुकानें, नक्शे पर", more_mosque: "पास की मस्जिदें", more_mosque_d: "पूरे जापान की मस्जिदें और नमाज़ की जगहें, दूरी के हिसाब से", more_taxi: "टैक्सी बुलाएँ", more_taxi_d: "पास की टैक्सी कंपनियाँ और फ़ोन पर जापानी में क्या कहें", more_note: "ये सुविधाएँ कम्युनिटी साइट iwate-bd.org पर खुलेंगी। हलाल जानकारी दुकानों का अपना दावा और सामग्री की जाँच है — मस्जिद का फ़ैसला नहीं।",
-    nav_quran: "क़ुरआन", quran_title: "पवित्र क़ुरआन", quran_listen: "▶ पूरी सूरह सुनें", quran_tr: "हिंदी अनुवाद दिखाएँ", quran_loading: "लोड हो रहा है…", quran_fail: "लोड नहीं हो सका। इंटरनेट कनेक्शन जाँचें।", quran_tap: "आयत पर टैप करें तो उसकी तिलावत सुनाई देगी।", quran_src: "अरबी पाठ: Tanzil (alquran.cloud द्वारा) · अनुवाद: सुहेल फ़ारूक़ ख़ान व सैफ़ुर्रहमान नदवी · तिलावत: मिशारी अल-अफ़ासी", compass_btn: "🧭 फ़ोन का कंपास इस्तेमाल करें", compass_wait: "फ़ोन धीरे-धीरे घुमाएँ…", compass_ok: "✓ आपका मुँह क़िबला की ओर है", compass_turn: "तीर बिल्कुल ऊपर आने तक घूमें", compass_na: "इस फ़ोन में कंपास नहीं है — ऊपर बताए तरीके से कंपास इस्तेमाल करें।",
+    nav_quran: "क़ुरआन", quran_title: "पवित्र क़ुरआन", quran_listen: "▶ पूरी सूरह सुनें", quran_tr: "हिंदी अनुवाद दिखाएँ", quran_loading: "लोड हो रहा है…", quran_fail: "लोड नहीं हो सका। इंटरनेट कनेक्शन जाँचें।", quran_tap: "आयत पर टैप करें तो उसकी तिलावत सुनाई देगी।", quran_src: "अरबी पाठ: Tanzil (alquran.cloud द्वारा) · अनुवाद: सुहेल फ़ारूक़ ख़ान व सैफ़ुर्रहमान नदवी · तिलावत: मिशारी अल-अफ़ासी", compass_btn: "🧭 फ़ोन का कंपास इस्तेमाल करें", compass_wait: "फ़ोन धीरे-धीरे घुमाएँ…", compass_ok: "✓ आपका मुँह क़िबला की ओर है", compass_turn: "तीर बिल्कुल ऊपर आने तक घूमें", compass_right: "↻ दाएँ {d}° घूमें", compass_left: "↺ बाएँ {d}° घूमें", compass_na: "इस फ़ोन में कंपास नहीं है — ऊपर बताए तरीके से कंपास इस्तेमाल करें।",
     title: "मस्जिद अल-तौहीद", sub: "मोरिओका मस्जिद · मोरिओका, इवाते",
     welcome: "स्वागत है। इवाते में नमाज़, शिक्षा और मेल-जोल की जगह।",
     nav_times: "नमाज़ का समय", nav_qibla: "क़िबला", nav_about: "परिचय", nav_access: "कैसे पहुँचें", nav_visit: "आने से पहले", nav_contact: "संपर्क",
@@ -1868,7 +1882,7 @@ const I18N = {
   ar: {
     more_gomi: "تقويم النفايات", more_gomi_d: "أي نوع من النفايات يُخرج في أي يوم في منطقتك، مع تذكير في الليلة السابقة",
     more_title: "خدمات أخرى", more_scan: "فحص الحلال", more_scan_d: "امسح الباركود أو المكوّنات على عبوة الطعام لترى شرح المكوّنات", more_food: "طعام حلال قريب منك", more_food_d: "المطاعم والمتاجر القريبة على الخريطة", more_mosque: "مساجد قريبة منك", more_mosque_d: "المساجد ومصليات اليابان مرتّبة حسب المسافة", more_taxi: "اطلب سيارة أجرة", more_taxi_d: "شركات الأجرة القريبة وما تقوله بالهاتف باليابانية", more_note: "تُفتح هذه الخدمات على موقع المجتمع iwate-bd.org. معلومات الحلال هي ادعاءات المتاجر نفسها وفحص للمكوّنات — وليست حكماً من المسجد.",
-    nav_quran: "القرآن", quran_title: "القرآن الكريم", quran_listen: "▶ استمع إلى السورة كاملة", quran_tr: "", quran_loading: "جارٍ التحميل…", quran_fail: "تعذّر التحميل. تحقّق من الاتصال بالإنترنت.", quran_tap: "اضغط على الآية لتستمع إلى تلاوتها.", quran_src: "النص: Tanzil (عبر alquran.cloud) · التلاوة: مشاري العفاسي", compass_btn: "🧭 استخدم بوصلة الهاتف", compass_wait: "أدر الهاتف ببطء…", compass_ok: "✓ أنت متّجه إلى القبلة", compass_turn: "استدر حتى يشير السهم إلى الأعلى تماماً", compass_na: "لا توجد بوصلة في هذا الجهاز — استخدم بوصلة كما هو موضّح أعلاه.",
+    nav_quran: "القرآن", quran_title: "القرآن الكريم", quran_listen: "▶ استمع إلى السورة كاملة", quran_tr: "", quran_loading: "جارٍ التحميل…", quran_fail: "تعذّر التحميل. تحقّق من الاتصال بالإنترنت.", quran_tap: "اضغط على الآية لتستمع إلى تلاوتها.", quran_src: "النص: Tanzil (عبر alquran.cloud) · التلاوة: مشاري العفاسي", compass_btn: "🧭 استخدم بوصلة الهاتف", compass_wait: "أدر الهاتف ببطء…", compass_ok: "✓ أنت متّجه إلى القبلة", compass_turn: "استدر حتى يشير السهم إلى الأعلى تماماً", compass_right: "↻ استدر يمينًا {d}°", compass_left: "↺ استدر يسارًا {d}°", compass_na: "لا توجد بوصلة في هذا الجهاز — استخدم بوصلة كما هو موضّح أعلاه.",
     title: "مسجد التوحيد", sub: "مسجد موريوكا · موريوكا، إيواته",
     welcome: "أهلاً وسهلاً. مكان للصلاة والتعلّم والتواصل في إيواته.",
     nav_times: "مواقيت الصلاة", nav_qibla: "القبلة", nav_about: "نبذة", nav_access: "الوصول", nav_visit: "قبل الزيارة", nav_contact: "التواصل",
@@ -3376,11 +3390,16 @@ let qiblaBearing = 0;
 const cmp = (() => {
   const btn = document.getElementById("cmpBtn"), st = document.getElementById("cmpSt");
   const svg = document.querySelector(".compass"), dial = document.getElementById("dial");
-  let on = false, got = false, shown = 0, state = "";
+  let on = false, got = false, shown = 0, state = "", deg = 0, ok = false;
   const touch = window.matchMedia && matchMedia("(pointer: coarse)").matches;
   if (!btn || !("DeviceOrientationEvent" in window) || !touch) return { text() {} };
   btn.hidden = false;
-  function say(k) { state = k; st.textContent = k ? T(k) : ""; st.classList.toggle("ok", k === "compass_ok"); }
+  function say(k, d) {
+    if (d !== undefined) deg = d;
+    state = k; st.textContent = k ? T(k).replace("{d}", deg) : "";
+    st.classList.toggle("ok", k === "compass_ok");
+    st.classList.toggle("near", k !== "compass_ok" && svg.classList.contains("near"));
+  }
   function heading(e) {
     if (typeof e.webkitCompassHeading === "number") return e.webkitCompassHeading;
     if ((e.absolute || e.type === "deviceorientationabsolute") && typeof e.alpha === "number") return (360 - e.alpha) % 360;
@@ -3394,9 +3413,15 @@ const cmp = (() => {
     target = shown + ((((target - shown) % 360) + 540) % 360 - 180);
     shown = target;
     dial.style.transform = `rotate(${shown}deg)`;
-    const off = Math.abs((((qiblaBearing - h) % 360) + 540) % 360 - 180);
-    svg.classList.toggle("aligned", off < 5);
-    say(off < 5 ? "compass_ok" : "compass_turn");
+    const diff = (((qiblaBearing - h) % 360) + 540) % 360 - 180;   // + = Qibla is to the right
+    const off = Math.abs(diff);
+    const was = ok;
+    ok = off < (ok ? 7 : 5);                                  // a little slack so it does not flicker at the edge
+    if (ok && !was && navigator.vibrate) navigator.vibrate(40);
+    svg.classList.toggle("aligned", ok);
+    svg.classList.toggle("near", !ok && off < 15);
+    if (ok) say("compass_ok");
+    else say(diff > 0 ? "compass_right" : "compass_left", Math.round(off));
   }
   function start() {
     if (on) return;

@@ -2031,7 +2031,7 @@ function moreUrl(base, l) {
 document.addEventListener("DOMContentLoaded", function () {
   const box = document.getElementById("mframe");
   if (!box) return;
-  const fr = box.querySelector("iframe"), title = box.querySelector(".mf-t"), ext = box.querySelector(".mf-ext");
+  const fr = box.querySelector("iframe"), title = box.querySelector(".mf-t");
   function close(fromHistory) {
     if (box.hidden) return;
     box.hidden = true;
@@ -2044,7 +2044,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!a || e.ctrlKey || e.metaKey || e.shiftKey || e.button) return;
     e.preventDefault();
     title.textContent = (a.querySelector("b") || a).textContent;
-    ext.href = a.href;
     fr.title = title.textContent;
     fr.src = a.href;
     box.hidden = false;
@@ -2052,7 +2051,6 @@ document.addEventListener("DOMContentLoaded", function () {
     history.pushState({ mf: 1 }, "");            // phone Back closes the frame, not the app
   });
   box.querySelector(".mf-back").addEventListener("click", () => close(false));
-  ext.addEventListener("click", () => close(false));
   window.addEventListener("popstate", () => close(true));
   document.addEventListener("keydown", e => { if (e.key === "Escape") close(false); });
 });
@@ -5043,7 +5041,6 @@ function setUrl() {
   <div class="mf-bar">
     <button type="button" class="mf-back" aria-label="Back">←</button>
     <span class="mf-t"></span>
-    <a class="mf-ext" target="_blank" rel="noopener" aria-label="Open in browser">↗</a>
   </div>
   <iframe title="" allow="camera; geolocation; clipboard-write; web-share; fullscreen"></iframe>
 </div>

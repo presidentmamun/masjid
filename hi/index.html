@@ -3990,6 +3990,14 @@ function qToggle() {
   au.play().catch(() => { q.paused = true; qMark(); });
   qMark();
 }
+// the adhan starts (this tab or another tab of this site) → the recitation pauses; ▶ continues it later
+function qHold() {
+  const au = $q("qAudio");
+  if (q.mode === "surah") { if (!au.paused) { au.pause(); q.paused = true; qMark(); } return; }
+  if (q.mode === "ayah" && !q.paused) qToggle();
+}
+const AZ_BC = "BroadcastChannel" in window ? new BroadcastChannel("masjid-azan") : null;
+if (AZ_BC) AZ_BC.onmessage = e => { if (e.data === "play") qHold(); };
 // lock screen / headphones: ⏸ ▶ and the next / previous verse
 const Q_ART = [{ src: "/icon-192.png", sizes: "192x192", type: "image/png" }, { src: "/icon-512.png", sizes: "512x512", type: "image/png" }];
 function qSession() {
@@ -5000,7 +5008,10 @@ const azan = (() => {
     const show = on => { btn.textContent = TA(on ? "a_stop" : "a_play"); };
     const close = () => { audio.pause(); box.remove(); };
     show(false);
-    audio.addEventListener("playing", () => { show(true); sub.textContent = TA("a_now"); });
+    audio.addEventListener("playing", () => {
+      show(true); sub.textContent = TA("a_now");
+      qHold(); if (AZ_BC) AZ_BC.postMessage("play");   // the Quran player must not play over the adhan
+    });
     audio.addEventListener("pause", () => show(false));
     audio.addEventListener("ended", close);
     btn.addEventListener("click", () => {

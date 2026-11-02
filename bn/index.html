@@ -5005,17 +5005,22 @@ const azan = (() => {
     sub.textContent = TA("a_tap");
     const audio = new Audio(SRC[i]);
     audio.preload = "auto";
+    let playing = false;
     const show = on => { btn.textContent = TA(on ? "a_stop" : "a_play"); };
     const close = () => { audio.pause(); box.remove(); };
     show(false);
     audio.addEventListener("playing", () => {
+      playing = true;
       show(true); sub.textContent = TA("a_now");
       qHold(); if (AZ_BC) AZ_BC.postMessage("play");   // the Quran player must not play over the adhan
     });
-    audio.addEventListener("pause", () => show(false));
+    audio.addEventListener("pause", () => { playing = false; show(false); });
     audio.addEventListener("ended", close);
     btn.addEventListener("click", () => {
-      if (!audio.paused) { close(); return; }
+      // প্রথম চাপে সবসময় বাজানোর চেষ্টা। আগে audio.paused দেখা হতো — কিন্তু iPhone-এ কার্ড খোলার সময়ের
+      // অটো-play() চেষ্টায় paused=false হয়ে থাকত (আওয়াজ না হলেও), ফলে প্রথম চাপেই close branch-এ গিয়ে
+      // কার্ড বন্ধ হয়ে যেত, কিছু বাজত না। এখন সত্যিকারের playing ফ্ল্যাগ দেখি, বন্ধ শুধু ■/✕ দিয়ে।
+      if (playing) { audio.pause(); sub.textContent = TA("a_tap"); return; }
       audio.play().catch(() => { show(false); sub.textContent = TA("a_tap"); });
     });
     $a(".azan-x").addEventListener("click", close);

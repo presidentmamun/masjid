@@ -360,6 +360,8 @@
   .azan-ico { font-size: 44px; display: block; margin-bottom: 4px; }
   .azan-name { display: block; font-size: 1.5rem; }
   .azan-sub { display: block; font-size: .9rem; color: var(--muted); margin: 4px 0 18px; }
+  .azan-jam { display: block; font-size: 1.05rem; font-weight: 800; color: var(--green); margin: 8px 0 0; }
+  .azan-jam:empty { display: none; }
   .azan-play { width: 100%; font: inherit; font-size: 1.05rem; font-weight: 700; cursor: pointer; padding: 13px; border: 0; border-radius: 999px; background: var(--green); color: #fff; }
   .azan-x { margin-top: 10px; font: inherit; font-size: .9rem; cursor: pointer; padding: 6px 16px; border: 0; background: none; color: var(--muted); }
   .notif { margin-top: 18px; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); }
@@ -5279,14 +5281,14 @@ const notif = (function () {
    this page with ?azan=<prayer>&t=<send time> (see sw.js) and the adhan plays here.
    iPhone usually blocks sound until a tap, so the big button is always there. */
 const I18N_A = {
-  en: { a_play: "▶ Play adhan", a_stop: "■ Stop", a_tap: "Tap the button to hear the adhan", a_now: "Adhan is playing", a_close: "Close" },
-  id: { a_play: "▶ Putar azan", a_stop: "■ Hentikan", a_tap: "Ketuk tombol untuk mendengar azan", a_now: "Azan sedang diputar", a_close: "Tutup" },
-  ms: { a_play: "▶ Main azan", a_stop: "■ Hentikan", a_tap: "Ketik butang untuk mendengar azan", a_now: "Azan sedang dimainkan", a_close: "Tutup" },
-  ja: { a_play: "▶ アザーンを再生", a_stop: "■ 停止", a_tap: "ボタンを押すとアザーンが流れます", a_now: "アザーン再生中", a_close: "閉じる" },
-  bn: { a_play: "▶ আজান শুনুন", a_stop: "■ বন্ধ করুন", a_tap: "আজান শুনতে বোতামে চাপুন", a_now: "আজান চলছে", a_close: "বন্ধ" },
-  ur: { a_play: "▶ اذان سنیں", a_stop: "■ بند کریں", a_tap: "اذان سننے کے لیے بٹن دبائیں", a_now: "اذان چل رہی ہے", a_close: "بند" },
-  hi: { a_play: "▶ अज़ान सुनें", a_stop: "■ बंद करें", a_tap: "अज़ान सुनने के लिए बटन दबाएँ", a_now: "अज़ान चल रही है", a_close: "बंद" },
-  ar: { a_play: "▶ استمع إلى الأذان", a_stop: "■ إيقاف", a_tap: "اضغط الزر لسماع الأذان", a_now: "الأذان يُرفع الآن", a_close: "إغلاق" }
+  en: { a_play: "▶ Play adhan", a_stop: "■ Stop", a_tap: "Tap the button to hear the adhan", a_now: "Adhan is playing", a_close: "Close", a_jamaat: "Jama'ah" },
+  id: { a_play: "▶ Putar azan", a_stop: "■ Hentikan", a_tap: "Ketuk tombol untuk mendengar azan", a_now: "Azan sedang diputar", a_close: "Tutup", a_jamaat: "Jamaah" },
+  ms: { a_play: "▶ Main azan", a_stop: "■ Hentikan", a_tap: "Ketik butang untuk mendengar azan", a_now: "Azan sedang dimainkan", a_close: "Tutup", a_jamaat: "Jemaah" },
+  ja: { a_play: "▶ アザーンを再生", a_stop: "■ 停止", a_tap: "ボタンを押すとアザーンが流れます", a_now: "アザーン再生中", a_close: "閉じる", a_jamaat: "ジャマーア" },
+  bn: { a_play: "▶ আজান শুনুন", a_stop: "■ বন্ধ করুন", a_tap: "আজান শুনতে বোতামে চাপুন", a_now: "আজান চলছে", a_close: "বন্ধ", a_jamaat: "জামাত" },
+  ur: { a_play: "▶ اذان سنیں", a_stop: "■ بند کریں", a_tap: "اذان سننے کے لیے بٹن دبائیں", a_now: "اذان چل رہی ہے", a_close: "بند", a_jamaat: "جماعت" },
+  hi: { a_play: "▶ अज़ान सुनें", a_stop: "■ बंद करें", a_tap: "अज़ान सुनने के लिए बटन दबाएँ", a_now: "अज़ान चल रही है", a_close: "बंद", a_jamaat: "जमात" },
+  ar: { a_play: "▶ استمع إلى الأذان", a_stop: "■ إيقاف", a_tap: "اضغط الزر لسماع الأذان", a_now: "الأذان يُرفع الآن", a_close: "إغلاق", a_jamaat: "الجماعة" }
 };
 for (const l in I18N_A) Object.assign(I18N[l], I18N_A[l]);
 
@@ -5308,13 +5310,23 @@ const azan = (() => {
     box.setAttribute("role", "dialog");
     box.setAttribute("aria-modal", "true");
     box.innerHTML = '<div class="azan-box"><span class="azan-ico">🕌</span><strong class="azan-name"></strong>'
-      + '<span class="azan-sub"></span><button type="button" class="azan-play"></button><br>'
+      + '<span class="azan-jam"></span><span class="azan-sub"></span><button type="button" class="azan-play"></button><br>'
       + '<button type="button" class="azan-x"></button></div>';
     document.body.appendChild(box);
     const $a = c => box.querySelector(c), btn = $a(".azan-play"), sub = $a(".azan-sub");
     $a(".azan-name").textContent = TA(PRAYERS[i]);
     $a(".azan-x").textContent = TA("a_close");
     sub.textContent = TA("a_tap");
+    // the visitor's own jamaat time for this prayer (Settings → My jamaat reminder) on the same adhan card
+    try {
+      const jarr = JSON.parse(store.get("n_jamaat") || "[]");
+      const JMAP = { 0: 0, 2: 1, 3: 2, 4: 3, 5: 4 };   // PRAYERS index → jamaat slot (0 Fajr,1 Dhuhr,2 Asr,3 Maghrib,4 Isha,5 Jumu'ah)
+      let ji = JMAP[i];
+      const friJP = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Tokyo", weekday: "short" }).format(new Date()) === "Fri";
+      if (i === 2 && friJP && jarr[5]) ji = 5;   // Friday Dhuhr → Jumu'ah slot if set
+      const jt = (Array.isArray(jarr) && ji != null) ? jarr[ji] : "";
+      if (jt && /^\d\d:\d\d$/.test(jt)) $a(".azan-jam").textContent = "🕋 " + TA("a_jamaat") + " " + jt;
+    } catch {}
     const audio = new Audio(SRC[i]);
     audio.preload = "auto";
     let playing = false;

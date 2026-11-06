@@ -3805,12 +3805,12 @@ function qVoiceNote() {
   if (Q_TR[lang] && want) k = lang === "ur" ? "q_v_ur" : lang === "hi" ? "q_v_hi" : lang === "en" ? (Q_TR.en === "en.sahih" ? "q_v_en" : "q_v_en2") : Q_CONT[lang] ? "q_v_cont" : "q_v_none";
   el.textContent = k ? T(k) : "";
   const wrap = $q("qLsn").closest(".q-lsn");
-  if (wrap) wrap.hidden = !Q_TR[lang];
+  if (wrap) wrap.hidden = !qCanTr();   // hide "listen in translation" when no translation AUDIO exists (e.g. id/ms: text only)
 }
 const $q = id => document.getElementById(id);
 // alquran.cloud down (it happens) → the same text from Quran.com, in the same shape
 const QC = "https://api.quran.com/api/v4/";
-const QC_TR = { "en.sahih": 20, "bn.bengali": 161, "ur.jalandhry": 234, "ja.japanese": 35, "hi.hindi": 122 };
+const QC_TR = { "en.sahih": 20, "bn.bengali": 161, "ur.jalandhry": 234, "ja.japanese": 35, "hi.hindi": 122, "id.indonesian": 134, "ms.basmeih": 39 };
 const qcClean = t => String(t || "").replace(/<sup[^>]*>[\s\S]*?<\/sup>/g, "").replace(/<[^>]+>/g, "").trim();
 const qcGet = u => fetch(QC + u, { credentials: "omit" }).then(r => { if (!r.ok) throw r.status; return r.json(); });
 const QC_ALQ = { "qc-22": "en.yusufali", "qc-19": "en.pickthall", "qc-203": "en.hilali", "qc-54": "ur.junagarhi" };

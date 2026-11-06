@@ -993,6 +993,9 @@
     .mosque-tab{display:inline-block;padding:6px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.45);color:inherit;text-decoration:none;font-size:.9rem;font-weight:600;opacity:.82;transition:opacity .15s,border-color .15s,background .15s}
     .mosque-tab:hover{opacity:1;border-color:currentColor}
     .mosque-tab[aria-current="page"]{background:var(--gold,#c9a44a);color:#1a1a1a;border-color:transparent;opacity:1}
+    /* no photo for Kitakami yet: hide Morioka's photo and let the About box fill the row */
+    html[data-page-mosque] .about-ph{display:none}
+    html[data-page-mosque] #about.grid-2{grid-template-columns:1fr;display:grid}
     </style>
     <nav class="mosque-tabs" aria-label="Mosque">
       <a class="mosque-tab" data-mtab="morioka" href="https://masjid.iwate-bd.org/ms/" aria-current="page" data-i18n-base="ts_masjid_n">Masjid Morioka</a>
@@ -1649,8 +1652,10 @@ const I18N = {
     method: "Calculation method", asr_m: "Asr calculation",
     std: "Standard (Shafi'i, Maliki, Hanbali)", hanafi: "Hanafi",
     note: "Times are calculated for Morioka. Congregation (jamaat) times may differ — please follow the masjid's announcements.",
+    note_k: "Times are calculated for Kitakami. Congregation (jamaat) times may differ — please follow the masjid's announcements.",
     week: "Next 7 days", date: "Date",
     jumuah_time: "Every Friday, 12:00–13:00",
+    jumuah_time_k: "Fridays — please check the masjid's announcement",
     qibla_title: "Qibla Direction", qibla_deg: "{d}° from north", qibla_dist: "About {km} km to Makkah",
     qibla_hint: "Hold a compass with north at the top and face the direction of the arrow.",
     about_title: "About the Masjid", about_ph: "Masjid Al-Tawheed (Morioka Masjid) from the outside",
@@ -1710,8 +1715,10 @@ const I18N = {
     method: "Metode perhitungan", asr_m: "Perhitungan Asar",
     std: "Standar (Syafi'i, Maliki, Hanbali)", hanafi: "Hanafi",
     note: "Waktu dihitung untuk Morioka. Waktu berjamaah mungkin berbeda — mohon ikuti pengumuman masjid.",
+    note_k: "Waktu dihitung untuk Kitakami. Waktu berjamaah mungkin berbeda — mohon ikuti pengumuman masjid.",
     week: "7 hari ke depan", date: "Tanggal",
     jumuah_time: "Setiap Jumat, 12:00–13:00",
+    jumuah_time_k: "Setiap Jumat — mohon periksa pengumuman masjid",
     qibla_title: "Arah Kiblat", qibla_deg: "{d}° dari utara", qibla_dist: "Sekitar {km} km ke Makkah",
     qibla_hint: "Pegang kompas dengan utara di atas dan hadapkan ke arah panah.",
     about_title: "Tentang Masjid", about_ph: "Masjid Al-Tawheed (Masjid Morioka) dari luar",
@@ -1771,8 +1778,10 @@ const I18N = {
     method: "Kaedah pengiraan", asr_m: "Pengiraan Asar",
     std: "Standard (Syafie, Maliki, Hanbali)", hanafi: "Hanafi",
     note: "Waktu dikira untuk Morioka. Waktu berjemaah mungkin berbeza — sila ikut pengumuman masjid.",
+    note_k: "Waktu dikira untuk Kitakami. Waktu berjemaah mungkin berbeza — sila ikut pengumuman masjid.",
     week: "7 hari akan datang", date: "Tarikh",
     jumuah_time: "Setiap Jumaat, 12:00–13:00",
+    jumuah_time_k: "Setiap Jumaat — sila semak pengumuman masjid",
     qibla_title: "Arah Kiblat", qibla_deg: "{d}° dari utara", qibla_dist: "Lebih kurang {km} km ke Makkah",
     qibla_hint: "Pegang kompas dengan utara di atas dan hadap ke arah anak panah.",
     about_title: "Tentang Masjid", about_ph: "Masjid Al-Tawheed (Masjid Morioka) dari luar",
@@ -1832,8 +1841,10 @@ const I18N = {
     method: "計算方法", asr_m: "アスルの計算",
     std: "標準（シャーフィイー派・マーリク派・ハンバル派）", hanafi: "ハナフィー派",
     note: "時刻は盛岡の位置に基づく計算値です。集団礼拝の時刻は異なる場合がありますので、マスジドのお知らせをご確認ください。",
+    note_k: "時刻は北上の位置に基づく計算値です。集団礼拝の時刻は異なる場合がありますので、マスジドのお知らせをご確認ください。",
     week: "今後7日間", date: "日付",
     jumuah_time: "毎週金曜日 12:00〜13:00",
+    jumuah_time_k: "毎週金曜日 — マスジドのお知らせをご確認ください",
     qibla_title: "キブラの方向", qibla_deg: "北から {d}°", qibla_dist: "マッカまで約 {km} km",
     qibla_hint: "方位磁石の北を上にして、矢印の方向を向いてください。",
     about_title: "マスジドについて", about_ph: "マスジド・アル・タウヒード（盛岡マスジド）の外観",
@@ -1893,8 +1904,10 @@ const I18N = {
     method: "হিসাবের পদ্ধতি", asr_m: "আসরের হিসাব",
     std: "সাধারণ (শাফেয়ি, মালেকি, হাম্বলি)", hanafi: "হানাফি",
     note: "সময়গুলো মরিওকার অবস্থান অনুযায়ী হিসাব করা। জামাতের সময় ভিন্ন হতে পারে, মসজিদের ঘোষণা অনুসরণ করুন।",
+    note_k: "সময়গুলো কিতাকামির অবস্থান অনুযায়ী হিসাব করা। জামাতের সময় ভিন্ন হতে পারে, মসজিদের ঘোষণা অনুসরণ করুন।",
     week: "আগামী ৭ দিন", date: "তারিখ",
     jumuah_time: "প্রতি শুক্রবার ১২:০০–১৩:০০",
+    jumuah_time_k: "প্রতি শুক্রবার — মসজিদের ঘোষণা দেখুন",
     qibla_title: "কিবলার দিক", qibla_deg: "উত্তর থেকে {d}°", qibla_dist: "মক্কা প্রায় {km} কিমি দূরে",
     qibla_hint: "কম্পাসের উত্তর দিক উপরে রেখে তীরের দিকে মুখ করুন।",
     about_title: "মসজিদ সম্পর্কে", about_ph: "মসজিদ আত-তাওহীদ (মরিওকা মসজিদ) — বাইরে থেকে",
@@ -1952,8 +1965,10 @@ const I18N = {
     method: "حساب کا طریقہ", asr_m: "عصر کا حساب",
     std: "عام (شافعی، مالکی، حنبلی)", hanafi: "حنفی",
     note: "اوقات موریوکا کے مقام کے مطابق حساب کیے گئے ہیں۔ جماعت کا وقت مختلف ہو سکتا ہے، براہِ کرم مسجد کے اعلانات دیکھیں۔",
+    note_k: "اوقات کیتاکامی کے مقام کے مطابق حساب کیے گئے ہیں۔ جماعت کا وقت مختلف ہو سکتا ہے، براہِ کرم مسجد کے اعلانات دیکھیں۔",
     week: "اگلے 7 دن", date: "تاریخ",
     jumuah_time: "ہر جمعہ 12:00–13:00",
+    jumuah_time_k: "ہر جمعہ — براہِ کرم مسجد کا اعلان دیکھیں",
     qibla_title: "قبلہ کی سمت", qibla_deg: "شمال سے {d}°", qibla_dist: "مکہ مکرمہ تقریباً {km} کلومیٹر",
     qibla_hint: "قطب نما کا شمال اوپر رکھ کر تیر کی سمت رخ کریں۔",
     about_title: "مسجد کا تعارف", about_ph: "مسجد التوحید (موریوکا مسجد) — بیرونی منظر",
@@ -2011,8 +2026,10 @@ const I18N = {
     method: "गणना का तरीका", asr_m: "अस्र की गणना",
     std: "सामान्य (शाफ़ई, मालिकी, हंबली)", hanafi: "हनफ़ी",
     note: "समय मोरिओका के स्थान के अनुसार गणना किए गए हैं। जमाअत का समय अलग हो सकता है, कृपया मस्जिद की घोषणाएँ देखें।",
+    note_k: "समय किताकामी के स्थान के अनुसार गणना किए गए हैं। जमाअत का समय अलग हो सकता है, कृपया मस्जिद की घोषणाएँ देखें।",
     week: "अगले 7 दिन", date: "तारीख",
     jumuah_time: "हर शुक्रवार 12:00–13:00",
+    jumuah_time_k: "हर शुक्रवार — कृपया मस्जिद की घोषणा देखें",
     qibla_title: "क़िबला की दिशा", qibla_deg: "उत्तर से {d}°", qibla_dist: "मक्का लगभग {km} किमी",
     qibla_hint: "कंपास का उत्तर ऊपर रखकर तीर की दिशा में मुँह करें।",
     about_title: "मस्जिद के बारे में", about_ph: "मस्जिद अल-तौहीद (मोरिओका मस्जिद) — बाहर से",
@@ -2070,8 +2087,10 @@ const I18N = {
     method: "طريقة الحساب", asr_m: "حساب العصر",
     std: "الجمهور (الشافعي، المالكي، الحنبلي)", hanafi: "الحنفي",
     note: "المواقيت محسوبة حسب موقع موريوكا. قد تختلف أوقات الجماعة، يُرجى متابعة إعلانات المسجد.",
+    note_k: "المواقيت محسوبة حسب موقع كيتاكامي. قد تختلف أوقات الجماعة، يُرجى متابعة إعلانات المسجد.",
     week: "الأيام السبعة القادمة", date: "التاريخ",
     jumuah_time: "كل يوم جمعة 12:00–13:00",
+    jumuah_time_k: "كل جمعة — يُرجى مراجعة إعلان المسجد",
     qibla_title: "اتجاه القبلة", qibla_deg: "{d}° من الشمال", qibla_dist: "نحو {km} كم إلى مكة المكرمة",
     qibla_hint: "أمسك البوصلة بحيث يكون الشمال للأعلى، واتجه نحو السهم.",
     about_title: "عن المسجد", about_ph: "مسجد التوحيد (مسجد موريوكا) من الخارج",
@@ -3630,7 +3649,7 @@ const cmp = (() => {
 
 /* ===================== Quran (loads only when the section comes into view) ===================== */
 // Arabic text + translation: api.alquran.cloud · recitation: Mishary Alafasy (whole surah: mp3quran, verse: everyayah)
-const Q_TR = { ja: "ja.japanese", bn: "bn.bengali", en: "en.sahih", ur: "ur.jalandhry", hi: "hi.hindi", ar: null };
+const Q_TR = { ja: "ja.japanese", bn: "bn.bengali", en: "en.sahih", ur: "ur.jalandhry", hi: "hi.hindi", ar: null, id: "id.indonesian", ms: "ms.basmeih" };
 const Q_API = "https://api.alquran.cloud/v1/";
 // reciters: chosen by the visitor (kept on the phone). Each has 2–3 tested sources for the whole surah
 // (mp3quran CDN, its old server, quranicaudio) and one verse by verse (everyayah) — if one fails, the next.
@@ -4625,7 +4644,7 @@ for (const l in I18N_G) Object.assign(I18N[l], I18N_G[l]);
 const gomi = (function () {
   const API = "https://iwate-bd.org/wp-json/gomi/v1/";
   const IMG = "https://iwate-bd.org/wp-content/plugins/gomi-calendar/assets/notify/";
-  const CARD_LANGS = ["bn", "en", "ja", "ur", "hi", "ar"];
+  const CARD_LANGS = ["bn", "en", "ja", "ur", "hi", "ar", "id", "ms"];
   let G = { on: 0, c: "", k: "", tn: "", cn: "", w: "prev", t: "20:00", x: [] };
   try { Object.assign(G, JSON.parse(store.get("gomi") || "{}")); } catch {}
   const save = () => store.set("gomi", JSON.stringify(G));
@@ -4936,7 +4955,7 @@ const notif = (function () {
   try { Object.assign(types, JSON.parse(store.get("n_types") || "{}")); } catch {}
   let sub = null, busy = false, msg = "", err = false, nOpen = false, known = false;   // known: this phone's subscription has been looked up
   // notification language: chosen once, then it no longer follows the page language
-  const NLANGS = { ja: "日本語", bn: "বাংলা", en: "English", ur: "اردو", hi: "हिन्दी", ar: "العربية" };
+  const NLANGS = { ja: "日本語", bn: "বাংলা", en: "English", ur: "اردو", hi: "हिन्दी", ar: "العربية", id: "Indonesia", ms: "Melayu" };
   let nlang = NLANGS[store.get("n_lang")] ? store.get("n_lang") : "";
   const NL = () => nlang || lang;
   const setNL = v => { nlang = v; store.set("n_lang", v); };

@@ -314,6 +314,18 @@
   .tset-sum i { flex: none; font-style: normal; padding: 2px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: .8rem; font-weight: 700; }
   .tset-panel { margin-top: 8px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); }
   .tset-panel[hidden] { display: none; }
+  .set-sec { padding: 12px 0; border-top: 1px solid var(--line); }
+  .set-sec:first-child { padding-top: 2px; border-top: 0; }
+  .set-h { margin: 0 0 8px; font-size: .95rem; font-weight: 800; color: var(--green); }
+  .set-lead { margin: 0 0 10px; font-size: .84rem; color: var(--muted); line-height: 1.5; }
+  .jm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+  .jm-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: .9rem; font-weight: 600; }
+  .jm-row input[type=time] { font: inherit; font-size: .9rem; padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: inherit; max-width: 55%; }
+  @media (max-width: 420px) { .jm-grid { grid-template-columns: 1fr; } .jm-row input[type=time] { max-width: 48%; } }
+  .set-langs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .set-langs .lang-btn { color: var(--text); border-color: var(--line); }
+  .set-langs .lang-btn[aria-pressed="true"] { color: #10251b; border-color: #d7b56d; }
+  .theme-btn.set-top { font-size: 1rem; }
   .tset-loc { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface-2); }
   .tset-loc button { flex: 1 1 0; padding: 8px 6px; border: 0; border-radius: 999px; background: transparent; color: var(--muted); font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
   .tset-loc button[aria-pressed="true"] { background: var(--green); color: #fff; }
@@ -985,6 +997,7 @@
       <button class="lang-btn" data-lang="id" >Indonesia</button>
       <button class="lang-btn" data-lang="ms" >Melayu</button>
       <button type="button" class="theme-btn" id="themeBtn"></button>
+      <button type="button" class="theme-btn set-top" id="setBtnTop" aria-label="Settings" title="Settings">⚙</button>
     </div>
     <p class="bismillah">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
     <h1 id="reload"><span data-i18n="title">मस्जिद अल-तौहीद</span><span class="rl-ic" aria-hidden="true">↻</span></h1>
@@ -1021,6 +1034,7 @@
     <li><a href="#visit" data-i18n="nav_visit">आने से पहले</a></li>
     <li><a href="#contact" data-i18n="nav_contact">संपर्क</a></li>
     <li><a href="#access" data-i18n="nav_access">कैसे पहुँचें</a></li>
+    <li><a href="#settings" class="nav-set" id="navSet" data-i18n="set_title"></a></li>
   </ul>
 </nav>
 
@@ -1057,38 +1071,72 @@
       <span data-i18n="jumuah_time">हर शुक्रवार 12:00–13:00</span>
     </div>
 
-    <div class="tset">
+    <div class="tset" id="settings">
       <button type="button" class="tset-sum" id="tsetSum" aria-expanded="false" aria-controls="tsetPanel"></button>
       <div class="tset-panel" id="tsetPanel" hidden>
-        <div class="tset-loc" role="group">
-          <button type="button" data-loc="masjid" data-i18n="ts_masjid">🕌 मस्जिद का समय</button>
-          <button type="button" data-loc="me" data-i18n="ts_me">📍 मेरे इलाक़े का समय</button>
+
+        <div class="set-sec">
+          <h3 class="set-h" data-i18n="set_calc"></h3>
+          <div class="tset-loc" role="group">
+            <button type="button" data-loc="masjid" data-i18n="ts_masjid">🕌 मस्जिद का समय</button>
+            <button type="button" data-loc="me" data-i18n="ts_me">📍 मेरे इलाक़े का समय</button>
+          </div>
+          <p class="tset-msg" id="tsetMsg" aria-live="polite"></p>
+          <div class="settings">
+            <label>
+              <span data-i18n="method">गणना का तरीका</span>
+              <select id="method">
+                <option value="karachi">Karachi — University of Islamic Sciences</option>
+                <option value="mwl">Muslim World League</option>
+                <option value="isna">ISNA — North America</option>
+                <option value="egypt">Egyptian General Authority</option>
+                <option value="makkah">Umm al-Qura — Makkah</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="asr_m">अस्र की गणना</span>
+              <select id="asr">
+                <option value="hanafi" data-i18n="hanafi">हनफ़ी</option>
+                <option value="std" data-i18n="std">सामान्य (शाफ़ई, मालिकी, हंबली)</option>
+              </select>
+            </label>
+          </div>
         </div>
-        <p class="tset-msg" id="tsetMsg" aria-live="polite"></p>
-    <div class="settings">
-      <label>
-        <span data-i18n="method">गणना का तरीका</span>
-        <select id="method">
-          <option value="karachi">Karachi — University of Islamic Sciences</option>
-          <option value="mwl">Muslim World League</option>
-          <option value="isna">ISNA — North America</option>
-          <option value="egypt">Egyptian General Authority</option>
-          <option value="makkah">Umm al-Qura — Makkah</option>
-        </select>
-      </label>
-      <label>
-        <span data-i18n="asr_m">अस्र की गणना</span>
-        <select id="asr">
-          <option value="hanafi" data-i18n="hanafi">हनफ़ी</option>
-          <option value="std" data-i18n="std">सामान्य (शाफ़ई, मालिकी, हंबली)</option>
-        </select>
-      </label>
-    </div>
+
+        <div class="set-sec">
+          <h3 class="set-h" data-i18n="jm_title"></h3>
+          <p class="set-lead" data-i18n="jm_lead"></p>
+          <div class="jm-grid">
+            <label class="jm-row"><span data-i18n="fajr">फ़ज्र</span><input type="time" step="300" id="jm0"></label>
+            <label class="jm-row"><span data-i18n="dhuhr">ज़ुहर</span><input type="time" step="300" id="jm1"></label>
+            <label class="jm-row"><span data-i18n="asr">अस्र</span><input type="time" step="300" id="jm2"></label>
+            <label class="jm-row"><span data-i18n="maghrib">मग़रिब</span><input type="time" step="300" id="jm3"></label>
+            <label class="jm-row"><span data-i18n="isha">इशा</span><input type="time" step="300" id="jm4"></label>
+            <label class="jm-row"><span data-i18n="jumuah">जुमा की नमाज़</span><input type="time" step="300" id="jm5"></label>
+          </div>
+        </div>
+
+        <div class="set-sec">
+          <div class="notif" id="notif" hidden></div>
+        </div>
+
+        <div class="set-sec">
+          <h3 class="set-h" data-i18n="set_lang"></h3>
+          <div class="set-langs" role="group" aria-label="Language">
+            <button class="lang-btn" data-lang="ja" >日本語</button>
+            <button class="lang-btn" data-lang="bn" >বাংলা</button>
+            <button class="lang-btn" data-lang="en" >English</button>
+            <button class="lang-btn" data-lang="ur" >اردو</button>
+            <button class="lang-btn" data-lang="hi" aria-current="page">हिन्दी</button>
+            <button class="lang-btn" data-lang="ar" >العربية</button>
+            <button class="lang-btn" data-lang="id" >Indonesia</button>
+            <button class="lang-btn" data-lang="ms" >Melayu</button>
+          </div>
+        </div>
+
       </div>
     </div>
     <p class="note" id="timesNote" data-i18n="note">समय मोरिओका के स्थान के अनुसार गणना किए गए हैं। जमाअत का समय अलग हो सकता है, कृपया मस्जिद की घोषणाएँ देखें।</p>
-
-    <div class="notif" id="notif" hidden></div>
 
   </section>
 
@@ -3482,7 +3530,7 @@ function placeName() { return place.mode === "me" ? (place.n || T("ts_my")) : T(
 function placeUI() {
   const sum = document.getElementById("tsetSum"); if (!sum) return;
   const mt = (document.querySelector(`#method option[value="${method}"]`) || {}).textContent || method;
-  sum.innerHTML = `<span>📍 <b>${escH(placeName())}</b> · ${escH(mt.split(" — ")[0])} · ${escH(T(asr === "hanafi" ? "hanafi" : "std"))}</span><i>${escH(T("ts_change"))}</i>`;
+  sum.innerHTML = `<span><b>⚙ ${escH(T("set_title"))}</b> · 📍 ${escH(placeName())} · ${escH(mt.split(" — ")[0])} · ${escH(T(asr === "hanafi" ? "hanafi" : "std"))}</span><i>${escH(T("ts_change"))}</i>`;
   document.querySelectorAll(".tset-loc [data-loc]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.loc === place.mode)));
   const note = document.getElementById("timesNote");
   if (note) note.textContent = place.mode === "me" ? T("note_me").replace("{p}", placeName()) : T("note");
@@ -4643,6 +4691,19 @@ const I18N_G = {
 };
 for (const l in I18N_G) Object.assign(I18N[l], I18N_G[l]);
 
+// Settings panel labels (consolidated settings + per-visitor jamaat reminder). Merged like the others above.
+const I18N_S = {
+  en: { set_title: "Settings", set_calc: "🕌 Prayer time calculation", jm_title: "🕋 My jamaat reminder", jm_lead: "Set the masjid's jamaat times for your own reminder. Kept only on your phone — works when notifications are on.", set_lang: "🌐 Language" },
+  id: { set_title: "Pengaturan", set_calc: "🕌 Perhitungan waktu salat", jm_title: "🕋 Pengingat jamaah saya", jm_lead: "Atur waktu salat berjamaah masjid untuk pengingat Anda sendiri. Hanya disimpan di ponsel Anda — berfungsi saat notifikasi aktif.", set_lang: "🌐 Bahasa" },
+  ms: { set_title: "Tetapan", set_calc: "🕌 Pengiraan waktu solat", jm_title: "🕋 Peringatan jemaah saya", jm_lead: "Tetapkan waktu solat berjemaah masjid untuk peringatan anda sendiri. Disimpan di telefon anda sahaja — berfungsi apabila pemberitahuan dihidupkan.", set_lang: "🌐 Bahasa" },
+  ja: { set_title: "設定", set_calc: "🕌 礼拝時刻の計算", jm_title: "🕋 ジャマーアのリマインダー", jm_lead: "マスジドのジャマーア（集団礼拝）の時刻をご自身のリマインダー用に設定できます。端末内にのみ保存され、通知がオンのときに有効です。", set_lang: "🌐 言語" },
+  bn: { set_title: "সেটিংস", set_calc: "🕌 নামাজের সময় হিসাব", jm_title: "🕋 আমার জামাতের রিমাইন্ডার", jm_lead: "নিজের রিমাইন্ডারের জন্য মসজিদের জামাতের সময় দিন। শুধু আপনার ফোনেই থাকে — নোটিফিকেশন চালু থাকলে কাজ করে।", set_lang: "🌐 ভাষা" },
+  ur: { set_title: "ترتیبات", set_calc: "🕌 نماز اوقات کا حساب", jm_title: "🕋 میری جماعت یاد دہانی", jm_lead: "اپنی یاد دہانی کے لیے مسجد کی جماعت کے اوقات درج کریں۔ صرف آپ کے فون میں محفوظ — اطلاعات آن ہونے پر کام کرتا ہے۔", set_lang: "🌐 زبان" },
+  hi: { set_title: "सेटिंग्स", set_calc: "🕌 नमाज़ समय गणना", jm_title: "🕋 मेरी जमात रिमाइंडर", jm_lead: "अपनी रिमाइंडर के लिए मस्जिद की जमात का समय डालें। सिर्फ़ आपके फ़ोन में रहता है — सूचनाएँ चालू होने पर काम करता है।", set_lang: "🌐 भाषा" },
+  ar: { set_title: "الإعدادات", set_calc: "🕌 حساب أوقات الصلاة", jm_title: "🕋 تذكير الجماعة", jm_lead: "أدخل أوقات صلاة الجماعة بالمسجد لتذكيرك الخاص. تُحفظ على هاتفك فقط — وتعمل عند تفعيل الإشعارات.", set_lang: "🌐 اللغة" }
+};
+for (const l in I18N_S) Object.assign(I18N[l], I18N_S[l]);
+
 /* ===================== Garbage-day reminder =====================
    The Gomi Calendar on iwate-bd.org knows each area's collection days; its reminder goes out through
    the same notification as the prayer times. Here: pick the area once (location or list), choose when,
@@ -4919,8 +4980,9 @@ const gomi = (function () {
     const p = document.createElement("span"); p.textContent = T("g_xban").replace("{d}", dayLabel(xs()[0].d));
     const b = document.createElement("button"); b.type = "button"; b.textContent = T("g_xon");
     b.onclick = () => {
+      const p = document.getElementById("tsetPanel"); if (p) p.hidden = false;
+      const s = document.getElementById("settings") || document.getElementById("notif"); if (s) s.scrollIntoView({ behavior: "smooth", block: "start" });
       if (notif.canPush()) notif.enable();
-      else { const nb = document.getElementById("notif"); if (nb) nb.scrollIntoView({ behavior: "smooth", block: "start" }); }
     };
     const x = document.createElement("button"); x.type = "button"; x.className = "g-ban-x"; x.textContent = "✕"; x.setAttribute("aria-label", T("g_close"));
     x.onclick = () => { if (ban) { ban.remove(); ban = null; } };
@@ -4942,7 +5004,14 @@ const gomi = (function () {
       if (a && /^https:\/\/iwate-bd\.org\/[^#]*#pt-gomi$/.test(a.href)) a.href = link(a.href);
     }, true);
   }
-  return { hook, ui, param, sig, start, banner };
+  // the visitor turned notifications on → turn gomi on too and find the area by GPS.
+  // param() still needs BOTH on+area, so if GPS is denied/unavailable gomi just stays dormant (no gomi notices) — prayer notices are unaffected.
+  function autoOn() {
+    if (!G.on) { G.on = 1; save(); }
+    if (!G.k && !P.busy) gps();
+    rer();
+  }
+  return { hook, ui, param, sig, start, banner, autoOn };
 })();
 
 const notif = (function () {
@@ -4959,6 +5028,20 @@ const notif = (function () {
   const TYPES = ["prayer", "ramz", "notice", "jumu", "isl", "jpdz"];
   let types = { prayer: 1, ramz: 1, notice: 1, jumu: 1, isl: 1, jpdz: 1 };
   try { Object.assign(types, JSON.parse(store.get("n_types") || "{}")); } catch {}
+  // the visitor's own jamaat times — 0:Fajr 1:Dhuhr 2:Asr 3:Maghrib 4:Isha 5:Jumu'ah, "HH:MM" or "" = none. Kept on this phone only; sent so the push backend reminds them.
+  let jam = ["", "", "", "", "", ""];
+  try { const j = JSON.parse(store.get("n_jamaat") || "[]"); if (Array.isArray(j)) jam = j.concat(jam).slice(0, 6).map(x => (typeof x === "string" && /^\d\d:\d\d$/.test(x)) ? x : ""); } catch {}
+  function jmWire() {
+    for (let i = 0; i < 6; i++) {
+      const inp = document.getElementById("jm" + i);
+      if (!inp || inp._jw) continue;
+      inp._jw = 1; inp.value = jam[i] || "";
+      inp.addEventListener("change", () => {
+        jam[i] = /^\d\d:\d\d$/.test(inp.value) ? inp.value : "";
+        store.set("n_jamaat", JSON.stringify(jam)); sync();
+      });
+    }
+  }
   let sub = null, busy = false, msg = "", err = false, nOpen = false, known = false;   // known: this phone's subscription has been looked up
   // notification language: chosen once, then it no longer follows the page language
   const NLANGS = { ja: "日本語", bn: "বাংলা", en: "English", ur: "اردو", hi: "हिन्दी", ar: "العربية", id: "Indonesia", ms: "Melayu" };
@@ -5048,7 +5131,7 @@ const notif = (function () {
   };
   const getSub = () => navigator.serviceWorker.getRegistration("/")
     .then(r => r ? r.pushManager.getSubscription() : null).catch(() => null);
-  const sig = () => [NL(), method, asr, TYPES.map(k => types[k] ? 1 : 0).join(""), LAT.toFixed(3) + "," + LNG.toFixed(3), gomi.sig()].join("|");
+  const sig = () => [NL(), method, asr, TYPES.map(k => types[k] ? 1 : 0).join(""), LAT.toFixed(3) + "," + LNG.toFixed(3), gomi.sig(), jam.join(";")].join("|");
   const dev = () => {
     const os = /Android/i.test(ua) ? "Android" : ios ? "iPhone" : /Windows/i.test(ua) ? "Windows" : /Mac OS/i.test(ua) ? "Mac" : "";
     return (os ? os + " · " : "") + "Masjid " + (app ? "app" : "browser");
@@ -5058,7 +5141,7 @@ const notif = (function () {
       endpoint: s.endpoint, lat: LAT, lng: LNG, tz: "Asia/Tokyo",
       method, asr: asr === "hanafi" ? "hanafi" : "standard",
       name: place.mode === "me" ? (place.n || (I18N[NL()] || {}).ts_my || "My area") : (I18N[NL()] || {}).title || T("title"),
-      mosque: (I18N[NL()] || {}).title || T("title"), jamaat: [], lang: NL(),
+      mosque: (I18N[NL()] || {}).title || T("title"), jamaat: jam.slice(0, 6), lang: NL(),
       types: { prayer: types.prayer ? 1 : 0, ramz: types.ramz ? 1 : 0, jumu: types.jumu ? 1 : 0, isl: types.isl ? 1 : 0, jpdz: types.jpdz ? 1 : 0, post: 0, live: 0, sunnah: 0 },
       gomi: gomi.param(),
       dev: dev()
@@ -5152,7 +5235,7 @@ const notif = (function () {
       return navigator.serviceWorker.register("/sw.js", { scope: "/" }).then(() => navigator.serviceWorker.ready);
     }).then(reg => reg.pushManager.getSubscription()
       .then(s => s || reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(PUSH.key) })))
-      .then(s => { if (!nlang) setNL(lang); return send(s).then(() => { sub = s; msg = ""; err = false; }); })
+      .then(s => { if (!nlang) setNL(lang); gomi.autoOn(); return send(s).then(() => { sub = s; msg = ""; err = false; }); })
       .catch(e => { err = true; msg = (e && e.denied) || Notification.permission === "denied" ? T("n_denied") : T("n_err"); })
       .then(() => { busy = false; render(); });
   }
@@ -5177,6 +5260,7 @@ const notif = (function () {
 
   function start() {
     if (!box) return;
+    jmWire();
     gomi.hook(render, sync, () => !!sub || !known);
     if (!(can && !(ios && !app))) known = true;
     render();
@@ -5290,6 +5374,17 @@ function setUrl() {
     const p = document.getElementById("tsetPanel"), b = document.getElementById("tsetSum");
     p.hidden = !p.hidden; b.setAttribute("aria-expanded", String(!p.hidden)); placeUI();
   });
+  // open the one Settings panel from the top (⚙ in the bar, and the "Settings" item in the section nav)
+  function openSettings() {
+    const p = document.getElementById("tsetPanel"), b = document.getElementById("tsetSum");
+    if (p) { p.hidden = false; if (b) b.setAttribute("aria-expanded", "true"); placeUI(); }
+    const s = document.getElementById("settings");
+    if (s) s.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  const setTop = document.getElementById("setBtnTop"); if (setTop) setTop.addEventListener("click", openSettings);
+  const navSet = document.getElementById("navSet"); if (navSet) navSet.addEventListener("click", e => { e.preventDefault(); openSettings(); });
+  // links that point at notifications now live inside Settings — open the panel first
+  document.querySelectorAll('a[href="#notif"], a[href="#settings"]').forEach(a => a.addEventListener("click", e => { e.preventDefault(); openSettings(); }));
   document.querySelectorAll(".tset-loc [data-loc]").forEach(b => b.addEventListener("click", () => {
     if (b.dataset.loc === "masjid") { store.set("place_fix", "masjid"); place.mode = "masjid"; placeSave(); placeApply(); placeMsg(""); }
     else placeFind();

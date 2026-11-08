@@ -347,11 +347,9 @@
   .fast-v { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
   .fast-note { margin: 10px 0 0; font-size: .85rem; opacity: .8; }
   .tset { margin-top: 14px; }
-  .tset-sum { display: flex; align-items: center; gap: 8px; width: 100%; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2);
-    color: var(--text); font: inherit; font-size: .86rem; text-align: start; cursor: pointer; }
-  .tset-sum span { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .tset-sum b { color: var(--green); }
-  .tset-sum i { flex: none; font-style: normal; padding: 2px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: .8rem; font-weight: 700; }
+  .tset-sum { display: inline-flex; align-items: center; gap: 6px; width: auto; margin-top: 12px; padding: 8px 15px; border-radius: 999px;
+    border: 1px solid var(--gold); background: var(--gold-soft); color: var(--green); font: inherit; font-size: .9rem; font-weight: 700; text-align: start; cursor: pointer; }
+  .tset-sum:active { transform: translateY(1px); }
   .tset-panel { margin-top: 8px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); }
   .tset-panel[hidden] { display: none; }
   .set-sec { padding: 12px 0; border-top: 1px solid var(--line); }
@@ -387,28 +385,33 @@
     margin: 0; max-height: 88vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
     border: 1px solid var(--line); border-bottom: 0; border-radius: 20px 20px 0 0;
     background: var(--surface); box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.3);
-    padding: 6px 16px 24px; padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+    padding: 0 16px 24px; padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
     transform: translateY(100%); transition: transform .3s cubic-bezier(.2, .8, .2, 1);
   }
   #tsetPanel.sheet.in { transform: translateY(0); }
   .sheet-hd { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: flex-end;
-    min-height: 34px; margin: 0 -16px 2px; padding: 10px 12px 8px; background: var(--surface); }
-  .sheet-grab { position: absolute; left: 50%; top: 7px; transform: translateX(-50%); width: 40px; height: 4px; border-radius: 999px; background: var(--line); }
-  .sheet-ttl { position: absolute; left: 16px; top: 14px; font-weight: 800; color: var(--green); font-size: 1rem; }
-  .sheet-x { width: 36px; height: 36px; flex: none; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font-size: 1rem; line-height: 1; cursor: pointer; }
+    min-height: 34px; margin: 0 -16px 12px; padding: 16px 14px 14px; color: #fff; border-radius: 20px 20px 0 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d7b56d' stroke-opacity='.3'%3E%3Cpath d='M32 6l7.5 18.5L58 32l-18.5 7.5L32 58l-7.5-18.5L6 32l18.5-7.5z'/%3E%3Crect x='18' y='18' width='28' height='28' transform='rotate(45 32 32)'/%3E%3C/g%3E%3C/svg%3E"), linear-gradient(135deg, #0f5a3c, #0b4330);
+    background-size: 46px, auto; }
+  .sheet-grab { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); width: 42px; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, 0.5); }
+  .sheet-ttl { position: absolute; left: 18px; top: 17px; font-weight: 800; color: #fff; font-size: 1.05rem; }
+  .sheet-x { width: 36px; height: 36px; flex: none; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.16); color: #fff; font-size: 1rem; line-height: 1; cursor: pointer; }
   .sheet-hd + .set-sec { border-top: 0; padding-top: 4px; }
   .lmodal { position: fixed; inset: 0; z-index: 9100; display: grid; place-items: center; padding: 20px; opacity: 0; transition: opacity .2s; }
   .lmodal[hidden] { display: none; }
   .lmodal.in { opacity: 1; }
   .lmodal-back { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); }
   .lmodal-card { position: relative; width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--line);
-    border-radius: 18px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4); padding: 18px;
+    border-radius: 18px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4); padding: 0; overflow: hidden;
     transform: translateY(10px) scale(.97); transition: transform .2s; }
   .lmodal.in .lmodal-card { transform: none; }
-  .lmodal-hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
-  .lmodal-hd h3 { margin: 0; font-size: 1.05rem; color: var(--green); }
-  .lmodal .set-langs { gap: 8px; }
-  .lmodal .set-langs .lang-btn { flex: 1 1 28%; min-width: 92px; padding: 11px 8px; text-align: center; font-size: 0.95rem; }
+  .lmodal-hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0; padding: 15px 18px; color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23d7b56d' stroke-opacity='.32'%3E%3Cpath d='M32 6l7.5 18.5L58 32l-18.5 7.5L32 58l-7.5-18.5L6 32l18.5-7.5z'/%3E%3Crect x='18' y='18' width='28' height='28' transform='rotate(45 32 32)'/%3E%3C/g%3E%3C/svg%3E"), linear-gradient(135deg, #0f5a3c, #0b4330);
+    background-size: 46px, auto; }
+  .lmodal-hd h3 { margin: 0; font-size: 1.1rem; color: #fff; }
+  .lmodal .set-langs { gap: 8px; padding: 16px 18px 20px; }
+  .lmodal .set-langs .lang-btn { flex: 1 1 28%; min-width: 92px; padding: 12px 8px; text-align: center; font-size: 0.95rem; }
+  .lmodal .set-langs .lang-btn[aria-pressed="true"] { background: var(--green); color: #fff; border-color: var(--green); }
   .settings {
     display: flex;
     flex-wrap: wrap;
@@ -3618,7 +3621,7 @@ function placeName() { return place.mode === "me" ? (place.n || T("ts_my")) : T(
 function placeUI() {
   const sum = document.getElementById("tsetSum"); if (!sum) return;
   const mt = (document.querySelector(`#method option[value="${method}"]`) || {}).textContent || method;
-  sum.innerHTML = `<span><b>⚙ ${escH(T("set_title"))}</b> · 📍 ${escH(placeName())} · ${escH(mt.split(" — ")[0])} · ${escH(T(asr === "hanafi" ? "hanafi" : "std"))}</span><i>${escH(T("ts_change"))}</i>`;
+  sum.innerHTML = `📍 ${escH(placeName())} · ${escH(T("ts_change"))}`;
   document.querySelectorAll(".tset-loc [data-loc]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.loc === place.mode)));
   const note = document.getElementById("timesNote");
   if (note) note.textContent = place.mode === "me" ? T("note_me").replace("{p}", placeName()) : T("note");

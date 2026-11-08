@@ -377,6 +377,38 @@
   .tset .settings { margin-top: 10px; }
   .tset .settings label { min-width: 0; flex-basis: 100%; }
   .tset .settings select { width: 100%; max-width: 100%; min-width: 0; }
+
+  /* ---- Overlays: settings bottom-sheet + language centre popup (no mid-page scroll) ---- */
+  .ov-back { position: fixed; inset: 0; z-index: 9000; background: rgba(0, 0, 0, 0.5); opacity: 0; transition: opacity .25s; }
+  .ov-back.show { opacity: 1; }
+  html.ov-open, html.ov-open body { overflow: hidden; }
+  #tsetPanel.sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 9001;
+    margin: 0; max-height: 88vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--line); border-bottom: 0; border-radius: 20px 20px 0 0;
+    background: var(--surface); box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.3);
+    padding: 6px 16px 24px; padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%); transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+  }
+  #tsetPanel.sheet.in { transform: translateY(0); }
+  .sheet-hd { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: flex-end;
+    min-height: 34px; margin: 0 -16px 2px; padding: 10px 12px 8px; background: var(--surface); }
+  .sheet-grab { position: absolute; left: 50%; top: 7px; transform: translateX(-50%); width: 40px; height: 4px; border-radius: 999px; background: var(--line); }
+  .sheet-ttl { position: absolute; left: 16px; top: 14px; font-weight: 800; color: var(--green); font-size: 1rem; }
+  .sheet-x { width: 36px; height: 36px; flex: none; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font-size: 1rem; line-height: 1; cursor: pointer; }
+  .sheet-hd + .set-sec { border-top: 0; padding-top: 4px; }
+  .lmodal { position: fixed; inset: 0; z-index: 9100; display: grid; place-items: center; padding: 20px; opacity: 0; transition: opacity .2s; }
+  .lmodal[hidden] { display: none; }
+  .lmodal.in { opacity: 1; }
+  .lmodal-back { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); }
+  .lmodal-card { position: relative; width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 18px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4); padding: 18px;
+    transform: translateY(10px) scale(.97); transition: transform .2s; }
+  .lmodal.in .lmodal-card { transform: none; }
+  .lmodal-hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+  .lmodal-hd h3 { margin: 0; font-size: 1.05rem; color: var(--green); }
+  .lmodal .set-langs { gap: 8px; }
+  .lmodal .set-langs .lang-btn { flex: 1 1 28%; min-width: 92px; padding: 11px 8px; text-align: center; font-size: 0.95rem; }
   .settings {
     display: flex;
     flex-wrap: wrap;
@@ -1117,6 +1149,7 @@
     <div class="tset" id="settings">
       <button type="button" class="tset-sum" id="tsetSum" aria-expanded="false" aria-controls="tsetPanel"></button>
       <div class="tset-panel" id="tsetPanel" hidden>
+        <div class="sheet-hd"><span class="sheet-grab" aria-hidden="true"></span><span class="sheet-ttl" data-i18n="set_title"></span><button type="button" class="sheet-x" id="setClose" aria-label="Close">✕</button></div>
 
         <div class="set-sec">
           <h3 class="set-h" data-i18n="set_calc"></h3>
@@ -1164,19 +1197,6 @@
           <div class="notif" id="notif" hidden></div>
         </div>
 
-        <div class="set-sec" id="langSec">
-          <h3 class="set-h" data-i18n="set_lang"></h3>
-          <div class="set-langs" role="group" aria-label="Language">
-            <button class="lang-btn" data-lang="ja" >日本語</button>
-            <button class="lang-btn" data-lang="bn" aria-current="page">বাংলা</button>
-            <button class="lang-btn" data-lang="en" >English</button>
-            <button class="lang-btn" data-lang="ur" >اردو</button>
-            <button class="lang-btn" data-lang="hi" >हिन्दी</button>
-            <button class="lang-btn" data-lang="ar" >العربية</button>
-            <button class="lang-btn" data-lang="id" >Indonesia</button>
-            <button class="lang-btn" data-lang="ms" >Melayu</button>
-          </div>
-        </div>
 
       </div>
     </div>
@@ -1471,6 +1491,25 @@
   <div class="mn-win" role="dialog" aria-modal="true" aria-labelledby="mnH">
     <div class="mn-top"><h3 id="mnH" data-i18n="ad_title">🔐 মসজিদের নোটিশ বোর্ড</h3><button type="button" class="mn-x" id="mnX" aria-label="✕">✕</button></div>
     <div class="mn-body" id="mnBody"></div>
+  </div>
+</div>
+
+<div class="ov-back" id="setBack" hidden></div>
+
+<div class="lmodal" id="langModal" hidden role="dialog" aria-modal="true" aria-label="Language">
+  <div class="lmodal-back" data-lclose></div>
+  <div class="lmodal-card">
+    <div class="lmodal-hd"><h3 data-i18n="set_lang"></h3><button type="button" class="sheet-x" id="langClose" aria-label="Close">✕</button></div>
+    <div class="set-langs" role="group" aria-label="Language">
+      <button class="lang-btn" data-lang="ja" >日本語</button>
+      <button class="lang-btn" data-lang="bn" aria-current="page">বাংলা</button>
+      <button class="lang-btn" data-lang="en" >English</button>
+      <button class="lang-btn" data-lang="ur" >اردو</button>
+      <button class="lang-btn" data-lang="hi" >हिन्दी</button>
+      <button class="lang-btn" data-lang="ar" >العربية</button>
+      <button class="lang-btn" data-lang="id" >Indonesia</button>
+      <button class="lang-btn" data-lang="ms" >Melayu</button>
+    </div>
   </div>
 </div>
 
@@ -5435,28 +5474,65 @@ function setUrl() {
   mSel.value = method; aSel.value = asr;
   mSel.addEventListener("change", () => { method = mSel.value; store.set("method", method); renderTimes(); notif.render(); placeUI(); });
   aSel.addEventListener("change", () => { asr = aSel.value; store.set("asr", asr); renderTimes(); notif.render(); placeUI(); });
-  document.getElementById("tsetSum").addEventListener("click", () => {
-    const p = document.getElementById("tsetPanel"), b = document.getElementById("tsetSum");
-    p.hidden = !p.hidden; b.setAttribute("aria-expanded", String(!p.hidden)); placeUI();
-  });
-  // open the one Settings panel from the top (⚙ in the bar, and the "Settings" item in the section nav)
-  function openSettings() {
-    const p = document.getElementById("tsetPanel"), b = document.getElementById("tsetSum");
-    if (p) { p.hidden = false; if (b) b.setAttribute("aria-expanded", "true"); placeUI(); }
-    const s = document.getElementById("settings");
-    if (s) s.scrollIntoView({ behavior: "smooth", block: "start" });
+  // ---- Settings as a bottom sheet (opens in place, no mid-page scroll) ----
+  const sheetEl = document.getElementById("tsetPanel");
+  const setBack = document.getElementById("setBack");
+  let sheetT = 0;
+  function openSettings(toNotif) {
+    if (!sheetEl) return;
+    clearTimeout(sheetT);
+    document.documentElement.classList.add("ov-open");
+    if (setBack) { setBack.hidden = false; void setBack.offsetHeight; setBack.classList.add("show"); }
+    sheetEl.hidden = false; sheetEl.classList.add("sheet");
+    const sum = document.getElementById("tsetSum"); if (sum) sum.setAttribute("aria-expanded", "true");
+    placeUI();
+    void sheetEl.offsetHeight; // commit the translateY(100%) start before animating in
+    requestAnimationFrame(() => {
+      sheetEl.classList.add("in");
+      sheetEl.scrollTop = 0;
+      if (toNotif) {
+        const n = document.getElementById("notif"), sec = n && n.closest(".set-sec");
+        if (sec) sheetEl.scrollTop = Math.max(0, sec.offsetTop - 44);
+      }
+    });
   }
-  const setTop = document.getElementById("setBtnTop"); if (setTop) setTop.addEventListener("click", openSettings);
-  const langPill = document.getElementById("langPill");
-  if (langPill) langPill.addEventListener("click", () => {
-    const p = document.getElementById("tsetPanel"), bt = document.getElementById("tsetSum");
-    if (p) { p.hidden = false; if (bt) bt.setAttribute("aria-expanded", "true"); placeUI(); }
-    const ls = document.getElementById("langSec");
-    if (ls) ls.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-  const navSet = document.getElementById("navSet"); if (navSet) navSet.addEventListener("click", e => { e.preventDefault(); openSettings(); });
-  // links that point at notifications now live inside Settings — open the panel first
-  document.querySelectorAll('a[href="#notif"], a[href="#settings"]').forEach(a => a.addEventListener("click", e => { e.preventDefault(); openSettings(); }));
+  function closeSettings() {
+    if (!sheetEl || !sheetEl.classList.contains("sheet")) return;
+    sheetEl.classList.remove("in");
+    if (setBack) setBack.classList.remove("show");
+    document.documentElement.classList.remove("ov-open");
+    const sum = document.getElementById("tsetSum"); if (sum) sum.setAttribute("aria-expanded", "false");
+    sheetT = setTimeout(() => { sheetEl.classList.remove("sheet"); sheetEl.hidden = true; if (setBack) setBack.hidden = true; }, 320);
+  }
+  const setClose = document.getElementById("setClose"); if (setClose) setClose.addEventListener("click", closeSettings);
+  if (setBack) setBack.addEventListener("click", closeSettings);
+  const tsetSum = document.getElementById("tsetSum"); if (tsetSum) tsetSum.addEventListener("click", () => openSettings(false));
+  const setTop = document.getElementById("setBtnTop"); if (setTop) setTop.addEventListener("click", () => openSettings(false));
+  // the countdown/bell (and any #notif link) open the sheet at the notifications section; #settings links open it at the top
+  document.querySelectorAll('a[href="#notif"]').forEach(a => a.addEventListener("click", e => { e.preventDefault(); openSettings(true); }));
+  document.querySelectorAll('a[href="#settings"]').forEach(a => a.addEventListener("click", e => { e.preventDefault(); openSettings(false); }));
+
+  // ---- Language as a centre popup (select → closes) ----
+  const langModal = document.getElementById("langModal");
+  let langT = 0;
+  function openLang() {
+    if (!langModal) return;
+    clearTimeout(langT);
+    document.documentElement.classList.add("ov-open");
+    langModal.hidden = false; void langModal.offsetHeight;
+    langModal.classList.add("in");
+  }
+  function closeLang() {
+    if (!langModal || langModal.hidden) return;
+    langModal.classList.remove("in");
+    if (!sheetEl || !sheetEl.classList.contains("sheet")) document.documentElement.classList.remove("ov-open");
+    langT = setTimeout(() => { langModal.hidden = true; }, 220);
+  }
+  const langPill = document.getElementById("langPill"); if (langPill) langPill.addEventListener("click", openLang);
+  const langClose = document.getElementById("langClose"); if (langClose) langClose.addEventListener("click", closeLang);
+  const lback = langModal && langModal.querySelector("[data-lclose]"); if (lback) lback.addEventListener("click", closeLang);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") { closeLang(); closeSettings(); } });
+
   document.querySelectorAll(".tset-loc [data-loc]").forEach(b => b.addEventListener("click", () => {
     if (b.dataset.loc === "masjid") { store.set("place_fix", "masjid"); place.mode = "masjid"; placeSave(); placeApply(); placeMsg(""); }
     else placeFind();
@@ -5464,6 +5540,7 @@ function setUrl() {
 
   document.querySelectorAll(".lang-btn").forEach(b => b.addEventListener("click", () => {
     lang = b.dataset.lang; store.set("lang", lang); setUrl(); renderAll();
+    closeLang();
   }));
 
   renderAll();

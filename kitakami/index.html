@@ -196,6 +196,16 @@
   #reload:active { opacity: .7; }
   .rl-ic { display: inline-block; margin-inline-start: .3em; font-size: .55em; vertical-align: middle; opacity: .6; }
   #reload.busy .rl-ic { animation: rl-spin .8s linear infinite; }
+  /* Pull-to-refresh spinner (Facebook/Material style) */
+  .ptr-ind { position: fixed; top: -50px; left: 50%; z-index: 9500; transform: translateX(-50%);
+    width: 40px; height: 40px; border-radius: 999px; display: grid; place-items: center;
+    background: var(--surface); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    opacity: 0; pointer-events: none; transition: transform .25s ease, opacity .2s ease; }
+  .ptr-ind.drag { transition: none; }
+  .ptr-ring { width: 22px; height: 22px; border-radius: 50%; box-sizing: border-box;
+    border: 2.5px solid var(--line); border-top-color: var(--green); }
+  .ptr-ind.ready .ptr-ring { border-top-color: var(--gold); }
+  .ptr-ind.go .ptr-ring { animation: rl-spin .7s linear infinite; }
   @keyframes rl-spin { to { transform: rotate(360deg); } }
   .hero .sub { margin: 6px 0 0; opacity: 0.85; font-size: 1.05rem; }
   .hero .welcome { margin: 16px auto 0; max-width: 40ch; font-size: 1.1rem; }
@@ -2532,8 +2542,61 @@ function renderQibla() {
     fetch(location.href, { cache: "reload", credentials: "same-origin" }).then(done, done);
     setTimeout(done, 4000);
   };
+  window.__reload = go;                                   // pull-to-refresh calls the same action
   h.addEventListener("click", go);
   h.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+})();
+
+/* Pull down from the very top to refresh (like Facebook) — same action as tapping the name.
+   Mainly for the installed Home-Screen app, which has no browser pull-to-refresh. */
+(() => {
+  let ind = null, startY = 0, pulling = false, dist = 0;
+  const THRESH = 64, MAX = 120, RES = 0.5;
+  const atTop = () => (window.scrollY || document.documentElement.scrollTop || 0) <= 0;
+  const blocked = () => { const c = document.documentElement.classList; return c.contains("mf-open") || c.contains("ov-open"); };
+  const make = () => {
+    if (ind) return ind;
+    ind = document.createElement("div");
+    ind.className = "ptr-ind";
+    ind.innerHTML = '<span class="ptr-ring"></span>';
+    document.body.appendChild(ind);
+    return ind;
+  };
+  const snapBack = () => { if (!ind) return; ind.classList.remove("drag", "ready"); ind.style.transform = ""; ind.style.opacity = ""; };
+  window.addEventListener("touchstart", e => {
+    pulling = false;
+    if (e.touches.length !== 1 || !atTop() || blocked()) return;
+    startY = e.touches[0].clientY; pulling = true; dist = 0;
+    make().classList.add("drag");
+  }, { passive: true });
+  window.addEventListener("touchmove", e => {
+    if (!pulling) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy <= 0 || !atTop()) { pulling = false; snapBack(); return; }
+    if (e.cancelable) e.preventDefault();
+    dist = Math.min(MAX, dy * RES);
+    ind.style.opacity = Math.min(1, dist / THRESH);
+    ind.style.transform = "translateX(-50%) translateY(" + dist + "px)";
+    ind.querySelector(".ptr-ring").style.transform = "rotate(" + (dist * 4) + "deg)";
+    ind.classList.toggle("ready", dist >= THRESH);
+  }, { passive: false });
+  const end = () => {
+    if (!pulling) return;
+    pulling = false;
+    if (!ind) return;
+    ind.classList.remove("drag");
+    if (dist >= THRESH) {
+      ind.classList.add("go");
+      ind.style.opacity = "1";
+      ind.style.transform = "translateX(-50%) translateY(60px)";
+      ind.querySelector(".ptr-ring").style.transform = "";   // let the spin animation take over
+      const r = window.__reload; if (typeof r === "function") r(); else location.reload();
+    } else {
+      snapBack();
+    }
+  };
+  window.addEventListener("touchend", end);
+  window.addEventListener("touchcancel", () => { if (pulling) { pulling = false; snapBack(); } });
 })();
 
 /* ===================== Islamic calendar, monthly / Ramadan timetable ===================== */

@@ -121,11 +121,33 @@
   .hero { position: relative; isolation: isolate; }
   .topbar {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: center;
-    margin-bottom: 28px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0 0 10px;
+    padding: 7px 8px 7px 12px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.14);
+    border: 1px solid rgba(215, 181, 109, 0.22);
   }
+  .tb-right { display: flex; align-items: center; gap: 6px; }
+  .lang-pill {
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.3;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    border: 1px solid rgba(215, 181, 109, 0.55);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--hero-text);
+    cursor: pointer;
+  }
+  .lang-pill:active { opacity: 0.8; }
+  .lang-pill .lp-ic { font-size: 1.05em; line-height: 1; }
   .lang-btn {
     font: inherit;
     font-size: 0.85rem;
@@ -153,7 +175,7 @@
     font-family: "Amiri", "Noto Naskh Arabic", serif;
     font-size: clamp(1.5rem, 4vw, 2.2rem);
     color: #e9cf8f;
-    margin: 0 0 8px;
+    margin: 18px 0 10px;
     direction: rtl;
     line-height: 1.8;
   }
@@ -180,15 +202,33 @@
   }
   .dates span b { color: #e9cf8f; font-weight: 600; margin-inline-end: 6px; }
   .next-badge {
-    display: inline-block;
-    margin-top: 22px;
-    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 10px 14px 10px 20px;
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.22);
     border: 1px solid rgba(215, 181, 109, 0.5);
     font-weight: 600;
+    color: var(--hero-text);
+    text-decoration: none;
+    cursor: pointer;
   }
+  .next-badge:hover { background: rgba(0, 0, 0, 0.3); }
   .next-badge .cd { font-variant-numeric: tabular-nums; color: #e9cf8f; }
+  .nb-bell {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    background: rgba(215, 181, 109, 0.18);
+    border: 1px solid rgba(215, 181, 109, 0.45);
+    font-size: 0.95rem;
+    line-height: 1;
+  }
   .hero-notif { display: table; margin: 12px auto 0; padding: 6px 14px; border-radius: 999px; color: #e9cf8f;
     font-size: .9rem; font-weight: 600; text-decoration: none; border: 1px solid rgba(215, 181, 109, 0.45); }
   .hero-notif:hover { background: rgba(0, 0, 0, 0.18); }
@@ -991,17 +1031,14 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="topbar" role="group" aria-label="Language">
-      <button class="lang-btn" data-lang="ja" aria-current="page">日本語</button>
-      <button class="lang-btn" data-lang="bn" >বাংলা</button>
-      <button class="lang-btn" data-lang="en" >English</button>
-      <button class="lang-btn" data-lang="ur" >اردو</button>
-      <button class="lang-btn" data-lang="hi" >हिन्दी</button>
-      <button class="lang-btn" data-lang="ar" >العربية</button>
-      <button class="lang-btn" data-lang="id" >Indonesia</button>
-      <button class="lang-btn" data-lang="ms" >Melayu</button>
-      <button type="button" class="theme-btn" id="themeBtn"></button>
-      <button type="button" class="theme-btn set-top" id="setBtnTop" aria-label="Settings" title="Settings">⚙</button>
+    <div class="topbar">
+      <button type="button" class="lang-pill" id="langPill" aria-haspopup="true" aria-label="Language">
+        <span class="lp-ic" aria-hidden="true">🌐</span><span id="langPillLbl">English</span>
+      </button>
+      <span class="tb-right">
+        <button type="button" class="theme-btn" id="themeBtn"></button>
+        <button type="button" class="theme-btn set-top" id="setBtnTop" aria-label="Settings" title="Settings">⚙</button>
+      </span>
     </div>
     <p class="bismillah">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
     <h1 id="reload"><span data-i18n="title">マスジド・アル・タウヒード</span><span class="rl-ic" aria-hidden="true">↻</span></h1>
@@ -1021,8 +1058,10 @@
       <span><b data-i18n="today">今日</b><span id="greg"></span></span>
       <span><b data-i18n="hijri">ヒジュラ暦</b><span id="hijri"></span></span>
     </div>
-    <div class="next-badge" id="nextBadge"></div>
-    <a class="hero-notif" href="#notif" data-i18n="nav_notif"></a>
+    <a class="next-badge" id="nextBadgeLink" href="#notif">
+      <span id="nextBadge"></span>
+      <span class="nb-bell" aria-hidden="true">🔔</span>
+    </a>
   </div>
 </header>
 
@@ -1125,7 +1164,7 @@
           <div class="notif" id="notif" hidden></div>
         </div>
 
-        <div class="set-sec">
+        <div class="set-sec" id="langSec">
           <h3 class="set-h" data-i18n="set_lang"></h3>
           <div class="set-langs" role="group" aria-label="Language">
             <button class="lang-btn" data-lang="ja" aria-current="page">日本語</button>
@@ -2327,6 +2366,10 @@ function renderTexts() {
   document.querySelectorAll(".lang-btn").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
   const rl = document.getElementById("reload");
   if (rl) { rl.title = T("reload"); rl.setAttribute("aria-label", T("title") + " — " + T("reload")); }
+  const LP = { en: "English", ja: "日本語", bn: "বাংলা", ur: "اردو", hi: "हिन्दी", ar: "العربية", id: "Indonesia", ms: "Melayu" };
+  const lpl = document.getElementById("langPillLbl"); if (lpl) lpl.textContent = LP[lang] || lang.toUpperCase();
+  const langPill = document.getElementById("langPill"); if (langPill) langPill.setAttribute("aria-label", T("set_lang") + ": " + (LP[lang] || lang));
+  const nbl = document.getElementById("nextBadgeLink"); if (nbl) nbl.setAttribute("aria-label", T("nav_notif"));
   document.querySelectorAll("a[data-more]").forEach(a => { a.href = moreUrl(a.dataset.more, lang); });
 }
 
@@ -5405,6 +5448,13 @@ function setUrl() {
     if (s) s.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   const setTop = document.getElementById("setBtnTop"); if (setTop) setTop.addEventListener("click", openSettings);
+  const langPill = document.getElementById("langPill");
+  if (langPill) langPill.addEventListener("click", () => {
+    const p = document.getElementById("tsetPanel"), bt = document.getElementById("tsetSum");
+    if (p) { p.hidden = false; if (bt) bt.setAttribute("aria-expanded", "true"); placeUI(); }
+    const ls = document.getElementById("langSec");
+    if (ls) ls.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
   const navSet = document.getElementById("navSet"); if (navSet) navSet.addEventListener("click", e => { e.preventDefault(); openSettings(); });
   // links that point at notifications now live inside Settings — open the panel first
   document.querySelectorAll('a[href="#notif"], a[href="#settings"]').forEach(a => a.addEventListener("click", e => { e.preventDefault(); openSettings(); }));

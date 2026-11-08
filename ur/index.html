@@ -346,7 +346,7 @@
   .fast-n { font-size: .9rem; opacity: .85; }
   .fast-v { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
   .fast-note { margin: 10px 0 0; font-size: .85rem; opacity: .8; }
-  .tset { margin-top: 14px; }
+  .tset { margin: 0; }
   .tset-sum { display: inline-flex; align-items: center; gap: 6px; width: auto; margin-top: 12px; padding: 8px 15px; border-radius: 999px;
     border: 1px solid var(--gold); background: var(--gold-soft); color: var(--green); font: inherit; font-size: .9rem; font-weight: 700; text-align: start; cursor: pointer; }
   .tset-sum:active { transform: translateY(1px); }
@@ -1150,7 +1150,6 @@
     </div>
 
     <div class="tset" id="settings">
-      <button type="button" class="tset-sum" id="tsetSum" aria-expanded="false" aria-controls="tsetPanel"></button>
       <div class="tset-panel" id="tsetPanel" hidden>
         <div class="sheet-hd"><span class="sheet-grab" aria-hidden="true"></span><span class="sheet-ttl" data-i18n="set_title"></span><button type="button" class="sheet-x" id="setClose" aria-label="Close">✕</button></div>
 
@@ -3618,9 +3617,6 @@ function placeMsg(k, again) {
 }
 function placeName() { return place.mode === "me" ? (place.n || T("ts_my")) : T("ts_masjid_n"); }
 function placeUI() {
-  const sum = document.getElementById("tsetSum"); if (!sum) return;
-  const mt = (document.querySelector(`#method option[value="${method}"]`) || {}).textContent || method;
-  sum.innerHTML = `📍 ${escH(placeName())} · ${escH(T("ts_change"))}`;
   document.querySelectorAll(".tset-loc [data-loc]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.loc === place.mode)));
   const note = document.getElementById("timesNote");
   if (note) note.textContent = place.mode === "me" ? T("note_me").replace("{p}", placeName()) : T("note");

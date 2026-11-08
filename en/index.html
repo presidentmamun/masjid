@@ -148,6 +148,13 @@
   }
   .lang-pill:active { opacity: 0.8; }
   .lang-pill .lp-ic { font-size: 1.05em; line-height: 1; }
+  .halal-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px;
+    border: 1px solid var(--gold); background: linear-gradient(180deg, rgba(215, 181, 109, 0.3), rgba(215, 181, 109, 0.15));
+    color: #ffe6a6; font: inherit; font-size: 0.85rem; font-weight: 700; text-decoration: none; white-space: nowrap; cursor: pointer; }
+  .halal-pill b { font-weight: 800; }
+  .halal-pill .hp-ic { flex: none; display: block; }
+  .halal-pill:active { transform: translateY(1px); }
+  @media (max-width: 360px) { .halal-pill b { display: none; } }
   .lang-btn {
     font: inherit;
     font-size: 0.85rem;
@@ -1070,6 +1077,7 @@
       <button type="button" class="lang-pill" id="langPill" aria-haspopup="true" aria-label="Language">
         <span class="lp-ic" aria-hidden="true">🌐</span><span id="langPillLbl">English</span>
       </button>
+      <a class="halal-pill" id="halalBtn" data-more="https://iwate-bd.org/?hs=scan" href="https://iwate-bd.org/?hs=scan&amp;lang=en&amp;pt_lang=en&amp;app=1" aria-label="Halal check"><svg class="hp-ic" aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.6-4.6"/></svg><b>Halal</b></a>
       <span class="tb-right">
         <button type="button" class="theme-btn" id="themeBtn"></button>
         <button type="button" class="theme-btn set-top" id="setBtnTop" aria-label="Settings" title="Settings">⚙</button>
